@@ -1,0 +1,366 @@
+# Aegis — 工程流程系统
+
+> 一套以**状态机为骨架、以制品为中心、以门禁为强制力**的 AI agent 项目开发规范。
+> 解决"通用方法论框架（如 Superpowers）在真实项目中失控"的问题。
+
+---
+
+## 一、它解决什么问题
+
+通用 skills 框架的问题是：**它只有横向的技能集合，没有纵向的工程状态机**。
+所以 agent 可以在任意时刻跳步、自作主张、不存档、不沉淀经验。
+
+Aegis 针对 8 类具体失控现象设计：
+
+| 现象 | Aegis 的解法 |
+|---|---|
+| 没 review 就自作主张生成方案 | P1/P2 出口有**人工签字门禁**，未签状态机停在原地 |
+| 前端不给 demo 直接写代码 | P2 **必备制品**含 `demo/*.html`，缺则 P4 无法开始 |
+| 文档随意生成、无关联 | 文档 schema 固定 + `docs/INDEX.md` 强制登记（P6 机检反查） |
+| 阶段成果不固化 | `STATE.md` 快照（≤40 行，P6 机检行数），新会话 30 秒接上 |
+| Python 不建 venv | P0 / P4 门禁由 `gate.sh` 硬检查 |
+| 故障不记录、老毛病复发 | `docs/incidents/`（**预防**必填机检）+ P3/P5 两处**历史缺陷回灌** |
+| 设计完不 review | **P3 独立阶段**，12 项评审清单 + 意图一致性复核 |
+| 规则叠加烧 token | 分阶段按需加载 + 单一真相源派生物化 |
+| **一上来就给方案，没讨论** | **P0.5 意图校准：两轮讨论 + checklist 前置** |
+| **checklist 全是技术黑话** | **小白语言规则 + `gate.sh` 关键词黑名单** |
+| **多任务混在一个分支** | **分支铁律 + `branch.sh` + 门禁检查** |
+| **交付了但别人用不了** | **P7 强制冒烟验证，`RELEASE` 的「已知限制」写「无」会被拦** |
+
+---
+
+## 二、三轴模型
+
+```
+轴一 阶段：P0 立项 → P0.5 意图校准 → P1 构思 → P2 设计 → P3 验证 → P4 实现 → P5 校验 → P6 归档 → P7 交付
+轴二 制品：每阶段有且仅有规定的产物，固定路径 + 固定 schema + 必须登记索引
+轴三 门禁：每阶段出口有 Exit Criteria，不满足则状态机拒绝前进
+```
+
+---
+
+## 三、六条铁律 + 分支铁律
+
+1. **阶段不可跳** — 未过出口门禁，禁止进下一阶段
+2. **设计前必须可视** — 前端没出 HTML demo 并确认，禁止写业务代码
+3. **完成必须留证** — 说"完成"必须贴验证输出
+4. **问题必须沉淀** — 调试超 15 分钟或试错 2 次以上，必须建 INC 且填「预防」
+5. **单一真相源** — `.ai/` 是唯一真相，其余是派生物
+6. **讨论前置** — 新要求禁止直接给方案，必须先走 P0.5 两轮讨论，每轮先建 checklist，用日常语言
+7. **分支隔离** — 每个新任务必须建独立分支，禁止直接改 main
+
+---
+
+## 三之一、P0.5 意图校准（新增）
+
+插在 P0 与 P1 之间的独立阶段。**它不是 P1 的一部分**，因为讨论发生在写需求之前。
+
+| 轮次 | 目的 | 强制 |
+|---|---|---|
+| R1 复述轮 | 用大白话复述你的要求，你纠正 | 不可跳 |
+| R2 深层轮 | 挖"为什么 / 什么算失败 / 什么情况例外" | 不可跳 |
+| R3 边界轮 | 只在前两轮发现重大歧义时触发 | 条件 |
+
+**每轮动作**：先写 checklist → 你确认清单本身 → 逐条选择 → 落 `ALIGN` 记录。
+
+**选项式（核心形式）**：每条关键点由 agent 给出「判断依据 + 3-4 个理解方向 + 其他兜底」，
+你只做选择。你的工作从"表达"降为"识别"，歧义大幅减少。
+
+```markdown
+## 1. 你想解决的是这个麻烦吗？
+**判断依据：** 猜错了后面设计方向会全错。
+**我可能理解错的地方：**
+- A. 主要是返工太多次 → 后果：重点放在"一次做对"
+- B. 更难受的是反复解释同一件事 → 后果：重点放在"结论沉淀"
+- C. 不是，真正的麻烦是别的 → 后果：请说明
+- D. 其他：_______________        ← 必须有
+**我的倾向：** B
+```
+
+两条必须遵守的原则：
+1. **先给描述或标准**，你据此回复
+2. **列出可能的理解偏差**，你指认正确方向
+
+**禁止**：开放式提问、选项缺「其他」、只给 2 个选项。`gate.sh` 会机检这三项。
+
+**小白语言硬规则**：每条 checklist 必须让你在不需要技术知识的前提下回答。
+`gate.sh` 内置技术词黑名单（API / 鉴权 / 缓存 / 事务 / 并发 …），出现即 FAIL。
+
+**讨论结论**落 `docs/align/ALIGN-<任务>.md`，是 P1 写 PRD 的**唯一依据**。
+
+---
+
+## 三之二、分支策略（新增）
+
+```bash
+make branch NAME=user-login      # 建 feat/user-login
+# ... P0.5 → P7 ...
+make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
+```
+
+- 类型：`feat / fix / docs / refactor / test / chore / spike`
+- 在 main 上有未提交改动 → `gate.sh` 拦截
+- 分支名不合规 → `gate.sh` 拦截
+- 合并前自动跑门禁
+
+---
+
+## 四、目录结构
+
+### 4.1 框架本体（本仓库）
+
+```
+aegis/
+├── VERSION                   版本号（语义化版本，唯一来源）
+├── AGENTS.md                 入口（会话启动协议 + 六条铁律 + 指针）
+├── STATE.md                  状态快照模板（≤40 行，新会话必读）
+├── CHANGELOG.md              变更日志（语义化版本）
+├── CLAUDE.md -> AGENTS.md    软链，兼容 Claude Code
+├── GEMINI.md -> AGENTS.md    软链，兼容 Gemini CLI
+├── Makefile                  setup / gate / status / sync / branch
+│
+├── .ai/                      规范真相源（唯一真相，按阶段拆分省 token）
+│   ├── 00-core.md            核心原则与状态机总览（必读）
+│   ├── 01-P0-init.md         立项
+│   ├── 015-P05-align.md      意图校准（两轮讨论 + 小白语言）
+│   ├── 02-P1-ideate.md       构思
+│   ├── 03-P2-design.md       设计（HTML demo 硬要求）
+│   ├── 04-P3-validate.md     验证（12 项 + 意图复核 + 历史回灌）
+│   ├── 05-P4-implement.md    实现（TDD + INC 触发）
+│   ├── 06-P5-verify.md       校验（三轮 review）
+│   ├── 07-P6-archive.md      归档（STATE 重写 + CHANGELOG + tag）
+│   ├── 08-P7-deliver.md      交付（冒烟验证 + RELEASE + 签收）
+│   ├── 90-preferences.md     用户偏好（必读）
+│   └── 99-reference/         7 份 schema（按需加载）
+│
+├── .skills/                  9 个可执行 skill（Superpowers 格式，派生物）
+│   ├── aegis-state/          会话开机自检 + 越界拦截
+│   ├── aegis-align/          P0.5 两轮选项式讨论
+│   ├── aegis-p1-ideate/      构思 + 逐条确认
+│   ├── aegis-p2-design/      设计 + HTML demo 强制
+│   ├── aegis-p3-validate/    设计评审 + 意图复核
+│   ├── aegis-p4-implement/   TDD + INC 记录
+│   ├── aegis-p5-verify/      三轮 review + INC 回灌
+│   ├── aegis-p6-archive/     状态固化 + tag
+│   └── aegis-p7-deliver/     冒烟验证 + 交付说明
+│
+├── scripts/
+│   ├── gate.sh               阶段出口门禁（P0–P7 + 框架自检）
+│   ├── state.sh              状态快照读写 / 阶段切换 / 签字
+│   ├── branch.sh             分支管理（start/finish/check）
+│   └── sync.sh               派生物同步 + skill 完整性校验
+│
+├── templates/docs/           项目文档模板（拷到你项目的 docs/）
+│   ├── INDEX.md              文档总索引（强制登记，P6 反查）
+│   ├── prd.md                PRD 模板（六节）
+│   ├── design/
+│   │   ├── DESIGN.md         设计主文档（七节）
+│   │   ├── STYLE.md          样式与交互规范
+│   │   └── REVIEW-DESIGN.md  设计评审 12 项
+│   ├── adr/ADR-0001-template.md
+│   ├── incidents/INC-0001-template.md   反面教材模板（预防必填）
+│   ├── reviews/REVIEW-CODE-template.md  代码评审模板（三轮）
+│   ├── release/RELEASE-template.md      交付说明模板
+│   └── align/README.md       两轮讨论文件命名与放法
+│
+├── examples/                 可运行样例（照抄即可）
+│   ├── align/                CHECKLIST / ALIGN 真实样例（两轮）
+│   └── design/demo/01-task-list.html   可交互 demo（5 态自包含）
+│
+├── adapters/                 跨 agent 适配壳（派生物，make sync 生成）
+│   ├── cursor/rules.mdc      → .cursor/rules/aegis.mdc
+│   ├── trae/rules.md         → .trae/rules/project_rules.md
+│   ├── codex/AGENTS.md       → 仓库根 AGENTS.md
+│   ├── claude-code/          仅软链，无额外文件
+│   ├── reasonix/             直接读 AGENTS.md
+│   ├── deepseek/             直接读 AGENTS.md
+│   └── generic/              其它任意 agent
+│
+└── archive/                  归档区（scripts / fixtures / releases）
+```
+
+### 4.2 装到你的项目后长这样
+
+```bash
+your-project/
+├── AGENTS.md                 ← 从 aegis/ 拷
+├── STATE.md                  ← 从 aegis/ 拷，之后由 scripts/state.sh 维护
+├── Makefile  scripts/  .ai/  .skills/  adapters/  archive/
+├── CLAUDE.md -> AGENTS.md
+├── docs/                     ← 由 templates/docs/ 初始化，之后是你的真实文档
+│   ├── INDEX.md
+│   ├── align/                CHECKLIST-*.md / ALIGN-*.md（每任务一套）
+│   ├── prd.md  design/  adr/  incidents/  reviews/  release/
+├── src/                      你的代码
+└── tests/                    你的测试
+```
+
+### 4.3 交付物在哪
+
+| 目录 | 放什么 | 能否删除 |
+|---|---|---|
+| `/workspace/aegis/` | **产品本体**（框架源码，只读参考）| 否 |
+| `/workspace/out/` | **正式产物**：打好的 zip + 解包副本 + 版本索引 | 否（这是交付物）|
+| `/workspace/temp/` | 中间产物：场景测试、评审草稿、临时脚本 | 是，随时可删 |
+
+---
+
+## 五、快速开始
+
+```bash
+# 1. 拷进你的项目（含隐藏目录）
+cp -r aegis/. your-project/
+
+# 2. 初始化项目文档（从模板）
+mkdir -p docs
+cp -r templates/docs/. docs/
+rm docs/adr/ADR-0001-template.md docs/incidents/INC-0001-template.md   # 模板不入库
+
+# 3. 建环境
+make setup
+
+# 4. 填项目信息
+#    编辑 AGENTS.md 与 STATE.md（项目名、技术栈、当前阶段 P0）
+
+# 5. 检查 P0 门禁
+make gate P0
+
+# 6. 同步派生物（生成 CLAUDE.md / adapters/ 下的壳）
+make sync
+```
+
+---
+
+## 六、核心命令
+
+| 命令 | 作用 |
+|---|---|
+| `make branch NAME=x` | 建任务分支 |
+| `make branch-finish NAME=x` | 合并回主分支 |
+| `make br-check` | 检查分支命名 |
+| `make setup` | 重建 Python 虚拟环境 |
+| `make gate` | 检查当前阶段门禁 |
+| `make gate P2` | 检查指定阶段 |
+| `make status` | 查看 STATE.md |
+| `make phase P1` | 切换阶段（**自动检查门禁，拒绝跳步**）|
+| `make sign P1 "原话"` | 记录门禁签字 |
+| `make next "a\|b"` | 更新下一步 |
+| `make sync` | `.ai/` → `.skills/` 与 `adapters/` 同步 |
+| `make demo` | 打开第一个 HTML demo |
+
+---
+
+## 七、与 Superpowers 的关系
+
+**不是替代，是分层叠加 + 选择性覆盖。**
+
+| Superpowers skill | Aegis 的处理 |
+|---|---|
+| `using-superpowers` | 保留，Aegis 的 `aegis-state` 在它之后接管 |
+| `brainstorming` | **被 `aegis-p1-ideate` 覆盖**（产出必须落 PRD 六节） |
+| `writing-plans` | **被 `aegis-p2-design` 覆盖**（必须出 demo） |
+| `verification-before-completion` | **被 P5 三轮 review 覆盖** |
+| `test-driven-development` | **保留**（通用，做得好） |
+| `systematic-debugging` | **保留** + 接入 INC 库 |
+
+覆盖 3 个、保留 3 个。加载量下降，token 省一半以上。
+
+**仲裁规则**：Aegis 的 `.ai/` > 用户当前指令中的流程要求 > 通用 skills。冲突无法判断时，向用户指出，不自行裁决。
+
+---
+
+## 八、跨 agent 支持
+
+| Agent | 接入方式 |
+|---|---|
+| Claude Code | 根目录 `CLAUDE.md`（软链到 AGENTS.md）|
+| Gemini CLI | 根目录 `GEMINI.md`（软链）|
+| Cursor | `adapters/cursor/rules.mdc` → `.cursor/rules/aegis.mdc` |
+| Trae CN | `adapters/trae/rules.md` → `.trae/rules/project_rules.md` |
+| Codex CLI/App | `AGENTS.md` + `adapters/codex/AGENTS.md` |
+| CodeBuddy CN / Reasonix / 其他 | 直接读 `AGENTS.md`（L1 兜底，无需壳）|
+
+> **保底原则**：任何 agent，哪怕不支持 skills，只要读 `AGENTS.md` + `STATE.md` 就能遵守规范。
+
+---
+
+## 九、Token 效率（实测，非估算）
+
+用 UTF-8 字符数 ÷ 1.6 折算（中文约 1 token / 1.6 字符）：
+
+| 加载内容 | 字符数 | ≈ tokens |
+|---|---|---|
+| `AGENTS.md` | 3547 | 2216 |
+| `STATE.md` | 289 | 180 |
+| `.ai/00-core.md` | 3817 | 2385 |
+| `.ai/90-preferences.md` | 1839 | 1149 |
+| **启动四件套合计** | **9492** | **≈5900** |
+| 再加当前阶段文件（以最长的 `015-P05-align.md` 为例）| +6917 | ≈+4300 |
+| `.ai/` 全量（11 份 + 7 份 schema） | 37424 | ≈23400 |
+
+**诚实的结论**：
+
+- 每次会话启动固定开销约 **5900 tokens**，进 P0.5 时约 **10200 tokens**。
+- 相比「全量 `.ai/` 23400 tokens」，分阶段加载确实省一半以上，但**不是** 800 tokens 那个量级。
+- 真实收益不在单次启动，而在**不必每轮重读全部规范**：进入 P4 之后，P0.5 的 4300 tokens 不再占上下文。
+
+> 早期版本 README 曾写「~800 tokens / 降 90%」，那是错的，已按实测修正。
+
+---
+
+## 十、验证记录
+
+本套方案已通过以下实测（均为注入缺陷后观察**是否被拦截**）：
+
+| 测试 | 结果 |
+|---|---|
+| P0 门禁（缺 .venv 应拦） | ✅ 拦截 |
+| P1 门禁（PRD 非目标为空） | ✅ 拦截 |
+| P1 门禁（非目标填占位符 `<...>`） | ✅ 拦截 |
+| P2 门禁（删除 demo 文件） | ✅ 拦截 |
+| P2 门禁（demo 引用外部 CDN） | ✅ 拦截 |
+| P2 门禁（无用户签字） | ✅ 拦截 |
+| **P4 门禁：`src/` 里留 `print()` 调试** | ✅ 拦截（定位到文件:行） |
+| **P4 门禁：硬编码 `API_KEY = "sk-live-..."`** | ✅ 拦截 |
+| **P4 门禁：INC 的「预防」仍是 `<...>` 占位符** | ✅ 拦截（填实后放行） |
+| **P4 门禁：干净代码 + 已填 INC** | ✅ 放行 |
+| P5 门禁：今日 REVIEW-CODE 缺失 | ✅ 拦截 |
+| **P6 门禁：STATE.md 涨到 48 行** | ✅ 拦截（>40） |
+| **P6 门禁：「下一步」写"继续开发"** | ✅ 拦截（要求可执行） |
+| **P6 门禁：CHANGELOG 写"优化若干细节"** | ✅ 拦截 |
+| **P6 门禁：tag `v2.5.0` 与 CHANGELOG 版本不符** | ✅ 拦截 |
+| **P6 门禁：新文档未登记 INDEX** | ✅ 拦截（13 条全部报出） |
+| **P6 门禁：归档完成（tag+版本一致+INDEX 全登记）** | ✅ 放行 |
+| **P6 门禁：分支内有 `.py` 改动** | ⚠️ 警告（不拦，因改动可能发生在 P4/P5） |
+| **P7 门禁：无 `RELEASE-v*.md`** | ✅ 拦截 |
+| **P7 门禁：已知限制写「无」** | ✅ 拦截 |
+| **P7 门禁：验证证据写「已测试」** | ✅ 拦截 |
+| **P7 门禁：内容填实但未签收** | ✅ 拦截 |
+| **P7 门禁：内容填实 + 已签收** | ✅ 放行 |
+| 阶段切换 P0 → P7（跳步） | ✅ 拒绝 |
+| 阶段切换 P0 → P1（逐级） | ✅ 检查门禁后放行 |
+| 阶段回退 P2 → P1 | ✅ 允许并提示 |
+| 9 个 SKILL.md frontmatter 规范 | ✅ 全部合规（desc 147–174 字符，fm 183–210 字符）|
+| 派生物同步一致性 | ✅ 一致（含反向检查未登记 skill）|
+| **P05 门禁：删 R2 讨论记录** | ✅ 拦截 |
+| **P05 门禁：R2 条目不足 6 条** | ✅ 拦截 |
+| **P05 门禁：checklist 含技术词「鉴权/缓存」** | ✅ 拦截 |
+| **P05 门禁：签字为空** | ✅ 拦截 |
+| **P05 门禁：某条缺「其他」选项** | ✅ 拦截（5/6） |
+| **P05 门禁：只给 A/B 两个方向** | ✅ 拦截（C:0） |
+| **分支检查：在 master 上有改动** | ✅ 拦截 |
+| **阶段跳步：P0.5 → P2** | ✅ 拒绝 |
+
+---
+
+## 十一、后续可扩展
+
+九个阶段的规范、skill、门禁已全部就位。可继续加强的方向：
+
+- git pre-commit hook 调用 `bash scripts/branch.sh check`（硬锁分支规范）
+- CI 集成 `make check-sync` + `make gate`（每个 PR 自动跑）
+- `.skills/` 打包成可分发插件（各 agent 各自安装）
+- `gate.sh ALL` 用于发版前的全链路体检（已支持，未纳入默认流程）
+
+> 注意：**不要为了"更完整"而增加阶段。** 九个阶段已经覆盖从"用户提一句"到"用户能用"的全链路，
+> 再加阶段只会让门禁变成形式主义 —— 这是 Aegis 最想避免的结局。

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo 规范范例 — 任务列表</title>
+<!--
+  Aegis P2 Demo 范例
+  ─────────────────────────────────────
+  对应 PRD：第 6 节「关键界面清单」第 1 项
+  作用：这是给用户"看和点"的设计稿，不是最终产品代码。
+  要求：自包含单文件、无外部依赖、双击即开、覆盖 5 种状态。
+
+  5 种状态：
+    1. 正常态  — 有数据的默认展示
+    2. 空状态  — 没有数据时
+    3. 加载态  — 请求进行中的骨架屏
+    4. 错误态  — 请求失败的提示
+    5. 交互反馈 — hover / active / disabled 的视觉变化
+-->
+<style>
+  :root{
+    --c-primary:#2f6feb; --c-primary-hover:#1e5bd4;
+    --c-bg:#f6f7f9; --c-surface:#ffffff;
+    --c-text:#1a1d21; --c-text-2:#5b6470; --c-border:#e3e6ea;
+    --c-success:#1a7f4b; --c-warn:#b45309; --c-error:#c0392b;
+    --radius:8px; --radius-sm:6px;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px;
+    --fs-xs:12px; --fs-sm:13px; --fs-md:14px; --fs-lg:16px; --fs-xl:20px;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:var(--fs-md); color:var(--c-text); background:var(--c-bg);
+    line-height:1.6; padding:var(--sp-6) var(--sp-4);
+  }
+  .wrap{max-width:720px;margin:0 auto}
+
+  /* 状态切换器 —— 仅 demo 用，真实产品不会有 */
+  .switcher{
+    display:flex;gap:var(--sp-2);flex-wrap:wrap;align-items:center;
+    background:#fff;border:1px dashed var(--c-border);border-radius:var(--radius);
+    padding:var(--sp-3);margin-bottom:var(--sp-5);
+  }
+  .switcher label{font-size:var(--fs-xs);color:var(--c-text-2);margin-right:var(--sp-1)}
+  .switcher button{
+    font:inherit;font-size:var(--fs-sm);cursor:pointer;
+    padding:var(--sp-1) var(--sp-3);border-radius:var(--radius-sm);
+    border:1px solid var(--c-border);background:#fff;color:var(--c-text-2);
+    transition:all .15s ease;
+  }
+  .switcher button:hover{border-color:var(--c-primary);color:var(--c-primary)}
+  .switcher button[aria-pressed="true"]{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+
+  .card{
+    background:var(--c-surface);border:1px solid var(--c-border);
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+  }
+  .card-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--c-border);
+  }
+  .card-head h1{font-size:var(--fs-xl);font-weight:600;letter-spacing:-.01em}
+  .count{font-size:var(--fs-sm);color:var(--c-text-2)}
+
+  .btn{
+    font:inherit;font-size:var(--fs-sm);font-weight:500;cursor:pointer;
+    padding:var(--sp-2) var(--sp-4);border-radius:var(--radius-sm);
+    border:1px solid var(--c-primary);background:var(--c-primary);color:#fff;
+    transition:all .15s ease;
+  }
+  .btn:hover{background:var(--c-primary-hover);border-color:var(--c-primary-hover)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{background:#c9ced6;border-color:#c9ced6;cursor:not-allowed;transform:none}
+  .btn-ghost{background:#fff;color:var(--c-text-2);border-color:var(--c-border)}
+  .btn-ghost:hover{background:#f2f4f7;color:var(--c-text);border-color:#cfd4dc}
+
+  .list{list-style:none}
+  .item{
+    display:flex;align-items:center;gap:var(--sp-3);
+    padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--c-border);
+    transition:background .15s ease;
+  }
+  .item:last-child{border-bottom:none}
+  .item:hover{background:#fafbfc}
+  .item input[type=checkbox]{width:16px;height:16px;accent-color:var(--c-primary);cursor:pointer;flex:none}
+  .item .title{flex:1;font-size:var(--fs-md)}
+  .item.done .title{color:var(--c-text-2);text-decoration:line-through}
+  .tag{
+    font-size:var(--fs-xs);padding:2px var(--sp-2);border-radius:999px;
+    background:#eef2f7;color:var(--c-text-2);flex:none;
+  }
+  .tag.hi{background:#fdecec;color:var(--c-error)}
+  .tag.mid{background:#fef4e6;color:var(--c-warn)}
+
+  /* 空态 / 错误态 / 加载态 */
+  .state{padding:var(--sp-6) var(--sp-5);text-align:center}
+  .state .icon{font-size:32px;margin-bottom:var(--sp-3);opacity:.7}
+  .state h2{font-size:var(--fs-lg);font-weight:600;margin-bottom:var(--sp-2)}
+  .state p{font-size:var(--fs-sm);color:var(--c-text-2);margin-bottom:var(--sp-4)}
+  .state.error .icon{color:var(--c-error)}
+  .state.error h2{color:var(--c-error)}
+
+  .skeleton{padding:var(--sp-3) var(--sp-5)}
+  .sk-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0}
+  .sk{
+    background:linear-gradient(90deg,#eef0f3 25%,#f7f8fa 37%,#eef0f3 63%);
+    background-size:400% 100%;animation:shimmer 1.4s ease infinite;border-radius:4px;
+  }
+  .sk-box{width:16px;height:16px;flex:none}
+  .sk-line{height:12px;flex:1}
+  @keyframes shimmer{0%{background-position:100% 50%}100%{background-position:0 50%}}
+
+  .footer{
+    padding:var(--sp-3) var(--sp-5);border-top:1px solid var(--c-border);
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:var(--fs-xs);color:var(--c-text-2);background:#fafbfc;
+  }
+
+  .notice{
+    margin-top:var(--sp-4);font-size:var(--fs-xs);color:var(--c-text-2);
+    line-height:1.8;
+  }
+  .notice code{background:#eef0f3;padding:1px 5px;border-radius:3px;font-size:11px}
+
+  @media (max-width:520px){
+    body{padding:var(--sp-4) var(--sp-3)}
+    .card-head{padding:var(--sp-3) var(--sp-4)}
+    .item{padding:var(--sp-3) var(--sp-4)}
+    .tag{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 仅 demo 用：状态切换 -->
+  <div class="switcher" role="group" aria-label="切换演示状态">
+    <label>演示状态：</label>
+    <button data-state="normal" aria-pressed="true">正常态</button>
+    <button data-state="empty"  aria-pressed="false">空状态</button>
+    <button data-state="loading" aria-pressed="false">加载态</button>
+    <button data-state="error"  aria-pressed="false">错误态</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h1>今日任务</h1>
+      <span class="count" id="count">3 项待完成</span>
+    </div>
+
+    <!-- 正常态 -->
+    <ul class="list" id="view-normal">
+      <li class="item"><input type="checkbox"><span class="title">整理 PRD 第 6 节界面清单</span><span class="tag mid">进行中</span></li>
+      <li class="item"><input type="checkbox"><span class="title">出登录页 HTML demo</span><span class="tag hi">紧急</span></li>
+      <li class="item done"><input type="checkbox" checked><span class="title">确认技术栈</span><span class="tag">已完成</span></li>
+    </ul>
+
+    <!-- 空状态 -->
+    <div class="state" id="view-empty" hidden>
+      <div class="icon">◻</div>
+      <h2>还没有任务</h2>
+      <p>创建第一项任务，开始今天的安排</p>
+      <button class="btn">新建任务</button>
+    </div>
+
+    <!-- 加载态 -->
+    <div class="skeleton" id="view-loading" hidden>
+      <div class="sk-row"><div class="sk sk-box"></div><div class="sk sk-line" style="max-width:60%"></div></div>
+      <div class="sk-row"><div class="sk sk-box"></div><div class="sk sk-line" style="max-width:78%"></div></div>
+      <div class="sk-row"><div class="sk sk-box"></div><div class="sk sk-line" style="max-width:45%"></div></div>
+      <div class="sk-row"><div class="sk sk-box"></div><div class="sk sk-line" style="max-width:70%"></div></div>
+    </div>
+
+    <!-- 错误态 -->
+    <div class="state error" id="view-error" hidden>
+      <div class="icon">!</div>
+      <h2>加载失败</h2>
+      <p>网络连接超时，请检查网络后重试</p>
+      <button class="btn" onclick="setState('normal')">重新加载</button>
+    </div>
+
+    <div class="footer">
+      <span>上次更新 2 分钟前</span>
+      <span>
+        <button class="btn btn-ghost">全部完成</button>
+        <button class="btn" id="addBtn">新建</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="notice">
+    <strong>这是 demo，不是最终代码。</strong><br>
+    请确认：① 整体视觉风格（配色/字号/疏密）　② 元素与布局　③ 交互流程是否顺畅　④ 空/加载/错误三态是否可接受<br>
+    交互反馈已内置：悬停行会变色、按钮 hover 加深、active 下沉、disabled 变灰。<br>
+    规范要点记录到 <code>docs/design/STYLE.md</code> 后即可进入实现阶段。
+  </div>
+
+</div>
+
+<script>
+  // 状态切换（仅 demo 用）
+  const views = {
+    normal:  document.getElementById('view-normal'),
+    empty:   document.getElementById('view-empty'),
+    loading: document.getElementById('view-loading'),
+    error:   document.getElementById('view-error'),
+  };
+  const countEl = document.getElementById('count');
+
+  function setState(state){
+    Object.entries(views).forEach(([k,el]) => { el.hidden = (k !== state); });
+    document.querySelectorAll('.switcher button').forEach(b => {
+      b.setAttribute('aria-pressed', String(b.dataset.state === state));
+    });
+    countEl.textContent = state === 'normal' ? '3 项待完成' : (state === 'loading' ? '加载中…' : '—');
+  }
+
+  document.querySelectorAll('.switcher button').forEach(b => {
+    b.addEventListener('click', () => setState(b.dataset.state));
+  });
+
+  // 勾选交互
+  document.querySelectorAll('#view-normal .item input').forEach(cb => {
+    cb.addEventListener('change', e => {
+      e.target.closest('.item').classList.toggle('done', e.target.checked);
+    });
+  });
+</script>
+</body>
+</html>
