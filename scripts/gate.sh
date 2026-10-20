@@ -211,6 +211,57 @@ if [[ "$PHASE" == "P05" || "$PHASE" == "ALL" ]]; then
         else
           die "$R 选项方向不足（A:$opt_a B:$opt_b C:$opt_c，每条至少 3 个方向 + 其他）"
         fi
+
+        # ---- 第七维：外部参照标注 ----
+        # 逐条目检查：每个关键点标题下（到下一个同级或更高级标题前）必须至少有一行依据标记。
+        # 不能只看总数——总数够了但集中写在开头，等于没标。
+        missing_basis=$(awk '
+          function flush() {
+            if (key != "" && !has) { print key }
+          }
+          /^#{2,4}[[:space:]]+[A-Z]?[0-9]+[.．、]/ {
+            flush()
+            key = $0; has = 0; next
+          }
+          /^#{2,4}[[:space:]]+.*未覆盖方向/ { flush(); key = ""; next }
+          /\[(检索|推荐|无参照)\]/ { if (key != "") has = 1 }
+          END { flush() }
+        ' "$CF")
+        n_missing=$(printf '%s\n' "$missing_basis" | grep -c . || true)
+        if [ "${n_missing:-0}" -eq 0 ]; then
+          ok "$R 每一条都有依据（$n 条全标）"
+        else
+          die "$R 有 $n_missing 条缺依据行（每条下面都要有 [检索]/[推荐]/[无参照] 之一）："
+          printf '%s\n' "$missing_basis" | head -5 | sed -E 's/^#{2,4}[[:space:]]*/      /'
+        fi
+
+        # 未覆盖方向：必须有这一节，且不能只有表头
+        if grep -qE '^#{2,4}[[:space:]]*.*未覆盖方向' "$CF"; then
+          uncovered=$(awk '/^#{2,4}[[:space:]]*.*未覆盖方向/{f=1;next} /^#{1,4} /{if(f)f=0} f' "$CF" \
+            | grep -E '^\|' \
+            | grep -vE '^\|[[:space:]]*[-: ]+\|' \
+            | grep -vE '^\|[[:space:]]*方向[[:space:]]*\|' || true)
+          if [ -n "$uncovered" ]; then
+            ok "$R 含「未覆盖方向」（$(printf '%s\n' "$uncovered" | grep -c . || echo 0) 行）"
+            # 三列检查：随便取一行看竖线数
+            cols=$(printf '%s\n' "$uncovered" | head -1 | awk -F'|' '{print NF-2}')
+            [ "${cols:-0}" -ge 3 ] && ok "$R 未覆盖方向含三列" || warn "$R 未覆盖方向有 ${cols:-0} 列（应含：方向 / 为什么没列 / 要采用还需了解什么）"
+          else
+            die "$R「未覆盖方向」一节为空——空等于声称选项已穷尽，而那几乎总是假的"
+          fi
+        else
+          die "$R 缺「未覆盖方向」一节（清单末尾必须写：知道但没列为选项的方向）"
+        fi
+
+        # 禁止无出处的断言（警告，不拦截：正常写作也会用这些词）
+        vague=$(grep -nE '(业界普遍|业界主流|通常认为|大家都知道|一般来说都)' "$CF" \
+          | grep -vE '\[(检索|推荐)\]' | head -3 || true)
+        if [ -n "$vague" ]; then
+          warn "$R 有未标注出处的概括性断言（应改写成 [检索]/[推荐] 或补具体出处）："
+          printf '%s\n' "$vague" | sed 's/^/      /'
+        else
+          ok "$R 无未标注出处的概括性断言"
+        fi
       else
         die "缺 $CF"
       fi
