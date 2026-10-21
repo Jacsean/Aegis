@@ -31,6 +31,7 @@
 |---|---|
 | `.ai/` | 阶段规范（11 份）|
 | `.ai/99-reference/` | schema（8 份）|
-| `templates/docs/` | 文档模板 |
+| `templates/docs/` | 文档模板（12 份）|
+| `.skills/` | 阶段 skill（9 份）|
 | `scripts/` | gate / state / branch / sync |
 | `adapters/` | 各 agent 的适配壳 |
