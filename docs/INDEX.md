@@ -11,6 +11,7 @@
 |---|---|
 | `develop/HANDOFF.md` | 开发事件索引（一行一条，时间倒序）|
 | `develop/handoff/` | 开发事件记录（七要素，每个任务一条）|
+| `develop/concepts/CONCEPTS.md` | 全局概念表（唯一概念定义处，五层梳理进行中）|
 | `develop/handoff/H-0001-建立基线.md` | v1.0.0 基线怎么建的 |
 | `develop/handoff/H-0002-一次性HANDOFF.md` | 已废止：一次性交接文档的问题 |
 | `develop/handoff/H-0003-第七维参考同行.md` | 第七维为什么加、怎么加的 |
