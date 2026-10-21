@@ -119,10 +119,10 @@ if [ "$SELF_RELEASE" -eq 1 ]; then
 
   # reference schema
   miss_ref=0
-  for f in prd-schema align-schema checklist-schema incident-schema state-schema adr-schema design-review-checklist; do
+  for f in prd-schema align-schema checklist-schema incident-schema state-schema adr-schema handoff-schema design-review-checklist; do
     [ -f ".ai/99-reference/$f.md" ] || { die "缺 .ai/99-reference/$f.md"; miss_ref=$((miss_ref+1)); }
   done
-  [ "$miss_ref" -eq 0 ] && ok ".ai/99-reference/ 齐全（7 份）"
+  [ "$miss_ref" -eq 0 ] && ok ".ai/99-reference/ 齐全（8 份）"
 
   # 适配壳
   miss_ad=0
@@ -135,10 +135,11 @@ if [ "$SELF_RELEASE" -eq 1 ]; then
   miss_tpl=0
   for f in prd.md INDEX.md design/DESIGN.md design/STYLE.md design/REVIEW-DESIGN.md \
            adr/ADR-0001-template.md incidents/INC-0001-template.md \
-           release/RELEASE-template.md reviews/REVIEW-CODE-template.md; do
+           release/RELEASE-template.md reviews/REVIEW-CODE-template.md \
+           HANDOFF-index.md handoff/README.md; do
     [ -f "$DOCS/$f" ] || { die "缺模板 $DOCS/$f"; miss_tpl=$((miss_tpl+1)); }
   done
-  [ "$miss_tpl" -eq 0 ] && ok "templates/docs/ 模板齐全（9 份）"
+  [ "$miss_tpl" -eq 0 ] && ok "templates/docs/ 模板齐全（11 份）"
 
   # 脚本可执行性
   for f in scripts/gate.sh scripts/state.sh scripts/branch.sh scripts/sync.sh; do
@@ -559,6 +560,77 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
     fi
   else
     die "缺 CHANGELOG.md"
+  fi
+
+  # HANDOFF 开发事件记录（七要素，见 .ai/99-reference/handoff-schema.md）
+  HF="$DOCS/develop/HANDOFF.md"
+  if [ -f "$HF" ]; then
+    ok "HANDOFF 索引存在"
+    # 索引层：必须是有表头的一行一条
+    if grep -qE '^\|[[:space:]]*编号[[:space:]]*\|' "$HF"; then
+      ok "HANDOFF 索引含标准表头（编号/时间/谁/事件/结果/链接）"
+    else
+      die "HANDOFF 索引缺标准表头（| 编号 | 时间 | 谁 | 事件 | 结果 | 链接 |）"
+    fi
+    # 最新一条必须有对应记录文件，且七要素齐
+    latest=$(grep -E '^\|[[:space:]]*H-[0-9]+' "$HF" | grep -vE '~~' | head -1)
+    if [ -n "$latest" ]; then
+      hid=$(printf '%s' "$latest" | awk -F'|' '{gsub(/ /,"",$2); print $2}')
+      hfile=$(find "$DOCS/develop/handoff" -name "${hid}-*.md" 2>/dev/null | head -1)
+      if [ -n "$hfile" ]; then
+        ok "$hid 有对应记录文件：$(basename "$hfile")"
+        miss=""
+        for k in 时间 谁 事件 为什么这样处理 怎么处理的 试过什么 下一步; do
+          grep -qE "^[-*][[:space:]]*\*\*${k}" "$hfile" || miss="$miss $k"
+        done
+        if [ -z "$miss" ]; then
+          ok "$hid 七要素齐全"
+        else
+          die "$hid 缺要素：$miss（七要素见 handoff-schema.md）"
+        fi
+        # 「试过什么」不许是空话
+        tried=$(awk '/\*\*试过什么\*\*/{f=1;next} /^[-*][[:space:]]*\*\*/{f=0} f' "$hfile")
+        if printf '%s' "$tried" | grep -qE '没试什么|无特别|没有尝试|N/A'; then
+          die "$hid「试过什么」写了空话（应写「本任务未走过弯路」，或列出实际试过的方案）"
+        elif printf '%s' "$tried" | grep -qE '(✅|❌)'; then
+          ok "$hid「试过什么」有具体条目"
+        else
+          warn "$hid「试过什么」未见 ✅/❌ 标记，确认是否写成了泛泛描述"
+        fi
+        # 上下游链接不许留空
+        for k in 上接 下接; do
+          v=$(grep -E "^[-*][[:space:]]*\*\*${k}\*\*" "$hfile" | head -1)
+          if [ -z "$v" ]; then
+            die "$hid 缺「$k」（没有就写「无」/「暂无」，不许省略）"
+          else
+            # 取冒号后内容，去掉空白；空则视为没写
+            val=$(printf '%s' "$v" | sed -E "s/^[-*][[:space:]]*\*\*${k}\*\*[：:][[:space:]]*//")
+            if [ -z "$(printf '%s' "$val" | tr -d '[:space:]')" ]; then
+              die "$hid「$k」为空（写「无」或「暂无」，不许留空）"
+            fi
+          fi
+        done
+      else
+        die "$hid 在索引里但没有对应记录文件（$DOCS/develop/handoff/${hid}-*.md）"
+      fi
+      # 逐一核对索引里所有未划掉的编号都有记录文件
+      orphan=""
+      for h in $(grep -E '^\|[[:space:]]*H-[0-9]+' "$HF" | grep -vE '~~' \
+                 | awk -F'|' '{gsub(/ /,"",$2); print $2}'); do
+        if ! find "$DOCS/develop/handoff" -name "${h}-*.md" 2>/dev/null | grep -q .; then
+          orphan="$orphan $h"
+        fi
+      done
+      if [ -n "$orphan" ]; then
+        die "索引里有编号但找不到记录文件：$orphan（索引与记录必须成对）"
+      else
+        ok "索引与记录文件一一对应"
+      fi
+    else
+      warn "HANDOFF 索引里还没有任何记录"
+    fi
+  else
+    warn "缺 $HF —— 本任务结束时有没有写开发事件记录？"
   fi
 
   # INDEX 完整性
