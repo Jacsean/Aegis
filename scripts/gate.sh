@@ -90,6 +90,19 @@ if [[ "$PHASE" == "P0" || "$PHASE" == "ALL" ]]; then
   [ -f STATE.md ] && ok "STATE.md 存在" || die "缺 STATE.md"
   [ -f "$DOCS/INDEX.md" ] && ok "$DOCS/INDEX.md 存在" || die "缺 $DOCS/INDEX.md"
 
+  # 概念表（启动协议第 5 步要读它；没有它，词义无从校准）
+  CF="$DOCS/develop/CONCEPTS.md"
+  if [ -f "$CF" ]; then
+    ok "CONCEPTS.md 存在"
+    if grep -q '^## 目录' "$CF" && [ "$(grep -c '^| ' "$CF")" -ge 5 ]; then
+      ok "CONCEPTS.md 有目录且非空"
+    else
+      die "CONCEPTS.md 缺「目录」一节或目录为空（启动协议靠它扫词）"
+    fi
+  else
+    die "缺 $CF —— 概念定义无处安放，词义会随会话漂移"
+  fi
+
   # 环境契约
   if [ -f pyproject.toml ] || [ -f requirements.txt ]; then
     [ -d .venv ] && ok "Python 虚拟环境 .venv 存在" || die "Python 项目必须有 .venv（铁律：环境可复现）"
@@ -596,6 +609,10 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
           ok "$hid「试过什么」有具体条目"
         else
           warn "$hid「试过什么」未见 ✅/❌ 标记，确认是否写成了泛泛描述"
+        fi
+        # 字段名过时：位置 → 地点（2026-10-21 起）
+        if grep -qE '^[-*][[:space:]]*\*\*位置\*\*' "$hfile"; then
+          warn "$hid 用了旧字段「位置」，应改为「地点」（见 CONCEPTS.md）"
         fi
         # 上下游链接不许留空
         for k in 上接 下接; do
