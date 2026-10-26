@@ -159,7 +159,7 @@ R1 内容：用自己的话把用户的要求复述一遍，让他纠正。
 - "我猜是这个意思" → 猜就是歧义的来源
 - **"选项就这两个，不然问他"** → 恰恰要列全方向 + 其他
 - "用户急着要" → 越急越要先确认方向
-<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/develop/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
+<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
 
 ## 同步块（真相源摘录，会话必读）
 
@@ -186,7 +186,7 @@ R1 内容：用自己的话把用户的要求复述一遍，让他纠正。
 ### 铁律三之二：任务必须留档
 
 **每个任务结束（合并进 main 前）必须写一条开发事件记录**，
-记在 `docs/develop/handoff/H-<编号>-<短名>.md`，并在 `docs/develop/HANDOFF.md` 索引加一行。
+记在 `dev/handoff/H-<编号>-<短名>.md`，并在 `dev/HANDOFF.md` 索引加一行。
 
 七要素：时间 / 谁 / 事件 / 为什么这样处理 / 怎么处理的 / **试过什么（成没成）** / 下一步等谁。
 

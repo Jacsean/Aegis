@@ -12,12 +12,12 @@
 2. 读 **`STATE.md`** — 当前阶段、已完成、下一步
 3. 读 **`.ai/00-core.md`** — 六条铁律
 4. 读 **`.ai/90-preferences.md`** — 用户偏好
-5. 读 **`docs/develop/CONCEPTS.md` 的「目录」一节** — 只读一句话列，约 200 tokens；遇到生词再按锚点跳条目
+5. 读 **`docs/CONCEPTS.md` 的「目录」一节** — 只读一句话列，约 200 tokens；遇到生词再按锚点跳条目
 6. 按 `STATE.md` 的当前阶段，加载 `.ai/0X-Pn-*.md`
 7. 声明：**「当前阶段 Pn，本次目标 X，已加载文件 Y」**，再动手
 
 > **为什么第 5 步不能省**：会话一结束上下文就没了。概念表是唯一能跨会话传递「这些词在这里是什么意思」的地方，
-> 不读它，下一轮就会把「地点」又理解成「文件存在哪」。规则见 `docs/develop/CONCEPTS.md`。
+> 不读它，下一轮就会把「地点」又理解成「文件存在哪」。规则见 `docs/CONCEPTS.md`。
 
 ---
 
@@ -112,12 +112,12 @@ docs/adr/ADR-*.md              架构决策（P2）
 src/  tests/                   源码与测试（P4）
 docs/incidents/INC-*.md        故障与问题库（P4/P5，预防必填）
 docs/reviews/REVIEW-CODE-*.md  代码评审（P5，三轮）
-archive/                       一次性脚本 / 大体积数据 / 旧交付说明（P6）
+dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说明（P6）【设计者维度，交付不包含】
 CHANGELOG.md                   变更日志（P6）
 docs/release/RELEASE-*.md      交付说明（P7）
-docs/develop/CONCEPTS.md       全局概念表（唯一概念定义处，改词只改这里）
-docs/develop/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
-docs/develop/handoff/H-*.md    开发事件记录（每个任务结束必写，七要素）
+docs/CONCEPTS.md       全局概念表（唯一概念定义处，改词只改这里）
+dev/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
+dev/handoff/H-*.md    开发事件记录（每个任务结束必写，七要素）
 docs/public/                   交付文档（给项目使用者看的，与开发文档分开）
 STATE.md                       状态快照（始终，≤40 行）
 docs/INDEX.md                  文档总索引（始终）

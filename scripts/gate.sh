@@ -91,7 +91,7 @@ if [[ "$PHASE" == "P0" || "$PHASE" == "ALL" ]]; then
   [ -f "$DOCS/INDEX.md" ] && ok "$DOCS/INDEX.md 存在" || die "缺 $DOCS/INDEX.md"
 
   # 概念表（启动协议第 5 步要读它；没有它，词义无从校准）
-  CF="$DOCS/develop/CONCEPTS.md"
+  CF="$DOCS/CONCEPTS.md"
   if [ -f "$CF" ]; then
     ok "CONCEPTS.md 存在"
     if grep -q '^## 目录' "$CF" && [ "$(grep -c '^| ' "$CF")" -ge 5 ]; then
@@ -576,7 +576,7 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
   fi
 
   # HANDOFF 开发事件记录（七要素，见 .ai/99-reference/handoff-schema.md）
-  HF="$DOCS/develop/HANDOFF.md"
+  HF="$ROOT/dev/HANDOFF.md"
   if [ -f "$HF" ]; then
     ok "HANDOFF 索引存在"
     # 索引层：必须是有表头的一行一条
@@ -589,7 +589,7 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
     latest=$(grep -E '^\|[[:space:]]*H-[0-9]+' "$HF" | grep -vE '~~' | head -1)
     if [ -n "$latest" ]; then
       hid=$(printf '%s' "$latest" | awk -F'|' '{gsub(/ /,"",$2); print $2}')
-      hfile=$(find "$DOCS/develop/handoff" -name "${hid}-*.md" 2>/dev/null | head -1)
+      hfile=$(find "$ROOT/dev/handoff" -name "${hid}-*.md" 2>/dev/null | head -1)
       if [ -n "$hfile" ]; then
         ok "$hid 有对应记录文件：$(basename "$hfile")"
         miss=""
@@ -628,13 +628,13 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
           fi
         done
       else
-        die "$hid 在索引里但没有对应记录文件（$DOCS/develop/handoff/${hid}-*.md）"
+        die "$hid 在索引里但没有对应记录文件（$ROOT/dev/handoff/${hid}-*.md）"
       fi
       # 逐一核对索引里所有未划掉的编号都有记录文件
       orphan=""
       for h in $(grep -E '^\|[[:space:]]*H-[0-9]+' "$HF" | grep -vE '~~' \
                  | awk -F'|' '{gsub(/ /,"",$2); print $2}'); do
-        if ! find "$DOCS/develop/handoff" -name "${h}-*.md" 2>/dev/null | grep -q .; then
+        if ! find "$ROOT/dev/handoff" -name "${h}-*.md" 2>/dev/null | grep -q .; then
           orphan="$orphan $h"
         fi
       done
