@@ -21,6 +21,17 @@
 | `develop/handoff/H-0003-第七维参考同行.md` | 第七维为什么加、怎么加的 | 历史 |
 | `develop/handoff/H-0004-五元素问题表述法.md` | 五元素为什么加、怎么加的 | 历史 |
 | `develop/handoff/H-0005-定下handoff七要素.md` | 七要素的来源与取舍 | 历史 |
+| `develop/handoff/H-0006-项目暂停-概念命名未对齐.md` | 为什么暂停、恢复条件 | 历史 |
+| `develop/handoff/H-0007-概念定义应为基石环节.md` | 概念定义环节待设计（只记录） | 历史 |
+| `develop/handoff/H-0008-结构信息两维度定案.md` | 三级结构 + 信息两维度的定案过程 | 历史 |
+| `develop/handoff/H-0009-用共识替代元概念.md` | 为什么弃用「元概念」、改用「共识」 | 历史 |
+| `develop/handoff/H-0010-概念排查依据v0.1.md` | 查概念用的缺陷分类与依据（v0.2） | 历史 |
+| `develop/handoff/H-0011-B轨道试点组织域.md` | B 轨道试点：组织域查出 5 处缺口 | 历史 |
+| `develop/handoff/H-0012-A轨道首轮地点与分支.md` | 「地点」「分支」两词原定义错在哪 | 历史 |
+| `develop/handoff/H-0013-A轨道二轮文档记录域.md` | ③文档记录域四词定案，删「节点」 | 历史 |
+| `develop/handoff/H-0014-B域骨架与元概念结案.md` | ②骨架域五词 + 元概念结案 | 历史 |
+| `develop/handoff/H-0015-概念表接通v1.4.0.md` | 概念表如何接入启动协议与门禁 | 历史 |
+| `develop/handoff/H-0016-文档一致性补齐.md` | INDEX 漏登记与旧字段的修法与根因 | 历史 |
 
 ## public · 交付文档
 

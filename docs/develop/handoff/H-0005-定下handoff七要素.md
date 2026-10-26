@@ -14,4 +14,4 @@
 - **下一步 / 等谁**：〔未知〕用户看完实物样例后，是否认可这套格式；若不认可，要调整的是「要素清单」还是「两层结构」，需用户指出
 - **上接**：H-0002（一次性 HANDOFF，本条取代它）
 - **下接**：暂无
-- **位置**：`.ai/99-reference/handoff-schema.md`、`templates/docs/HANDOFF-index.md`
+- **地点**：`.ai/99-reference/handoff-schema.md`（七要素、三态标注、上下游链接）、`templates/docs/HANDOFF-index.md`

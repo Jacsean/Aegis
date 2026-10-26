@@ -655,9 +655,13 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
     missing=0
     for f in $(find docs -type f \( -name '*.md' -o -name '*.html' \) ! -name 'INDEX.md' 2>/dev/null); do
       # 登记方式二选一：写全文件名，或写所在目录（如 `align/`、`adr/`）代表该目录已概括
+      # 例外：handoff 记录一条一个文件，必须逐条登记——目录概括对它是漏登记的挡箭牌（H-0016）
       base=$(basename "$f")
       dir=$(dirname "$f")
       if grep -q "$base" "$DOCS/INDEX.md"; then continue; fi
+      case "$f" in
+        docs/develop/handoff/*) die "文档未登记进 INDEX: $f"; missing=$((missing+1)); continue ;;
+      esac
       if grep -qF "$(printf '%s/' "$dir")" "$DOCS/INDEX.md"; then continue; fi
       if grep -qF "$(printf '%s' "$dir" | sed -E 's#^(docs|templates/docs)/##')/" "$DOCS/INDEX.md"; then continue; fi
       die "文档未登记进 INDEX: $f"; missing=$((missing+1))
