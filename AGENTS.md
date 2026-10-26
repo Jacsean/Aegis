@@ -116,6 +116,7 @@ dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说�
 CHANGELOG.md                   变更日志（P6）
 docs/release/RELEASE-*.md      交付说明（P7）
 docs/CONCEPTS.md       全局概念表（唯一概念定义处，改词只改这里）
+docs/PATH-MAP.md       分离前后路径映射表（agent 回溯 git 历史用，用户不看）
 dev/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
 dev/handoff/H-*.md    开发事件记录（每个任务结束必写，七要素）
 docs/public/                   交付文档（给项目使用者看的，与开发文档分开）
