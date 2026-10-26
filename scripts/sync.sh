@@ -12,7 +12,7 @@ CHANGED=0
 say() { printf "  %s\n" "$1"; }
 
 # ---------- 1. .skills/ 存在性 ----------
-echo "[1/3] 校验 .skills/ 完整性"
+echo "[1/4] 校验 .skills/ 完整性"
 
 EXPECTED_SKILLS=(
   "aegis-state"
@@ -39,7 +39,7 @@ for d in .skills/*/; do
 done
 
 # ---------- 2. frontmatter 规范 ----------
-echo "[2/3] 校验 SKILL.md frontmatter"
+echo "[2/4] 校验 SKILL.md frontmatter"
 
 for f in .skills/*/SKILL.md; do
   [ -f "$f" ] || continue
@@ -60,7 +60,7 @@ for f in .skills/*/SKILL.md; do
 done
 
 # ---------- 3. harness 适配壳 ----------
-echo "[3/3] 生成 adapters/ 适配壳"
+echo "[3/4] 生成 adapters/ 适配壳"
 
 write_if_changed() {
   local target="$1"; local tmp
@@ -143,7 +143,59 @@ EOS
 
 
 
-# 软链
+# ---------- 4. 真生成：.ai/ 真相源 → .skills/*/SKILL.md 同步块 ----------
+echo "[4/4] 生成 .skills/ 同步块（铁律 + 概念表目录 + 分工原则）"
+
+# 从真相源提取的三段内容，拼成同步块；--check 模式只比对不写入
+extract() { # $1=文件 $2=起始标记 $3=结束标记
+  awk -v s="$2" -v e="$3" 'index($0,s){f=1} f&&e&&index($0,e)&&!index($0,s){exit} f{print}' "$1"
+}
+
+CORE_SNIP="$(extract .ai/00-core.md '## 3. 六条铁律' '## 4.')"
+CONCEPT_SNIP="$(extract docs/develop/CONCEPTS.md '## 目录（一句话列' '\037')"   # 到文件尾
+PREF_SNIP="$(extract .ai/90-preferences.md '## 分工原则' '### 技术词使用规则')"
+
+BUILD_BLOCK() {
+  cat <<'EOS'
+<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/develop/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
+
+## 同步块（真相源摘录，会话必读）
+
+EOS
+  printf '%s\n\n' "$CORE_SNIP"
+  printf '%s\n\n' "$PREF_SNIP"
+  printf '%s\n' "$CONCEPT_SNIP"
+  cat <<'EOS'
+<!-- END GENERATED BLOCK -->
+EOS
+}
+
+GEN_LINE_RE='BEGIN GENERATED BLOCK'
+for f in .skills/*/SKILL.md; do
+  [ -f "$f" ] || continue
+  # 删除旧的生成块
+  tmp_new="$(mktemp)"
+  awk -v b="$GEN_LINE_RE" '
+    $0 ~ /<!-- BEGIN GENERATED BLOCK/ {skip=1; next}
+    $0 ~ /<!-- END GENERATED BLOCK/   {skip=0; next}
+    !skip
+  ' "$f" > "$tmp_new"
+  BUILD_BLOCK > "$(mktemp)" # noop 保序
+  { cat "$tmp_new"; BUILD_BLOCK; } > "$f.new"
+  rm -f "$tmp_new"
+  # 压缩多余空行（删块后留下的三连空行）
+  if cmp -s "$f" "$f.new"; then
+    say "✓ $f 同步块已最新"; rm -f "$f.new"
+  else
+    if [ "$MODE" = "--check" ]; then
+      say "✗ $f 同步块需更新"; CHANGED=1; rm -f "$f.new"
+    else
+      mv "$f.new" "$f"; say "→ $f 同步块已重生成"
+    fi
+  fi
+done
+
+# ---------- 5. 软链 ----------
 for link in CLAUDE.md GEMINI.md; do
   if [ -L "$link" ]; then
     say "✓ $link -> $(readlink "$link")"
