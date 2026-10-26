@@ -91,6 +91,11 @@ if [[ "$PHASE" == "P0" || "$PHASE" == "ALL" ]]; then
   [ -f "$DOCS/INDEX.md" ] && ok "$DOCS/INDEX.md 存在" || die "缺 $DOCS/INDEX.md"
 
   # 概念表（启动协议第 5 步要读它；没有它，词义无从校准）
+  # 3.2 修订留痕：.ai/ 文档状态行检查（告警级）
+  for f in .ai/*.md .ai/99-reference/*.md; do
+    [ -f "$f" ] || continue
+    grep -q '^> 状态：' "$f" || warn "$f 缺状态行（00-core 3.2：定稿/暂定/已作废→指向）"
+  done
   CF="$DOCS/CONCEPTS.md"
   if [ -f "$CF" ]; then
     ok "CONCEPTS.md 存在"
@@ -598,6 +603,12 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
         done
         if [ -z "$miss" ]; then
           ok "$hid 七要素齐全"
+          # 铁律七：概念固化检查（告警级，不阻塞）
+          if grep -qE '^[-*][[:space:]]*\*\*新词\*\*' "$hfile"; then
+            ok "$hid 概念固化已申报（新词行存在）"
+          else
+            warn "$hid 缺「新词」行（铁律七 P6 必填：新词+词条状态，无写「无」）"
+          fi
         else
           die "$hid 缺要素：$miss（七要素见 handoff-schema.md）"
         fi

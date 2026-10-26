@@ -93,7 +93,7 @@ alwaysApply: true
 会话开始必须：
 1. 读 AGENTS.md
 2. 读 STATE.md（当前阶段）
-3. 读 .ai/00-core.md（六条铁律 + 分支铁律）与 .ai/90-preferences.md
+3. 读 .ai/00-core.md（七条铁律 + 分支铁律）与 .ai/90-preferences.md
 4. 按当前阶段读 .ai/0X-Pn-*.md
 
 禁止跳过阶段。
@@ -111,7 +111,7 @@ write_if_changed adapters/trae/rules.md <<'EOS'
 ## 会话开始顺序
 1. 读 `AGENTS.md`
 2. 读 `STATE.md`（当前在哪个阶段）
-3. 读 `.ai/00-core.md`（六条铁律 + 分支铁律）与 `.ai/90-preferences.md`
+3. 读 `.ai/00-core.md`（七条铁律 + 分支铁律）与 `.ai/90-preferences.md`
 4. 按当前阶段读 `.ai/0X-Pn-*.md`
 
 ## 硬规则
@@ -133,7 +133,7 @@ write_if_changed adapters/codex/AGENTS.md <<'EOS'
 本项目约定文件位于仓库根目录 `AGENTS.md`。
 
 请先阅读：
-- `AGENTS.md` — 入口与六条铁律 + 分支铁律
+- `AGENTS.md` — 入口与七条铁律 + 分支铁律
 - `STATE.md` — 当前阶段与下一步
 
 再按 `STATE.md` 中的当前阶段，加载 `.ai/0X-Pn-*.md`。
@@ -151,7 +151,7 @@ extract() { # $1=文件 $2=起始标记 $3=结束标记
   awk -v s="$2" -v e="$3" 'index($0,s){f=1} f&&e&&index($0,e)&&!index($0,s){exit} f{print}' "$1"
 }
 
-CORE_SNIP="$(extract .ai/00-core.md '## 3. 六条铁律' '## 4.')"
+CORE_SNIP="$(extract .ai/00-core.md '## 3. 七条铁律' '## 4.')"
 CONCEPT_SNIP="$(extract docs/CONCEPTS.md '## 目录（一句话列' '\037')"   # 到文件尾
 PREF_SNIP="$(extract .ai/90-preferences.md '## 分工原则' '### 技术词使用规则')"
 
