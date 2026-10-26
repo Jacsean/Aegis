@@ -51,7 +51,7 @@ Aegis 是一套**以状态机为骨架、以制品为中心、以门禁为强制
 ### 铁律三之二：任务必须留档
 
 **每个任务结束（合并进 main 前）必须写一条开发事件记录**，
-记在 `docs/develop/handoff/H-<编号>-<短名>.md`，并在 `docs/develop/HANDOFF.md` 索引加一行。
+记在 `dev/handoff/H-<编号>-<短名>.md`，并在 `dev/HANDOFF.md` 索引加一行。
 
 七要素：时间 / 谁 / 事件 / 为什么这样处理 / 怎么处理的 / **试过什么（成没成）** / 下一步等谁。
 
@@ -130,7 +130,7 @@ main/master  ← 始终保持可运行
 ② 读 STATE.md             （30 行快照：当前在哪、有什么、下一步）
 ③ 读本文件 00-core.md     （六条铁律）
 ④ 读 90-preferences.md    （用户偏好，始终生效）
-⑤ 读 docs/develop/CONCEPTS.md 的「目录」节（约 200 tokens，只读一句话列）
+⑤ 读 docs/CONCEPTS.md 的「目录」节（约 200 tokens，只读一句话列）
 ⑥ 按 STATE.md 的当前阶段，加载 .ai/0X-Pn-*.md
 ⑦ 声明："当前阶段 Pn，本次目标 X，将加载文件 Y"
 ```

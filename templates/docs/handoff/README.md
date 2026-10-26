@@ -2,7 +2,7 @@
 
 每条记录一个文件：`H-<4位编号>-<短名>.md`
 
-索引在上一级 `docs/develop/HANDOFF.md`（一行一条）。
+索引在上一级 `dev/HANDOFF.md`（一行一条）。
 
 七要素与规则见 `.ai/99-reference/handoff-schema.md`。
 

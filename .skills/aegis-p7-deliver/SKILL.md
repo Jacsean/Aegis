@@ -133,7 +133,7 @@ make branch-finish NAME=<任务短名>
 
 深层含义（改哪句、给谁看、为什么改）恰恰最容易被误读。
 唯一例外：用户明确说"不用讨论"，登记豁免后直接执行。
-<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/develop/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
+<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
 
 ## 同步块（真相源摘录，会话必读）
 
@@ -160,7 +160,7 @@ make branch-finish NAME=<任务短名>
 ### 铁律三之二：任务必须留档
 
 **每个任务结束（合并进 main 前）必须写一条开发事件记录**，
-记在 `docs/develop/handoff/H-<编号>-<短名>.md`，并在 `docs/develop/HANDOFF.md` 索引加一行。
+记在 `dev/handoff/H-<编号>-<短名>.md`，并在 `dev/HANDOFF.md` 索引加一行。
 
 七要素：时间 / 谁 / 事件 / 为什么这样处理 / 怎么处理的 / **试过什么（成没成）** / 下一步等谁。
 

@@ -153,7 +153,7 @@ done
 
 ```bash
 # 1. 记录层：一条完整记录
-docs/develop/handoff/H-<编号>-<短名>.md
+dev/handoff/H-<编号>-<短名>.md
 ```
 
 ```markdown
@@ -175,7 +175,7 @@ docs/develop/handoff/H-<编号>-<短名>.md
 
 ```bash
 # 2. 索引层：一行
-docs/develop/HANDOFF.md
+dev/HANDOFF.md
 ```
 
 ```markdown
@@ -197,7 +197,7 @@ docs/develop/HANDOFF.md
 
 | 目录 | 放什么 | 读者 |
 |---|---|---|
-| `docs/develop/` | 开发过程文档：align / prd / design / adr / incidents / reviews / handoff | 开发时的人和 agent |
+| `dev/` | 开发过程文档：align / prd / design / adr / incidents / reviews / handoff | 开发时的人和 agent |
 | `docs/public/` | 交付文档：给项目使用者看的说明、验收材料 | 项目使用者 |
 
 **判据只有一条：这份文档是「做的时候用的」还是「交出去给人看的」。**
@@ -250,8 +250,8 @@ git commit -m "chore(archive): v1.3.0 归档 — STATE / CHANGELOG / INDEX / tag
 | 制品 | 路径 | 要求 |
 |---|---|---|
 | 状态快照 | `STATE.md` | 已整体重写，≤40 行，下一步可执行 |
-| 事件索引 | `docs/develop/HANDOFF.md` | 一行一条，表头齐全，与记录文件一一对应 |
-| 事件记录 | `docs/develop/handoff/H-*.md` | 七要素齐全，「试过什么」非空，上下游链接非空 |
+| 事件索引 | `dev/HANDOFF.md` | 一行一条，表头齐全，与记录文件一一对应 |
+| 事件记录 | `dev/handoff/H-*.md` | 七要素齐全，「试过什么」非空，上下游链接非空 |
 | 变更日志 | `CHANGELOG.md` | 本版本条目含变更类型 + 可追溯编号 |
 | 文档索引 | `docs/INDEX.md` | 所有 docs/ 下文件已登记 |
 | 版本标签 | git tag | `v<X.Y.Z>`，与 CHANGELOG 一致 |

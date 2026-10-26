@@ -1,6 +1,6 @@
 # HANDOFF · 开发事件索引（Aegis 自身）
 
-> 这是 Aegis 自己的开发事件索引，`docs/develop/HANDOFF.md` 的实物样本。
+> 这是 Aegis 自己的开发事件索引，`dev/HANDOFF.md` 的实物样本。
 > **一行一条，时间倒序。** 详情点链接。
 
 | 编号 | 时间 | 谁 | 事件 | 结果 | 链接 |

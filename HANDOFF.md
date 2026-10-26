@@ -1,11 +1,11 @@
 # 续接点（HANDOFF）
 
 > ▶ **暂停已解除（2026-10-21）。** 概念表 16 词定案，已接入启动协议与门禁（v1.4.0）。
-> 暂停起因见 `docs/develop/handoff/H-0006`，解除与接线见 `H-0015`。
+> 暂停起因见 `dev/handoff/H-0006`，解除与接线见 `H-0015`。
 
 > ⚠️ **本文件定位已变（2026-10-21）**：它是「当前任务实时状态」，**不承担历史检索**。
-> 历史检索请查 `docs/develop/HANDOFF.md`（开发事件索引）+ `docs/develop/handoff/`。
-> 原因见 `docs/develop/handoff/H-0002-一次性HANDOFF.md`。
+> 历史检索请查 `dev/HANDOFF.md`（开发事件索引）+ `dev/handoff/`。
+> 原因见 `dev/handoff/H-0002-一次性HANDOFF.md`。
 
 > 用途：**下次开工先读这一份，不用回头翻对话。**
 > 更新规则：每次停止工作时更新本文件最后一节，然后提交。
@@ -69,7 +69,7 @@ AEGIS_SELF=1 bash scripts/gate.sh P0    # 应 PASS
 
 **解决**：任务做完三个月后，没人说得清「当时为什么这么做、试过什么、为什么没做成」。
 
-**两层**：`docs/develop/HANDOFF.md`（一行一条索引）+ `docs/develop/handoff/H-*.md`（七要素记录）。
+**两层**：`dev/HANDOFF.md`（一行一条索引）+ `dev/handoff/H-*.md`（七要素记录）。
 
 **七要素**：时间 / 谁 / 事件 / 为什么这样处理 / 怎么处理的 / **试过什么（成没成）** / **下一步等谁**。
 后两项来自事故交接模板，是最容易漏、也最省时间的两项。

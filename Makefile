@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PY    := .venv/bin/python
 PIP   := .venv/bin/pip
 
-.PHONY: help setup gate status sync check-sync phase sign next demo clean branch br-status br-check branch-finish
+.PHONY: help setup gate status sync check-sync deliver phase sign next demo clean branch br-status br-check branch-finish
 
 help:
 	@echo "Aegis 常用命令"
@@ -26,6 +26,7 @@ help:
 	@echo "  make next \"a|b\"       更新下一步"
 	@echo "  make sync             同步 .ai/ 派生物（.skills/ + adapters/）"
 	@echo "  make check-sync       只检查是否需同步"
+	@echo "  make deliver V=1.6.0  打使用者维度交付包（剔除 dev/）"
 	@echo "  make demo             打开第一个 HTML demo"
 	@echo ""
 
@@ -83,6 +84,9 @@ sync:
 
 check-sync:
 	@bash scripts/sync.sh --check
+
+deliver:
+	@bash scripts/deliver.sh $(V)
 
 # ---------- 其他 ----------
 demo:

@@ -4,6 +4,20 @@
 
 ---
 
+## [1.6.0] - 2026-10-21
+
+### 新增
+
+- 产物两维度分离（H-0019）：**设计者维度**收进 `dev/`（handoff 记录、HANDOFF 索引、archive 归档），交付/安装时剔除；**使用者维度** = 其余全部（根目录 + docs/ + .ai/ + .skills/ + adapters/ + scripts/ + templates/ + examples/）；重叠文件一律归使用者方
+- `scripts/deliver.sh <版本>`：克隆（保 git 历史+tag 回退点）→ 剔除 `dev/` → 使用者维度完整性自检 → 打包；Makefile 加 `make deliver V=x.y.z`
+
+### 变更
+
+- **概念表搬家**：`docs/develop/CONCEPTS.md` → `docs/CONCEPTS.md`（启动协议、门禁、schema 等引用路径同步更新）
+- 已知限制：交付包内 `.git` 历史对象仍含 dev/ 文件（为保留 tag 回退点）；工作树不出现
+
+---
+
 ## [1.5.0] - 2026-10-21
 
 ### 新增
@@ -44,7 +58,7 @@
 
 ### 新增
 
-- `AGENTS.md` 启动协议第 5 步：读 `docs/develop/CONCEPTS.md` 的「目录」一节（约 200 tokens）。
+- `AGENTS.md` 启动协议第 5 步：读 `docs/CONCEPTS.md` 的「目录」一节（约 200 tokens）。
   不读它，下一轮会话就会把「地点」重新理解成「文件存在哪」——这是本轮反复出错的直接原因
 - `gate.sh P0`：`CONCEPTS.md` 不存在、或缺「目录」节、或目录为空 → FAIL
 - `.ai/99-reference/handoff-schema.md` 顶部声明：本文件的词，含义以概念表为准
@@ -88,8 +102,8 @@
 
 ### 暂停期间做了什么
 
-- `docs/develop/concepts/CONCEPTS.md`：全局概念表骨架（五层计划 + 条目规则）
-- `docs/develop/handoff/H-0006`：暂停决定、理由、试过什么
+- `dev/concepts/CONCEPTS.md`：全局概念表骨架（五层计划 + 条目规则）
+- `dev/handoff/H-0006`：暂停决定、理由、试过什么
 - `STATE.md` / `HANDOFF.md`：暂停标记 + 恢复条件
 - **未改任何现有规范**（`.ai/`、`templates/`、`scripts/`、`AGENTS.md` 一字未动）
 
@@ -136,8 +150,8 @@
 ### 新增
 
 **两层结构（索引 + 记录）**
-- `docs/develop/HANDOFF.md`：一行一条，时间倒序，可 grep
-- `docs/develop/handoff/H-<编号>-<短名>.md`：七要素完整记录
+- `dev/HANDOFF.md`：一行一条，时间倒序，可 grep
+- `dev/handoff/H-<编号>-<短名>.md`：七要素完整记录
 - 两层而非一层：纯流水账单条太浅、跨条太散；纯目录树一件事只能放一个位置
 
 **七要素（完整性判据，取代「写几行」）**
@@ -177,7 +191,7 @@
 
 - `.ai/00-core.md`：新增铁律三之二
 - `.ai/07-P6-archive.md`：新增 4.5（写开发事件记录）、4.6（docs 分层）；必备制品加两行
-- `AGENTS.md`：制品位置表加 `docs/develop/`、`docs/public/`
+- `AGENTS.md`：制品位置表加 `dev/`、`docs/public/`
 - `.ai/99-reference/` 从 7 份变 8 份（新增 `handoff-schema.md`）
 - `templates/docs/` 新增 `HANDOFF-index.md`、`handoff/README.md`
 
