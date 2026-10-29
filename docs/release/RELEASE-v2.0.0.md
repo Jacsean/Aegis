@@ -1,12 +1,12 @@
 # RELEASE · v2.0.0（八阶段落地）
 
-## 一、这是什么
+## 一、交付了什么
 Aegis 流程骨架切换：九阶段（P0/P0.5/P1~P7）→ 八阶段（S1 立题→S2 对齐→S3 收敛→S4 展开→S5 找破绽→S6 实现→S7 固化→S8 交付）+ 场景决断入口分诊。
 
 ## 二、怎么用
 解压后读 `AGENTS.md` → 启动协议 → 场景决断（`.ai/09`）→ 按 `STATE.md` 阶段加载 `.ai/1X-Sn-*.md`；门禁 `bash scripts/gate.sh S1~S8` 或 `make gate-s1`…`gate-s8`。
 
-## 三、验证记录
+## 三、验证证据
 - 3 场景推演走通（dev/eight-stage-plan/simulation-findings.md）
 - 仓库侧门禁 S1~S6 PASS；S7 待合并打 tag；S8 待本签收
 - U1~U12 经用户定稿；M1~M11 移植有出处

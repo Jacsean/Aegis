@@ -22,6 +22,8 @@
 | `PATH-MAP.md` | 分离前后路径映射（agent 回溯 git 历史用，用户不看）| 索引 |
 | `align/ALIGN-eight-stage*` | 八阶段落地任务的两轮对齐与汇总留档 | **真相源** |
 | `align/CHECKLIST-eight-stage-R1/R2` | 两轮清单（选项式，含未覆盖方向）| 留档 |
+| `prd.md` | 八阶段落地任务的范围声明 + 失败定义 | **真相源** |
+| `design/DESIGN.md` | 八阶段落地的模块划分与取舍 | **真相源** |
 
 ## dev/ · 设计者维度（开发过程档案，交付不包含）
 
