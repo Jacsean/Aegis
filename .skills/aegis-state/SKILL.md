@@ -37,7 +37,7 @@ description: Use when starting any session in this repository, before any code o
 当前阶段：S4 设计
 当前迭代：v1.2 用户登录
 本次目标：<用户要什么>
-已加载：00-core, 90-preferences, 03-S4-design
+已加载：00-core, 90-preferences, 13-S4-expand
 ```
 
 ### 3. 判断请求是否越界

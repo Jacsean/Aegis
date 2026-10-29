@@ -190,7 +190,7 @@ main/master  ← 始终保持可运行
 | 阶段 | 名称 | 必备制品 | 用户签字 |
 |---|---|---|---|
 | 场景决断 | 入口分诊 | 场景声明（点名 4 类之一 + 理由） | ❌ |
-| S1 立题 | 项目前提 | `docs/prd.md` 的前提清单节（假设显式化） | ❌ |
+| S1 立题 | 项目前提 | `docs/develop/prereq/PREREQ-<任务短名>.md`（假设显式化，独立制品；S2 出口顺带确认） | ❌ |
 | **S2 对齐** | 意图校准 | `docs/align/CHECKLIST-*-R1/R2.md`、`ALIGN-*-R1/R2.md`、`ALIGN-*.md` | ✅ **强制（全流程唯一强制签字点）** |
 | S3 收敛 | 划边界 | `docs/prd.md`（范围声明/失败定义/功能/非目标/成功判据/风险 六节） | ✅ 与 S2 一致时自动继承 |
 | S4 展开 | 摊方案 | `docs/design/DESIGN.md`、`STYLE.md`、`demo/*.html`、`adr/*.md` | ✅ **强制（看 demo 后）** |
