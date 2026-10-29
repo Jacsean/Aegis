@@ -11,6 +11,7 @@
 | `docs/develop/handoff/H-*.md` | `dev/handoff/H-*.md` | 设计者 | 同上 |
 | `archive/` | `dev/archive/` | 设计者 | 同上 |
 | `docs/develop/`（其余内容） | `dev/` | 设计者 | 均不在交付包内 |
+| `.ai/01~08`（九阶段阶段文件） | `dev/legacy/`（v2.0.0 起） | 设计者 | 九阶段已作废；阶段卡+附录在 `.ai/09~17`；git 历史可回溯 |
 
 ## 三个口径
 
