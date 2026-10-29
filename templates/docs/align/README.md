@@ -1,7 +1,7 @@
 # docs/align — 意图校准记录
 
-> 本目录存放 P0.5 阶段的全部讨论产物。
-> **它是 P1 写 PRD 的唯一依据。**
+> 本目录存放 S2 阶段的全部讨论产物。
+> **它是 S3 写 PRD 的唯一依据。**
 
 ---
 
@@ -26,7 +26,7 @@
 ② 写 CHECKLIST--R1 → 用户确认清单 → 逐条讨论 → 写 ALIGN-…-R1
 ③ 写 CHECKLIST--R2 → 用户确认清单 → 逐条讨论 → 写 ALIGN-…-R2
 ④ 写 ALIGN-<任务>.md 汇总 → 用户签字
-⑤ make gate P05   →  PASS 才可进 P1
+⑤ make gate S2   →  PASS 才可进 S3
 ```
 
 ---

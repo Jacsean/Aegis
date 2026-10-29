@@ -70,37 +70,33 @@ EOF
 
   phase)
     NEW="${2:-}"
-    [[ "$NEW" =~ ^P(0\.5|05|[0-7])$ ]] || { echo "用法: bash scripts/state.sh phase P0|P05|P1..P7"; exit 1; }
-    [ "$NEW" = "P0.5" ] && NEW="P05"
+    [[ "$NEW" =~ ^S[1-8]$ ]] || { echo "用法: bash scripts/state.sh phase S1..S8"; exit 1; }
     [ -f "$STATE" ] || { echo "STATE.md 不存在"; exit 1; }
 
     CUR="$(grep -oE '当前阶段：\*{0,2}[SP][0-9.]+' "$STATE" | grep -oE '[SP][0-9.]+' | head -1)"
-    CUR="${CUR:-P0}"
-    [ "$CUR" = "P0.5" ] && CUR="P05"
+    CUR="${CUR:-S1}"
 
     ord() {
       case "$1" in
-        P0) echo 0;; P05) echo 1;; P1) echo 2;; P2) echo 3;; P3) echo 4;;
+        S1) echo 1;; S2) echo 2;; S3) echo 3;; S4) echo 4;;
+        S5) echo 5;; S6) echo 6;; S7) echo 7;; S8) echo 8;;
+        # 兼容旧 STATE 中残留的旧编号（只在读取时归一，不再写入）
+        P0|P05) echo 1;; P1) echo 2;; P2) echo 3;; P3) echo 4;;
         P4) echo 5;; P5) echo 6;; P6) echo 7;; P7) echo 8;; *) echo 99;;
       esac
     }
     CUR_N=$(ord "$CUR"); NEW_N=$(ord "$NEW")
 
     if [ "${FORCE:-0}" != "1" ]; then
-      # (a) 向前跳多级 → 拒绝
       if [ "$NEW_N" -gt $((CUR_N + 1)) ]; then
         echo "✗ 拒绝跳步：当前 $CUR，不能直接跳到 $NEW。"
         echo "  铁律一：阶段不可跳。必须先逐级通过 ${CUR} 的出口门禁。"
         echo "  确需豁免：FORCE=1 bash scripts/state.sh phase $NEW"
         exit 1
       fi
-
-      # (b) 回退 → 允许
       if [ "$NEW_N" -lt "$CUR_N" ]; then
         echo "↩ 回退到 $NEW（这是正常流程，不是失败）"
       fi
-
-      # (c) 前进一级 → 检查当前阶段门禁
       if [ "$NEW_N" -eq $((CUR_N + 1)) ]; then
         echo "→ $CUR → $NEW，检查 $CUR 出口门禁..."
         if ! bash scripts/gate.sh "$CUR" > /tmp/aegis_gate.$$ 2>&1; then
@@ -120,7 +116,6 @@ EOF
     fi
 
     DISPLAY="$NEW"
-    [ "$NEW" = "P05" ] && DISPLAY="P0.5"
     python3 - "$STATE" "$DISPLAY" <<'PY'
 import sys, re, pathlib
 p, new = pathlib.Path(sys.argv[1]), sys.argv[2]

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Aegis 阶段出口门禁检查
-# 用法: bash scripts/gate.sh [P0|P1|P2|...]
+# 用法: bash scripts/gate.sh [S1|S2|...|S8|ALL]
 #       bash scripts/gate.sh          # 自动读 STATE.md 的当前阶段
 
 set -uo pipefail
@@ -50,13 +50,13 @@ head_() { printf "\n${YELLOW}[%s]${NC} %s\n" "$1" "$2"; }
 PHASE="${1:-}"
 if [ -z "$PHASE" ]; then
   if [ -f STATE.md ]; then
-    PHASE="$(grep -oE '当前阶段：\*{0,2}P[0-9.]+' STATE.md | grep -oE 'P[0-9.]+' | head -1)"
+    PHASE="$(grep -oE '当前阶段：\*{0,2}[SP][0-9.]+' STATE.md | grep -oE '[SP][0-9.]+' | head -1)"
   fi
-  [ -z "$PHASE" ] && PHASE="P0"
+  [ -z "$PHASE" ] && PHASE="S1"
 fi
-# 归一化：P0.5 → P05
-[[ "$PHASE" == "P0.5" ]] && PHASE="P05"
-# 八阶段别名（v2.0.0，H-0022）：S 阶段映射到既有检查块；S5 同时跑 P3+P5
+# 归一化：S5 之外的 S<n> 直接走别名；不再保留旧编号归一化（v2.0.0 起旧编号只在 git 历史）
+# S 阶段 → 内部检查块（对外只用 S；旧名仅内部实现细节，不对使用者暴露）
+# S5 同时跑「设计检查点 + 代码检查点」两块
 case "$PHASE" in
   S1) PHASE="P0" ;;
   S2) PHASE="P05" ;;
@@ -179,9 +179,9 @@ if [ "$SELF_RELEASE" -eq 1 ]; then
   done
 fi
 
-# ---------- P0.5 意图校准 ----------
+# ---------- S2 对齐（意图校准）----------
 if [[ "$PHASE" == "P05" || "$PHASE" == "ALL" ]]; then
-  head_ P05 "意图校准：两轮讨论 + checklist + 小白语言"
+  head_ P05 "S2 对齐：两轮讨论 + checklist + 小白语言"
 
   ALIGN_DIR="$DOCS/align"
   # 任务短名来源，按可信度排序：

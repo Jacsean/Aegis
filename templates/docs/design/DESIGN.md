@@ -5,7 +5,7 @@
 - 上游：`docs/prd.md`
 - 下游：`docs/design/STYLE.md`、`docs/design/demo/`、`docs/adr/`
 
-> 七节缺一不可。缺任何一节 → P2 门禁不通过。
+> 七节缺一不可。缺任何一节 → S4 门禁不通过。
 
 ---
 
@@ -78,7 +78,7 @@ def create_task(title: str, priority: int = 0) -> Task:
 
 ## 6. 错误路径
 
-> 不只写 happy path。这张表是 P3 评审第 6 项的依据。
+> 不只写 happy path。这张表是 S5 评审第 6 项的依据。
 
 | 场景 | 处理 | 用户可见反馈 |
 |---|---|---|

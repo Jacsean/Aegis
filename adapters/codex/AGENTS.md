@@ -6,6 +6,6 @@
 - `AGENTS.md` — 入口与七条铁律 + 分支铁律
 - `STATE.md` — 当前阶段与下一步
 
-再按 `STATE.md` 中的当前阶段，加载 `.ai/0X-Pn-*.md`。
+再按 `STATE.md` 中的当前阶段，加载 `.ai/1X-Sn-*.md`。
 
 门禁：`bash scripts/gate.sh`
