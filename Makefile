@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PY    := .venv/bin/python
 PIP   := .venv/bin/pip
 
-.PHONY: help setup gate status sync check-sync deliver phase sign next demo clean branch br-status br-check branch-finish
+.PHONY: help setup gate status sync check-sync deliver gate-s1 gate-s2 gate-s3 gate-s4 gate-s5 gate-s6 gate-s7 gate-s8 phase sign next demo clean branch br-status br-check branch-finish
 
 help:
 	@echo "Aegis 常用命令"
@@ -101,3 +101,13 @@ clean:
 	@rm -rf .tmp __pycache__ .pytest_cache
 	@find . -name '*.pyc' -not -path './.venv/*' -delete
 	@echo "已清理临时文件"
+
+# ---------- 八阶段门禁别名（v2.0.0） ----------
+gate-s1: ; @bash scripts/gate.sh S1
+gate-s2: ; @bash scripts/gate.sh S2
+gate-s3: ; @bash scripts/gate.sh S3
+gate-s4: ; @bash scripts/gate.sh S4
+gate-s5: ; @bash scripts/gate.sh S5
+gate-s6: ; @bash scripts/gate.sh S6
+gate-s7: ; @bash scripts/gate.sh S7
+gate-s8: ; @bash scripts/gate.sh S8

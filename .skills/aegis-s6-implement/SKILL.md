@@ -1,86 +1,91 @@
 ---
-name: aegis-p3-validate
-description: Use when design artifacts exist and implementation has not started, or when about to write code without having reviewed the design against requirements and past incidents
+name: aegis-s6-implement
+description: Use when writing or changing code after design approval, when a bug or unexpected behavior is being investigated, or when a fix took several attempts
 ---
 
-# Aegis P3 Validate
+# Aegis P4 Implement
 
 ## Overview
 
-设计做完，**先自查再实现**。
+按已通过的设计写代码，**边做边把踩过的坑记下来**。
 
-核心原则：**在纸上改，成本是改代码的 1/10。**
-
-本阶段只审查与判定，不改设计内容（发现问题就退回 P2 修）。
+核心原则：**没看到测试失败，就不知道测试在测什么。**
 
 ## When to Use
 
-- DESIGN.md、demo、ADR 已完成，准备开始写代码
-- 用户催"直接开始做"（此时更应先自查）
+- 设计已通过 P3，开始写代码
+- 修 bug、调试异常行为
+- 重构既有代码
 
 ## 动作
 
-### 1. 逐条过 12 项清单
+### 1. 环境确认
 
-全文见 `.ai/99-reference/design-review-checklist.md`。
+Python 一律 `.venv/bin/python`，不用系统 Python，不依赖 activate。
 
-**每项必须写三行**，不能只打勾：
-- 查了什么
-- 结论
-- 发现问题怎么处理
+### 2. TDD 循环
 
-### 2. 意图一致性复核（最容易发现问题的一步）
+```
+写失败测试 → 真的看到它失败 → 写最小实现 → 看到它通过 → 重构
+```
 
-对照 `docs/align/ALIGN-<任务>.md`：
+每个功能点：1 正常用例 + 1 边界用例。修 bug 先写能复现的失败测试。
 
-| 对照 | 检查 |
-|---|---|
-| 第 4 节「这次做什么」 | DESIGN 全覆盖了吗 |
-| 第 5 节「这次不做什么」 | 有没有偷偷做了 |
-| 第 5 节「绝对不要」 | 有没有踩红线 |
-| 第 6 节「什么算搞砸」 | 这个设计会导致那些情形吗 |
+### 3. 前端以 demo 为准
 
-### 3. 历史缺陷回灌
+样式从 `docs/design/STYLE.md` 取，不临时决定。
+5 种状态（正常/空/加载/错误/交互反馈）必须全实现。
 
-打开 `docs/incidents/`，逐条问「这个设计会不会让它再发生」，做成表：
+### 4. incident 强制记录
 
-| INC | 现象 | 会再犯 | 依据 |
-|---|---|---|---|
+满足任一条件必须建 `docs/incidents/INC-xxx.md`：
+- 调试超 15 分钟
+- 试错 2 次以上
+- 发现设计没考虑到
+- 用户指出的问题
+- 环境导致非预期行为
 
-「会再犯」的必须当场补设计或登记为已知限制。
+**「预防」一节必填**（加测试 / 加 gate 检查 / 改规范 / 补设计），没写不算闭环。
 
-### 4. 写 `docs/design/REVIEW-DESIGN.md`
+### 5. 偏离设计要回写
 
-### 5. 给结论（三选一）
-
-- **通过** — 12 项全绿
-- **修正后通过** — 1-2 项小问题，现场修完
-- **退回 P2** — 3 项以上，或涉及架构/意图偏差
+不要偷偷改。在 DESIGN.md 对应节标注「实现时调整为…，原因…」。
+涉及架构 → 加 ADR；涉及范围 → 回 P1 或 P0.5。
 
 ## 完成标准
 
-- [ ] REVIEW-DESIGN.md 勾选条目 ≥ 12，每项有结论
-- [ ] 有「意图一致性复核」一节，对照了 ALIGN 四节
-- [ ] 有「历史缺陷回灌」一节
-- [ ] 结论明确
-- [ ] `bash scripts/gate.sh P3` PASS
+- [ ] 测试全绿且**贴出输出**
+- [ ] 无 TODO 遗留（或已登记）
+- [ ] 无调试残留
+- [ ] 前端 5 态齐全
+- [ ] 偏离处已回写 DESIGN.md
+- [ ] `bash scripts/gate.sh P4` PASS
+
+## 必须停下来问的情况
+
+- 设计不可行要改架构
+- 需要引入新依赖
+- 需求有歧义，两种实现都说得通
+- 想删除或重写已有代码
 
 ## Common Mistakes
 
 | 错误 | 纠正 |
 |---|---|
-| 只打勾不写结论 | 等于没查 |
-| 只查技术，不查意图 | 技术全对但做的不是用户要的 |
-| 不回灌历史故障 | 老毛病必然复发 |
-| 发现问题但"先做再说" | 返工成本 ×10 |
-| "已经写了很多，不忍推翻" | 沉没成本，已写的不是保留理由 |
+| 没看到测试失败就写实现 | 必须真的看到 RED |
+| 调试完不记 incident | 超 15 分钟就记 |
+| incident 不写预防 | 只是日记，无累积 |
+| 偷偷改设计 | 文档与代码背离 |
+| 前端只做正常态 | 5 态全做 |
+| 一个提交改十个文件 | 小步提交 |
 
 ## Red Flags — STOP
 
-- "设计很清晰，不用审" → 清晰是感觉，清单是证据
-- "等实现完一起测" → 那时改的成本是现在十倍
-- "这个问题很小，先跳过" → 小问题在实现时会被放大
-- "用户催得急" → 越急越要先确定方向没跑偏
+- "这个太简单不用写测试" → 简单代码一样会坏
+- "我手动试过了" → 手动试过不等于有测试
+- "先写完再补测试" → 顺序反了，测试会写成"验证我写的代码"而不是"验证应该做什么"
+- "这个小问题不值得记" → 同一坑第三次踩时就不这么想了
+- "设计有问题但我先绕着写" → 绕的代价后期更大
 <!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
 
 ## 同步块（真相源摘录，会话必读）

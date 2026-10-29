@@ -39,6 +39,8 @@ GREEN='\033[0;32m'; RED='\033[0;31m'; YELLOW='\033[0;33m'; NC='\033[0m'
 FAIL=0
 WARN=0
 
+IN_PACKAGE=0
+[ ! -d "$ROOT/dev" ] && IN_PACKAGE=1   # 交付包内：设计者维度文件被剔除
 ok()   { printf "  ${GREEN}✓${NC} %s\n" "$1"; }
 die()  { printf "  ${RED}✗${NC} %s\n" "$1"; FAIL=$((FAIL+1)); }
 warn() { printf "  ${YELLOW}!${NC} %s\n" "$1"; WARN=$((WARN+1)); }
@@ -54,6 +56,17 @@ if [ -z "$PHASE" ]; then
 fi
 # 归一化：P0.5 → P05
 [[ "$PHASE" == "P0.5" ]] && PHASE="P05"
+# 八阶段别名（v2.0.0，H-0022）：S 阶段映射到既有检查块；S5 同时跑 P3+P5
+case "$PHASE" in
+  S1) PHASE="P0" ;;
+  S2) PHASE="P05" ;;
+  S3) PHASE="P1" ;;
+  S4) PHASE="P2" ;;
+  S5) PHASE="P3+P5" ;;
+  S6) PHASE="P4" ;;
+  S7) PHASE="P6" ;;
+  S8) PHASE="P7" ;;
+esac
 
 echo "==============================================="
 if [ "$SELF_RELEASE" -eq 1 ]; then
@@ -129,8 +142,8 @@ if [ "$SELF_RELEASE" -eq 1 ]; then
 
   # 阶段规范 9 份
   miss_spec=0
-  for f in 00-core 01-P0-init 015-P05-align 02-P1-ideate 03-P2-design 04-P3-validate \
-           05-P4-implement 06-P5-verify 07-P6-archive 08-P7-deliver 90-preferences; do
+  for f in 00-core 09-scene-triage 10-S1-title 11-S2-align 12-S3-converge 13-S4-expand \
+           14-S5-falsify 15-S6-implement 16-S7-solidify 17-S8-deliver 90-preferences; do
     [ -f ".ai/$f.md" ] || { die "缺 .ai/$f.md"; miss_spec=$((miss_spec+1)); }
   done
   [ "$miss_spec" -eq 0 ] && ok ".ai/ 阶段规范齐全（11 份）"
@@ -658,7 +671,7 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
       warn "HANDOFF 索引里还没有任何记录"
     fi
   else
-    warn "缺 $HF —— 本任务结束时有没有写开发事件记录？"
+    [ "$IN_PACKAGE" -eq 1 ] || warn "缺 $HF —— 本任务结束时有没有写开发事件记录？"
   fi
 
   # INDEX 完整性

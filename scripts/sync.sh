@@ -16,14 +16,14 @@ echo "[1/4] 校验 .skills/ 完整性"
 
 EXPECTED_SKILLS=(
   "aegis-state"
-  "aegis-align"
-  "aegis-p1-ideate"
-  "aegis-p2-design"
-  "aegis-p3-validate"
-  "aegis-p4-implement"
-  "aegis-p5-verify"
-  "aegis-p6-archive"
-  "aegis-p7-deliver"
+  "aegis-s2-align"
+  "aegis-s3-converge"
+  "aegis-s4-expand"
+  "aegis-s5-falsify"
+  "aegis-s6-implement"
+  "aegis-s5-recheck"
+  "aegis-s7-solidify"
+  "aegis-s8-deliver"
 )
 for s in "${EXPECTED_SKILLS[@]}"; do
   if [ -f ".skills/$s/SKILL.md" ]; then say "✓ .skills/$s"; else say "✗ 缺 .skills/$s/SKILL.md"; CHANGED=1; fi
