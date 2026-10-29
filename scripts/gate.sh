@@ -38,7 +38,7 @@ if [ "$SELF_RELEASE" -eq 1 ]; then CODE="scripts"; else CODE="src"; fi
 # 交付包内：设计者维度文件（dev/）被剔除。此后的「项目内容」检查（S1~S8）一律跳过——
 # 交付包是"还能不能装进新项目"的骨架，不是某个具体项目的制品；跑项目门禁只会刷一堆缺项噪音。
 IN_PACKAGE=0
-[ ! -d "$ROOT/dev" ] && IN_PACKAGE=1
+[ -f "$ROOT/.aegis-package" ] && IN_PACKAGE=1   # deliver.sh 出包时写入标记；交付包只跑框架自检
 
 GREEN='\033[0;32m'; RED='\033[0;31m'; YELLOW='\033[0;33m'; NC='\033[0m'
 FAIL=0

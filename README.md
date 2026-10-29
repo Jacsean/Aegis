@@ -39,7 +39,7 @@ Aegis 针对 8 类具体失控现象设计：
 
 ---
 
-## 三、六条铁律 + 分支铁律
+## 三、七条铁律 + 分支铁律
 
 1. **阶段不可跳** — 未过出口门禁，禁止进下一阶段
 2. **设计前必须可视** — 前端没出 HTML demo 并确认，禁止写业务代码
@@ -196,7 +196,7 @@ make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
 ```
 aegis/
 ├── VERSION                   版本号（语义化版本，唯一来源）
-├── AGENTS.md                 入口（会话启动协议 + 六条铁律 + 指针）
+├── AGENTS.md                 入口（会话启动协议 + 七条铁律 + 指针）
 ├── STATE.md                  状态快照模板（≤40 行，新会话必读）
 ├── CHANGELOG.md              变更日志（语义化版本）
 ├── CLAUDE.md -> AGENTS.md    软链，兼容 Claude Code

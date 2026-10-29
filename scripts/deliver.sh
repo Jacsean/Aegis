@@ -19,6 +19,7 @@ git -C "$TMP/$NAME" checkout --quiet "v$VER" 2>/dev/null || true
 
 # 2. 剔除设计者维度（使用者的工作树里不应出现 dev/）
 rm -rf "$TMP/$NAME/dev"
+touch "$TMP/$NAME/.aegis-package"   # 交付包标记：gate.sh 见此只跑框架自检
 say="已剔除 dev/（设计者维度）"; echo "  → $say"
 
 # 3. 验收自检：使用者维度完整性
