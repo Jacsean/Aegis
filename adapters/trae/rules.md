@@ -5,7 +5,7 @@
 ## 会话开始顺序
 1. 读 `AGENTS.md`
 2. 读 `STATE.md`（当前在哪个阶段）
-3. 读 `.ai/00-core.md`（六条铁律 + 分支铁律）与 `.ai/90-preferences.md`
+3. 读 `.ai/00-core.md`（七条铁律 + 分支铁律）与 `.ai/90-preferences.md`
 4. 按当前阶段读 `.ai/0X-Pn-*.md`
 
 ## 硬规则

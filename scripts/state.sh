@@ -74,7 +74,7 @@ EOF
     [ "$NEW" = "P0.5" ] && NEW="P05"
     [ -f "$STATE" ] || { echo "STATE.md 不存在"; exit 1; }
 
-    CUR="$(grep -oE '当前阶段：\*{0,2}P[0-9.]+' "$STATE" | grep -oE 'P[0-9.]+' | head -1)"
+    CUR="$(grep -oE '当前阶段：\*{0,2}[SP][0-9.]+' "$STATE" | grep -oE '[SP][0-9.]+' | head -1)"
     CUR="${CUR:-P0}"
     [ "$CUR" = "P0.5" ] && CUR="P05"
 
@@ -134,7 +134,7 @@ def repl(m):
         head = '**' if line.startswith('**') else '- **'
         return f"{head}当前阶段：{new}**"
     return f"当前阶段：{new}"
-t = re.sub(r'(?:- )?\*{0,2}当前阶段：\*{0,2}P[0-9.]+[^\n]*', repl, t, count=1)
+t = re.sub(r'(?:- )?\*{0,2}当前阶段：\*{0,2}[SP][0-9.]+[^\n]*', repl, t, count=1)
 p.write_text(t, encoding='utf-8')
 PY
     echo "已切换阶段 → $DISPLAY（记得更新「下一步」）"

@@ -10,18 +10,21 @@
 
 1. 读 **本文件**
 2. 读 **`STATE.md`** — 当前阶段、已完成、下一步
-3. 读 **`.ai/00-core.md`** — 六条铁律
+3. 读 **`.ai/00-core.md`** — 七条铁律
 4. 读 **`.ai/90-preferences.md`** — 用户偏好
 5. 读 **`docs/CONCEPTS.md` 的「目录」一节** — 只读一句话列，约 200 tokens；遇到生词再按锚点跳条目
-6. 按 `STATE.md` 的当前阶段，加载 `.ai/0X-Pn-*.md`
-7. 声明：**「当前阶段 Pn，本次目标 X，已加载文件 Y」**，再动手
+6. 跑**场景决断**（`.ai/09-scene-triage.md`）：按会话关键字定场景与阶段组合
+7. 按 `STATE.md` 的当前阶段，加载 `.ai/1X-Sn-*.md`
+8. 声明：**「场景 X · 当前阶段 Sn，本次目标 X，已加载文件 Y」**，再动手
 
 > **为什么第 5 步不能省**：会话一结束上下文就没了。概念表是唯一能跨会话传递「这些词在这里是什么意思」的地方，
 > 不读它，下一轮就会把「地点」又理解成「文件存在哪」。规则见 `docs/CONCEPTS.md`。
 
+> 遇设计问题，先查 `docs/INDEX.md` 的「状态」列与 `.ai/` 文件头状态行；标「已作废」的设计**禁止引用**，按其指向找到定稿。规则见 `.ai/00-core.md` 3.2（H-0021）。
+
 ---
 
-## 六条铁律（摘要，全文见 `.ai/00-core.md`）
+## 七条铁律（摘要，全文见 `.ai/00-core.md`）
 
 1. **阶段不可跳** — 未过出口门禁，禁止进下一阶段
 2. **设计前必须可视** — 前端项目没出 HTML demo 并获得确认，禁止写业务代码
@@ -54,7 +57,7 @@ P0 立项 → P0.5 意图校准 → P1 构思 → P2 设计 → P3 验证 → P4
 | 阶段 | 加载文件 | 人工签字 |
 |---|---|---|
 | P0 立项 | `.ai/01-P0-init.md` | ✅ |
-| **P0.5 意图校准** | **`.ai/015-P05-align.md` + `99-reference/align-schema.md` + `checklist-schema.md`** | ✅ **强制** |
+| **S2 对齐** | **`.ai/11-S2-align.md` + `99-reference/align-schema.md` + `checklist-schema.md`** | ✅ **强制** |
 | P1 构思 | `.ai/02-P1-ideate.md` | ✅ 强制 |
 | P2 设计 | `.ai/03-P2-design.md` | ✅ 强制（看 demo 后）|
 | P3 验证 | `.ai/04-P3-validate.md` + `99-reference/design-review-checklist.md` | ⚠️ 建议 |
@@ -130,7 +133,7 @@ docs/INDEX.md                  文档总索引（始终）
 
 ```
 1. 用户当前明确指令
-2. 00-core.md 六条铁律
+2. 00-core.md 七条铁律
 3. 当前阶段 .ai/0X-*.md
 4. 90-preferences.md
 5. 通用方法论框架（Superpowers 等）
