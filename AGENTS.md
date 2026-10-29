@@ -31,7 +31,7 @@
 3. **完成必须留证** — 说"完成"必须贴验证输出，"应该可以"不算
 4. **问题必须沉淀** — 调试超 15 分钟或试错 2 次以上，必须建 `docs/incidents/INC-*.md`，且必须填「预防」
 5. **单一真相源** — `.ai/` 是唯一真相，`.skills/` 与 `adapters/` 是派生物，禁止手工维护两份
-6. **讨论前置** — 新要求禁止直接给方案。必须先走 P0.5 两轮讨论，每轮先建**选项式** checklist（每条必须含「其他___」），用日常语言，结论落文档
+6. **讨论前置** — 新要求禁止直接给方案。必须先走 S2 两轮讨论，每轮先建**选项式** checklist（每条必须含「其他___」），用日常语言，结论落文档
 7. **分支隔离** — 每个新任务必须建独立分支，禁止在 main 上直接改
 
 ---
@@ -48,36 +48,36 @@
 
 ---
 
-## 八阶段状态机（含 P0.5）
+## 八阶段状态机（含 S2）
 
 ```
-P0 立项 → P0.5 意图校准 → P1 构思 → P2 设计 → P3 验证 → P4 实现 → P5 校验 → P6 归档 → P7 交付
+S1 立项 → S2 意图校准 → S3 构思 → S4 设计 → S5 验证 → S6 实现 → S5 校验 → S7 归档 → S8 交付
 ```
 
 | 阶段 | 加载文件 | 人工签字 |
 |---|---|---|
-| P0 立项 | `.ai/01-P0-init.md` | ✅ |
+| S1 立项 | `.ai/01-S1-init.md` | ✅ |
 | **S2 对齐** | **`.ai/11-S2-align.md` + `99-reference/align-schema.md` + `checklist-schema.md`** | ✅ **强制** |
-| P1 构思 | `.ai/02-P1-ideate.md` | ✅ 强制 |
-| P2 设计 | `.ai/03-P2-design.md` | ✅ 强制（看 demo 后）|
-| P3 验证 | `.ai/04-P3-validate.md` + `99-reference/design-review-checklist.md` | ⚠️ 建议 |
-| P4 实现 | `.ai/05-P4-implement.md` | ❌ |
-| P5 校验 | `.ai/06-P5-verify.md` | ✅ 强制 |
-| P6 归档 | `.ai/07-P6-archive.md` + `99-reference/state-schema.md` | ❌ |
-| P7 交付 | `.ai/08-P7-deliver.md` | ✅ 强制 |
+| S3 构思 | `.ai/02-S3-ideate.md` | ✅ 强制 |
+| S4 设计 | `.ai/03-S4-design.md` | ✅ 强制（看 demo 后）|
+| S5 验证 | `.ai/04-S5-validate.md` + `99-reference/design-review-checklist.md` | ⚠️ 建议 |
+| S6 实现 | `.ai/05-S6-implement.md` | ❌ |
+| S5 校验 | `.ai/06-S5-verify.md` | ✅ 强制 |
+| S7 归档 | `.ai/07-S7-archive.md` + `99-reference/state-schema.md` | ❌ |
+| S8 交付 | `.ai/08-S8-deliver.md` | ✅ 强制 |
 
 **一句话记住每个阶段在防什么：**
 
 | 阶段 | 防的失控 |
 |---|---|
-| P0.5 | 没搞清要什么就动手 |
-| P1 | 需求范围悄悄膨胀 |
-| P2 | 前端风格全靠猜 |
-| P3 | 带缺陷进实现 |
-| P4 | 没测试就宣称做完 / 坑不记录 |
-| P5 | 老毛病复发 |
-| P6 | 下个会话从零读全部文档 |
-| P7 | 交付了但别人用不了 |
+| S2 | 没搞清要什么就动手 |
+| S3 | 需求范围悄悄膨胀 |
+| S4 | 前端风格全靠猜 |
+| S5 | 带缺陷进实现 |
+| S6 | 没测试就宣称做完 / 坑不记录 |
+| S5 | 老毛病复发 |
+| S7 | 下个会话从零读全部文档 |
+| S8 | 交付了但别人用不了 |
 
 ---
 
@@ -85,7 +85,7 @@ P0 立项 → P0.5 意图校准 → P1 构思 → P2 设计 → P3 验证 → P4
 
 ```bash
 make branch NAME=user-login      # 建 feat/user-login
-# ... 走 P0.5 → P7 ...
+# ... 走 S2 → S8 ...
 make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
 ```
 
@@ -103,21 +103,21 @@ make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
 ## 制品位置（不许乱放）
 
 ```
-docs/align/CHECKLIST-<任务>-R1.md / R2.md   两轮讨论清单（P0.5）
-docs/align/ALIGN-<任务>-R1.md / R2.md       两轮讨论记录（P0.5）
-docs/align/ALIGN-<任务>.md                   意图校准结论（P0.5）⭐
-docs/prd.md                    需求（P1）
-docs/design/DESIGN.md          设计主文档（P2）
-docs/design/STYLE.md           样式与交互规范（P2）
-docs/design/demo/*.html        HTML demo（P2，前端必需）
-docs/design/REVIEW-DESIGN.md   设计评审（P3）
-docs/adr/ADR-*.md              架构决策（P2）
-src/  tests/                   源码与测试（P4）
-docs/incidents/INC-*.md        故障与问题库（P4/P5，预防必填）
-docs/reviews/REVIEW-CODE-*.md  代码评审（P5，三轮）
-dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说明（P6）【设计者维度，交付不包含】
-CHANGELOG.md                   变更日志（P6）
-docs/release/RELEASE-*.md      交付说明（P7）
+docs/align/CHECKLIST-<任务>-R1.md / R2.md   两轮讨论清单（S2）
+docs/align/ALIGN-<任务>-R1.md / R2.md       两轮讨论记录（S2）
+docs/align/ALIGN-<任务>.md                   意图校准结论（S2）⭐
+docs/prd.md                    需求（S3）
+docs/design/DESIGN.md          设计主文档（S4）
+docs/design/STYLE.md           样式与交互规范（S4）
+docs/design/demo/*.html        HTML demo（S4，前端必需）
+docs/design/REVIEW-DESIGN.md   设计评审（S5）
+docs/adr/ADR-*.md              架构决策（S4）
+src/  tests/                   源码与测试（S6）
+docs/incidents/INC-*.md        故障与问题库（S6/S5，预防必填）
+docs/reviews/REVIEW-CODE-*.md  代码评审（S5，三轮）
+dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说明（S7）【设计者维度，交付不包含】
+CHANGELOG.md                   变更日志（S7）
+docs/release/RELEASE-*.md      交付说明（S8）
 docs/CONCEPTS.md       全局概念表（唯一概念定义处，改词只改这里）
 docs/PATH-MAP.md       分离前后路径映射表（agent 回溯 git 历史用，用户不看）
 dev/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
@@ -150,10 +150,10 @@ docs/INDEX.md                  文档总索引（始终）
 make setup                       # 重建环境
 make branch NAME=<任务短名>       # 建任务分支
 make gate                        # 检查当前阶段门禁
-make gate P05                    # 检查指定阶段
+make gate S2                    # 检查指定阶段
 make status                      # 查看状态快照
-make phase P05                   # 切换阶段（自动检查门禁）
-make sign P05 "原话"              # 记录签字
+make phase S2                   # 切换阶段（自动检查门禁）
+make sign S2 "原话"              # 记录签字
 make branch-finish NAME=<短名>    # 合并回主分支
 make sync                        # .ai/ 同步到 .skills/ 与 adapters/
 ```

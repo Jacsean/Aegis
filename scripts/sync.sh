@@ -94,11 +94,11 @@ alwaysApply: true
 1. 读 AGENTS.md
 2. 读 STATE.md（当前阶段）
 3. 读 .ai/00-core.md（七条铁律 + 分支铁律）与 .ai/90-preferences.md
-4. 按当前阶段读 .ai/0X-Pn-*.md
+4. 按当前阶段读 .ai/1X-Sn-*.md
 
 禁止跳过阶段。
 每个新任务必须建独立分支（<类型>/<短名>），禁止直接改主分支。
-新要求必须先走 P0.5 两轮讨论（每轮先给问题清单，用日常语言），禁止直接给方案。
+新要求必须先走 S2 对齐两轮讨论（每轮先给问题清单，用日常语言），禁止直接给方案。
 前端项目未出 HTML demo 并获得用户确认前，禁止写业务代码。
 门禁检查：bash scripts/gate.sh
 EOS
@@ -112,12 +112,12 @@ write_if_changed adapters/trae/rules.md <<'EOS'
 1. 读 `AGENTS.md`
 2. 读 `STATE.md`（当前在哪个阶段）
 3. 读 `.ai/00-core.md`（七条铁律 + 分支铁律）与 `.ai/90-preferences.md`
-4. 按当前阶段读 `.ai/0X-Pn-*.md`
+4. 按当前阶段读 `.ai/1X-Sn-*.md`
 
 ## 硬规则
 - 禁止跳过阶段；未过出口门禁不得前进
 - 每个新任务必须建独立分支，禁止直接改主分支
-- 新要求必须先走 P0.5 两轮讨论（每轮先给问题清单，用日常语言），禁止直接给方案
+- 新要求必须先走 S2 对齐两轮讨论（每轮先给问题清单，用日常语言），禁止直接给方案
 - 前端项目未出 HTML demo 并获得用户确认前，禁止写业务代码
 - 说"完成"必须贴验证输出
 
@@ -136,7 +136,7 @@ write_if_changed adapters/codex/AGENTS.md <<'EOS'
 - `AGENTS.md` — 入口与七条铁律 + 分支铁律
 - `STATE.md` — 当前阶段与下一步
 
-再按 `STATE.md` 中的当前阶段，加载 `.ai/0X-Pn-*.md`。
+再按 `STATE.md` 中的当前阶段，加载 `.ai/1X-Sn-*.md`。
 
 门禁：`bash scripts/gate.sh`
 EOS

@@ -120,7 +120,7 @@ case "${1:-status}" in
       if [ -f "docs/align/ALIGN-${SLUG}.md" ]; then
         grep -q '总确认原话' "docs/align/ALIGN-${SLUG}.md" && ok "ALIGN 签字存在" || err "ALIGN 缺签字"
       else
-        info "未找到 docs/align/ALIGN-${SLUG}.md（若已过 P0.5 应存在）"
+        info "未找到 docs/align/ALIGN-${SLUG}.md（若已过 S2 对齐应存在）"
       fi
     fi
 

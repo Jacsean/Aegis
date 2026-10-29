@@ -6,7 +6,7 @@
 - git tag：v0.1.0（必须与 CHANGELOG 版本号一致）
 
 > **写这份文档前，必须先做一次冒烟验证**（干净环境 + 照抄本文命令跑通）。
-> 顺序反了 = 交付假货。规则见 `.ai/08-P7-deliver.md`。
+> 顺序反了 = 交付假货。规则见 `.ai/08-S8-deliver.md`。
 
 ---
 
@@ -122,5 +122,5 @@ $ <业务命令 / 打开页面>
 签字记录同步写入 `STATE.md`：
 
 ```bash
-bash scripts/state.sh sign P7 "用户原话"
+bash scripts/state.sh sign S8 "用户原话"
 ```

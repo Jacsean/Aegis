@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Aegis 阶段出口门禁检查
-# 用法: bash scripts/gate.sh [P0|P1|P2|...]
+# 用法: bash scripts/gate.sh [S1|S2|...|S8|ALL]
 #       bash scripts/gate.sh          # 自动读 STATE.md 的当前阶段
 
 set -uo pipefail
@@ -35,12 +35,14 @@ if [ "$SELF_RELEASE" -eq 1 ]; then DOCS="templates/docs"; else DOCS="docs"; fi
 # 代码根：项目用 src/；框架自检时把 scripts/ 当代码根（框架没有业务代码）
 if [ "$SELF_RELEASE" -eq 1 ]; then CODE="scripts"; else CODE="src"; fi
 
+# 交付包内：设计者维度文件（dev/）被剔除。此后的「项目内容」检查（S1~S8）一律跳过——
+# 交付包是"还能不能装进新项目"的骨架，不是某个具体项目的制品；跑项目门禁只会刷一堆缺项噪音。
+IN_PACKAGE=0
+[ ! -d "$ROOT/dev" ] && IN_PACKAGE=1
+
 GREEN='\033[0;32m'; RED='\033[0;31m'; YELLOW='\033[0;33m'; NC='\033[0m'
 FAIL=0
 WARN=0
-
-IN_PACKAGE=0
-[ ! -d "$ROOT/dev" ] && IN_PACKAGE=1   # 交付包内：设计者维度文件被剔除
 ok()   { printf "  ${GREEN}✓${NC} %s\n" "$1"; }
 die()  { printf "  ${RED}✗${NC} %s\n" "$1"; FAIL=$((FAIL+1)); }
 warn() { printf "  ${YELLOW}!${NC} %s\n" "$1"; WARN=$((WARN+1)); }
@@ -50,22 +52,21 @@ head_() { printf "\n${YELLOW}[%s]${NC} %s\n" "$1" "$2"; }
 PHASE="${1:-}"
 if [ -z "$PHASE" ]; then
   if [ -f STATE.md ]; then
-    PHASE="$(grep -oE '当前阶段：\*{0,2}P[0-9.]+' STATE.md | grep -oE 'P[0-9.]+' | head -1)"
+    PHASE="$(grep -oE '当前阶段：\*{0,2}[SP][0-9.]+' STATE.md | grep -oE '[SP][0-9.]+' | head -1)"
   fi
-  [ -z "$PHASE" ] && PHASE="P0"
+  [ -z "$PHASE" ] && PHASE="S1"
 fi
-# 归一化：P0.5 → P05
-[[ "$PHASE" == "P0.5" ]] && PHASE="P05"
-# 八阶段别名（v2.0.0，H-0022）：S 阶段映射到既有检查块；S5 同时跑 P3+P5
+# 归一化：S5 之外的 S<n> 直接走别名；不再保留旧编号归一化（v2.0.0 起旧编号只在 git 历史）
+# S 阶段 → 内部检查块。S5 同时跑「设计检查点 + 代码检查点」两块
 case "$PHASE" in
-  S1) PHASE="P0" ;;
-  S2) PHASE="P05" ;;
-  S3) PHASE="P1" ;;
-  S4) PHASE="P2" ;;
-  S5) PHASE="P3+P5" ;;
-  S6) PHASE="P4" ;;
-  S7) PHASE="P6" ;;
-  S8) PHASE="P7" ;;
+  S1) PHASE="S1" ;;
+  S2) PHASE="S2" ;;
+  S3) PHASE="S3" ;;
+  S4) PHASE="S4" ;;
+  S5) PHASE="S5" ;;
+  S6) PHASE="S6" ;;
+  S7) PHASE="S7" ;;
+  S8) PHASE="S8" ;;
 esac
 
 echo "==============================================="
@@ -76,8 +77,38 @@ else
 fi
 echo "==============================================="
 
+# ---------- 包内模式：只做框架自检，不跑项目门禁 ----------
+if [ "$IN_PACKAGE" -eq 1 ]; then
+  if [ "$SELF_RELEASE" -eq 0 ]; then
+    head_ FRAME "交付包自检"
+    [ -f VERSION ] && ok "VERSION 存在（$(cat VERSION)）" || die "缺 VERSION"
+    miss_spec=0
+    for f in 00-core 09-scene-triage 10-S1-title 11-S2-align 12-S3-converge 13-S4-expand \
+             14-S5-falsify 15-S6-implement 16-S7-solidify 17-S8-deliver 90-preferences; do
+      [ -f ".ai/$f.md" ] || { die "缺 .ai/$f.md"; miss_spec=$((miss_spec+1)); }
+    done
+    [ "$miss_spec" -eq 0 ] && ok ".ai/ 阶段规范齐全（11 份）"
+    [ -d dev ] && die "交付包内出现 dev/（设计者维度未剔除）" || ok "设计者维度已剔除（无 dev/）"
+    bash scripts/check-no-legacy.sh . >/dev/null 2>&1 \
+      && ok "旧版流程设计不可见（check-no-legacy PASS）" \
+      || die "使用者维度仍有旧版流程残留（跑 bash scripts/check-no-legacy.sh 看详情）"
+    bash scripts/sync.sh --check >/dev/null 2>&1 \
+      && ok "派生物一致" || die "派生物不同步（make sync）"
+  fi
+  echo ""
+  echo "==============================================="
+  if [ "$FAIL" -eq 0 ]; then
+    echo "PASS — 交付包自检通过（包内不跑项目级 S1~S8 门禁：这是骨架，不是在用项目）"
+    echo "==============================================="
+    exit 0
+  fi
+  echo "FAIL — 交付包自检未通过：$FAIL 项缺失"
+  echo "==============================================="
+  exit 1
+fi
+
 # ---------- 通用：分支规范 ----------
-if [[ "$PHASE" != "P0" ]] && [ "$SELF_RELEASE" -eq 0 ]; then
+if [[ "$PHASE" != "S1" ]] && [ "$SELF_RELEASE" -eq 0 ]; then
   head_ BRANCH "分支规范（每任务必须独立分支）"
   if git rev-parse --git-dir >/dev/null 2>&1; then
     CUR=$(git branch --show-current 2>/dev/null)
@@ -93,9 +124,9 @@ if [[ "$PHASE" != "P0" ]] && [ "$SELF_RELEASE" -eq 0 ]; then
   fi
 fi
 
-# ---------- P0 立项 ----------
-if [[ "$PHASE" == "P0" || "$PHASE" == "ALL" ]]; then
-  head_ P0 "立项：宪法与环境契约"
+# ---------- S1 立题 ----------
+if [[ "$PHASE" == "S1" || "$PHASE" == "ALL" ]]; then
+  head_ S1 "立题：宪法与环境契约"
 
   [ -f AGENTS.md ] && ok "AGENTS.md 存在" || die "缺 AGENTS.md"
   [ -f .ai/00-core.md ] && ok ".ai/00-core.md 存在" || die "缺 .ai/00-core.md"
@@ -173,15 +204,15 @@ if [ "$SELF_RELEASE" -eq 1 ]; then
   [ "$miss_tpl" -eq 0 ] && ok "templates/docs/ 模板齐全（11 份）"
 
   # 脚本可执行性
-  for f in scripts/gate.sh scripts/state.sh scripts/branch.sh scripts/sync.sh; do
+  for f in scripts/gate.sh scripts/state.sh scripts/branch.sh scripts/sync.sh scripts/deliver.sh scripts/check-no-legacy.sh; do
     [ -f "$f" ] || { die "缺脚本 $f"; continue; }
     bash -n "$f" 2>/dev/null && ok "语法正确: $f" || die "语法错误: $f"
   done
 fi
 
-# ---------- P0.5 意图校准 ----------
-if [[ "$PHASE" == "P05" || "$PHASE" == "ALL" ]]; then
-  head_ P05 "意图校准：两轮讨论 + checklist + 小白语言"
+# ---------- S2 对齐（意图校准）----------
+if [[ "$PHASE" == "S2" || "$PHASE" == "ALL" ]]; then
+  head_ S2 "S2 对齐：两轮讨论 + checklist + 小白语言"
 
   ALIGN_DIR="$DOCS/align"
   # 任务短名来源，按可信度排序：
@@ -355,9 +386,9 @@ if [[ "$PHASE" == "P05" || "$PHASE" == "ALL" ]]; then
   fi
 fi
 
-# ---------- P1 构思 ----------
-if [[ "$PHASE" == "P1" || "$PHASE" == "ALL" ]]; then
-  head_ P1 "构思：PRD 六节 + 用户签字"
+# ---------- S3 收敛 ----------
+if [[ "$PHASE" == "S3" || "$PHASE" == "ALL" ]]; then
+  head_ S3 "收敛：PRD 六节 + 用户签字"
 
   if [ ! -f "$DOCS/prd.md" ]; then
     die "缺 $DOCS/prd.md"
@@ -391,16 +422,16 @@ if [[ "$PHASE" == "P1" || "$PHASE" == "ALL" ]]; then
   fi
 
   # 签字
-  if [ -f STATE.md ] && grep -qE 'P1.*确认.*✅' STATE.md; then
-    ok "P1 用户签字已记录"
+  if [ -f STATE.md ] && grep -qE 'S3.*确认.*✅' STATE.md; then
+    ok "S3 用户签字已记录"
   else
-    die "STATE.md 缺 P1 用户签字（未签字禁止进 P2）"
+    die "STATE.md 缺 S3 用户签字（未签字禁止进 S4）"
   fi
 fi
 
-# ---------- P2 设计 ----------
-if [[ "$PHASE" == "P2" || "$PHASE" == "ALL" ]]; then
-  head_ P2 "设计：DESIGN + HTML demo + STYLE + ADR"
+# ---------- S4 展开 ----------
+if [[ "$PHASE" == "S4" || "$PHASE" == "ALL" ]]; then
+  head_ S4 "展开：DESIGN + HTML demo + STYLE + ADR"
 
   [ -f "$DOCS/design/DESIGN.md" ] && ok "DESIGN.md 存在" || die "缺 $DOCS/design/DESIGN.md"
   if [ -f "$DOCS/design/DESIGN.md" ]; then
@@ -453,16 +484,16 @@ if [[ "$PHASE" == "P2" || "$PHASE" == "ALL" ]]; then
   [ "$adr_count" -gt 0 ] && ok "ADR 数量: $adr_count" || warn "无 ADR（若有重大决策则必需）"
 
   # 签字
-  if [ -f STATE.md ] && grep -qE 'P2.*确认.*✅' STATE.md; then
-    ok "P2 用户签字已记录"
+  if [ -f STATE.md ] && grep -qE 'S4.*确认.*✅' STATE.md; then
+    ok "S4 用户签字已记录"
   else
-    die "STATE.md 缺 P2 用户签字（未看 demo 禁止进 P4）"
+    die "STATE.md 缺 S4 用户签字（未看 demo 禁止进 S6）"
   fi
 fi
 
-# ---------- P3 设计评审 ----------
-if [[ "$PHASE" == "P3" || "$PHASE" == "ALL" ]]; then
-  head_ P3 "验证：设计评审 12 项"
+# ---------- S5 找破绽 · 设计检查点 ----------
+if [[ "$PHASE" == "S5-DESIGN" || "$PHASE" == "ALL" || "$PHASE" == "S5" ]]; then
+  head_ S5 "找破绽：设计评审 12 项"
   if [ -f "$DOCS/design/REVIEW-DESIGN.md" ]; then
     ok "REVIEW-DESIGN.md 存在"
     cnt=$(grep -cE '^\s*-\s*\[[ xX]\]' "$DOCS/design/REVIEW-DESIGN.md" || true)
@@ -477,13 +508,13 @@ if [[ "$PHASE" == "P3" || "$PHASE" == "ALL" ]]; then
   fi
 fi
 
-# ---------- P4 实现 ----------
-if [[ "$PHASE" == "P4" || "$PHASE" == "ALL" ]]; then
-  head_ P4 "实现：测试留证 + 无调试残留 + INC 闭环"
+# ---------- S6 实现 ----------
+if [[ "$PHASE" == "S6" || "$PHASE" == "ALL" ]]; then
+  head_ S6 "实现：测试留证 + 无调试残留 + INC 闭环"
 
   # 环境
   if [ -f pyproject.toml ] || [ -f requirements.txt ]; then
-    [ -x .venv/bin/python ] && ok ".venv/bin/python 可用" || die "缺 .venv（P4 必须用虚拟环境）"
+    [ -x .venv/bin/python ] && ok ".venv/bin/python 可用" || die "缺 .venv（S6 必须用虚拟环境）"
   fi
 
   # 测试存在且能跑
@@ -545,18 +576,18 @@ if [[ "$PHASE" == "P4" || "$PHASE" == "ALL" ]]; then
   fi
 fi
 
-# ---------- P5 校验 ----------
-if [[ "$PHASE" == "P5" || "$PHASE" == "ALL" ]]; then
-  head_ P5 "校验：三轮 review"
+# ---------- S5 找破绽 · 代码检查点 ----------
+if [[ "$PHASE" == "S5-CODE" || "$PHASE" == "ALL" || "$PHASE" == "S5" ]]; then
+  head_ S5 "找破绽：三轮 review"
   today=$(date +%F)
   found=$(find "$DOCS/reviews" -maxdepth 1 -name "REVIEW-CODE-${today}*.md" 2>/dev/null | wc -l | tr -d ' ')
   [ "$found" -gt 0 ] && ok "今日代码评审记录存在" || die "缺今日 $DOCS/reviews/REVIEW-CODE-${today}.md"
-  if [ -f STATE.md ] && grep -qE 'P5.*确认.*✅' STATE.md; then ok "P5 用户签字已记录"; else die "缺 P5 用户签字"; fi
+  if [ -f STATE.md ] && grep -qE 'S5.*确认.*✅' STATE.md; then ok "S5 用户签字已记录"; else die "缺 S5 用户签字"; fi
 fi
 
-# ---------- P6 归档 ----------
-if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
-  head_ P6 "归档：STATE 精简 + CHANGELOG + INDEX 完整 + tag"
+# ---------- S7 固化 ----------
+if [[ "$PHASE" == "S7" || "$PHASE" == "ALL" ]]; then
+  head_ S7 "固化：STATE 精简 + CHANGELOG + INDEX 完整 + tag"
 
   # STATE 行数上限 40
   if [ -f STATE.md ]; then
@@ -620,7 +651,7 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
           if grep -qE '^[-*][[:space:]]*\*\*新词\*\*' "$hfile"; then
             ok "$hid 概念固化已申报（新词行存在）"
           else
-            warn "$hid 缺「新词」行（铁律七 P6 必填：新词+词条状态，无写「无」）"
+            warn "$hid 缺「新词」行（铁律七 S7 必填：新词+词条状态，无写「无」）"
           fi
         else
           die "$hid 缺要素：$miss（七要素见 handoff-schema.md）"
@@ -698,10 +729,10 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
         code_chg=$(git diff --name-only "$base...HEAD" 2>/dev/null \
           | grep -E '\.(py|js|ts|jsx|tsx|go|rs|java|rb|php|vue|svelte)$' || true)
         if [ -n "$code_chg" ]; then
-          warn "本分支相对 $base 有代码文件改动（P6 本身不应改代码，确认这些改动都发生在 P4/P5）："
+          warn "本分支相对 $base 有代码文件改动（S7 本身不应改代码，确认改动都发生在 S6/S5）："
           printf '%s\n' "$code_chg" | head -5 | sed 's/^/      /'
         else
-          ok "本分支无代码文件改动（P6 合规）"
+          ok "本分支无代码文件改动（S7 合规）"
         fi
         break
       fi
@@ -725,9 +756,9 @@ if [[ "$PHASE" == "P6" || "$PHASE" == "ALL" ]]; then
   fi
 fi
 
-# ---------- P7 交付 ----------
-if [[ "$PHASE" == "P7" || "$PHASE" == "ALL" ]]; then
-  head_ P7 "交付：RELEASE 五节 + 真实证据 + 用户签收"
+# ---------- S8 交付 ----------
+if [[ "$PHASE" == "S8" || "$PHASE" == "ALL" ]]; then
+  head_ S8 "交付：RELEASE 五节 + 真实证据 + 用户签收"
 
   rel=$(find "$DOCS/release" -maxdepth 1 -name 'RELEASE-v[0-9]*.md' 2>/dev/null | sort | tail -1)
   if [ -z "$rel" ]; then
@@ -770,10 +801,10 @@ if [[ "$PHASE" == "P7" || "$PHASE" == "ALL" ]]; then
     fi
   fi
 
-  if [ -f STATE.md ] && grep -qE 'P7.*确认.*✅' STATE.md; then
-    ok "P7 用户签收已记录"
+  if [ -f STATE.md ] && grep -qE 'S8.*确认.*✅' STATE.md; then
+    ok "S8 用户签收已记录"
   else
-    die "缺 P7 用户签收（未签收禁止合并到主分支）"
+    die "缺 S8 用户签收（未签收禁止合并到主分支）"
   fi
 fi
 
