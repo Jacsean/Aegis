@@ -21,10 +21,12 @@
 | `CONCEPTS.md` | 全局概念表（唯一概念定义处，五域 26 词已定）| **真相源** |
 | `PATH-MAP.md` | 分离前后路径映射（agent 回溯 git 历史用，用户不看）| 索引 |
 | `align/ALIGN-eight-stage*` | 八阶段落地任务的两轮对齐与汇总留档 | **真相源** |
+| `align/ALIGN-legacy-leak*` | 步 4 验收泄漏修复的两轮对齐与汇总留档 | **真相源** |
 | `align/CHECKLIST-eight-stage-R1/R2` | 两轮清单（选项式，含未覆盖方向）| 留档 |
+| `align/CHECKLIST-legacy-leak-R1/R2` | 泄漏修复与复验清单 | 留档 |
 | `prd.md` | 八阶段落地任务的范围声明 + 失败定义 | **真相源** |
 | `design/DESIGN.md` | 八阶段落地的模块划分与取舍 | **真相源** |
-| `release/` | 发布说明（RELEASE-vX.Y.Z.md，每版本一份）| 交付 |
+| `release/` | 发布说明（RELEASE-vX.Y.Z.md，每版本一份；最新 v2.0.1）| 交付 |
 
 ## dev/ · 设计者维度（开发过程档案，交付不包含）
 

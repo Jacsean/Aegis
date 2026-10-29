@@ -19,10 +19,10 @@ help:
 	@echo "  —— 环境与流程 ——"
 	@echo "  make setup            重建环境（venv + 依赖）"
 	@echo "  make gate             检查当前阶段门禁"
-	@echo "  make gate P05         检查指定阶段（P0/P05/P1..）"
+	@echo "  make gate S2          检查指定阶段（S1..S8）"
 	@echo "  make status           查看状态快照 STATE.md"
-	@echo "  make phase P1         切换阶段（会自动跑门禁）"
-	@echo "  make sign P1 \"原话\"    记录门禁签字"
+	@echo "  make phase S3         切换阶段（会自动跑门禁）"
+	@echo "  make sign S2 \"原话\"    记录门禁签字"
 	@echo "  make next \"a|b\"       更新下一步"
 	@echo "  make sync             同步 .ai/ 派生物（.skills/ + adapters/）"
 	@echo "  make check-sync       只检查是否需同步"
@@ -56,13 +56,13 @@ setup:
 
 # ---------- 门禁 ----------
 gate:
-	@if [ -n "$(filter P%,$(MAKECMDGOALS))" ]; then \
-		bash scripts/gate.sh $(filter P%,$(MAKECMDGOALS)); \
+	@if [ -n "$(filter S%,$(MAKECMDGOALS))" ]; then \
+		bash scripts/gate.sh $(filter S%,$(MAKECMDGOALS)); \
 	else \
 		bash scripts/gate.sh; \
 	fi
 
-P0 P05 P1 P2 P3 P4 P5 P6 P7:
+S1 S2 S3 S4 S5 S6 S7 S8:
 	@:
 
 # ---------- 状态 ----------

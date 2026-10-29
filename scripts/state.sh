@@ -80,9 +80,7 @@ EOF
       case "$1" in
         S1) echo 1;; S2) echo 2;; S3) echo 3;; S4) echo 4;;
         S5) echo 5;; S6) echo 6;; S7) echo 7;; S8) echo 8;;
-        # 兼容旧 STATE 中残留的旧编号（只在读取时归一，不再写入）
-        P0|P05) echo 1;; P1) echo 2;; P2) echo 3;; P3) echo 4;;
-        P4) echo 5;; P5) echo 6;; P6) echo 7;; P7) echo 8;; *) echo 99;;
+        *) echo 99;;
       esac
     }
     CUR_N=$(ord "$CUR"); NEW_N=$(ord "$NEW")
