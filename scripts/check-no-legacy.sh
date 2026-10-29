@@ -47,6 +47,18 @@ while IFS= read -r line; do
   hits=$((hits+1))
 done < <(grep -rnE "$PAT" "${scan[@]}" 2>/dev/null)
 
+# 2b. 内部设计过程痕迹不得出现在使用者维度（H 编号是对设计者档案的引用，包内是死链；
+#     框架自身的对齐签字/内部 PRD 属设计者维度）
+while IFS= read -r line; do
+  [ -z "$line" ] && continue
+  echo "  ✗ $line"
+  hits=$((hits+1))
+done < <(grep -rnE '^> 状态：.*H-0[0-9]{3}' .ai/ templates/ adapters/ 2>/dev/null)
+[ -f docs/PATH-MAP.md ] && { echo "  ✗ docs/PATH-MAP.md 在使用者维度（应移设计者维度）"; hits=$((hits+1)); }
+while IFS= read -r f; do
+  echo "  ✗ $f 含框架内部对齐签字（应移设计者维度）"; hits=$((hits+1))
+done < <(grep -rln '签字（用户原话）' docs/ 2>/dev/null)
+
 # 3. 对外用法不得引导旧编号
 grep -qE 'gate\.sh \[P0' scripts/gate.sh 2>/dev/null && { echo "  ✗ gate.sh 用法仍引导旧编号"; hits=$((hits+1)); }
 grep -qE 'state\.sh phase P0' scripts/state.sh 2>/dev/null && { echo "  ✗ state.sh 用法仍引导旧编号"; hits=$((hits+1)); }
