@@ -51,20 +51,20 @@
 ## 八阶段状态机（含 S2）
 
 ```
-S1 立项 → S2 意图校准 → S3 构思 → S4 设计 → S5 验证 → S6 实现 → S5 校验 → S7 归档 → S8 交付
+S1 立题 → S2 对齐 → S3 收敛 → S4 展开 → S5 找破绽（可重复：查设计/查代码） → S6 实现 → S7 固化 → S8 交付
 ```
 
 | 阶段 | 加载文件 | 人工签字 |
 |---|---|---|
-| S1 立项 | `.ai/01-S1-init.md` | ✅ |
-| **S2 对齐** | **`.ai/11-S2-align.md` + `99-reference/align-schema.md` + `checklist-schema.md`** | ✅ **强制** |
-| S3 构思 | `.ai/02-S3-ideate.md` | ✅ 强制 |
-| S4 设计 | `.ai/03-S4-design.md` | ✅ 强制（看 demo 后）|
-| S5 验证 | `.ai/04-S5-validate.md` + `99-reference/design-review-checklist.md` | ⚠️ 建议 |
-| S6 实现 | `.ai/05-S6-implement.md` | ❌ |
-| S5 校验 | `.ai/06-S5-verify.md` | ✅ 强制 |
-| S7 归档 | `.ai/07-S7-archive.md` + `99-reference/state-schema.md` | ❌ |
-| S8 交付 | `.ai/08-S8-deliver.md` | ✅ 强制 |
+| 场景决断 | `.ai/09-scene-triage.md`（入口分诊，先于 S1） | ❌ |
+| S1 立题 | `.ai/10-S1-title.md` | ❌ |
+| **S2 对齐** | **`.ai/11-S2-align.md` + `99-reference/align-schema.md` + `checklist-schema.md`** | ✅ **强制（全流程唯一强制签字点）** |
+| S3 收敛 | `.ai/12-S3-converge.md` + `99-reference/prd-schema.md` | ✅ 与 S2 一致时自动继承 |
+| S4 展开 | `.ai/13-S4-expand.md` + `99-reference/adr-schema.md` | ✅ **强制（看 demo 后）** |
+| S5 找破绽 | `.ai/14-S5-falsify.md` + `99-reference/design-review-checklist.md`（查设计用 REVIEW-DESIGN，查代码用 REVIEW-CODE） | ⚠️ 建议 |
+| S6 实现 | `.ai/15-S6-implement.md` | ❌ |
+| S7 固化 | `.ai/16-S7-solidify.md` + `99-reference/state-schema.md` | ❌ |
+| S8 交付 | `.ai/17-S8-deliver.md` | ✅ 强制 |
 
 **一句话记住每个阶段在防什么：**
 

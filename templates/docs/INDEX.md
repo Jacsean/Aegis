@@ -45,7 +45,7 @@
 |---|---|---|
 | `src/` `tests/` | 源码与测试（TDD，每功能点正常+边界） | ← DESIGN / demo |
 | [incidents/](incidents/) | 故障与问题库（含**预防**措施） | ← 任意阶段踩坑 → S5 回灌 |
-| [incidents/INC-0001-template.md](incidents/INC-0001-template.md) | INC 模板（现象/复现/根因/解决/预防/关联） | ← 触发条件见 `.ai/05-S6-implement.md` |
+| [incidents/INC-0001-template.md](incidents/INC-0001-template.md) | INC 模板（现象/复现/根因/解决/预防/关联） | ← 触发条件见 `.ai/15-S6-implement.md` |
 
 ### S5 校验
 

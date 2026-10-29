@@ -22,7 +22,7 @@ Aegis 针对 8 类具体失控现象设计：
 | 故障不记录、老毛病复发 | `docs/incidents/`（**预防**必填机检）+ S5/S5 两处**历史缺陷回灌** |
 | 设计完不 review | **S5 独立阶段**，12 项评审清单 + 意图一致性复核 |
 | 规则叠加烧 token | 分阶段按需加载 + 单一真相源派生物化 |
-| **一上来就给方案，没讨论** | **S2 意图校准：两轮讨论 + checklist 前置** |
+| **一上来就给方案，没讨论** | **S2 对齐：两轮讨论 + checklist 前置** |
 | **checklist 全是技术黑话** | **小白语言规则 + `gate.sh` 关键词黑名单** |
 | **多任务混在一个分支** | **分支铁律 + `branch.sh` + 门禁检查** |
 | **交付了但别人用不了** | **S8 强制冒烟验证，`RELEASE` 的「已知限制」写「无」会被拦** |
@@ -32,7 +32,7 @@ Aegis 针对 8 类具体失控现象设计：
 ## 二、三轴模型
 
 ```
-轴一 阶段：S1 立项 → S2 意图校准 → S3 构思 → S4 设计 → S5 验证 → S6 实现 → S5 校验 → S7 归档 → S8 交付
+轴一 阶段：S1 立题 → S2 对齐 → S3 收敛 → S4 展开 → S5 找破绽（可重复：查设计/查代码） → S6 实现 → S7 固化 → S8 交付
 轴二 制品：每阶段有且仅有规定的产物，固定路径 + 固定 schema + 必须登记索引
 轴三 门禁：每阶段出口有 Exit Criteria，不满足则状态机拒绝前进
 ```
@@ -51,7 +51,7 @@ Aegis 针对 8 类具体失控现象设计：
 
 ---
 
-## 三之一、S2 意图校准（新增）
+## 三之一、S2 对齐（新增）
 
 插在 S1 与 S3 之间的独立阶段。**它不是 S3 的一部分**，因为讨论发生在写需求之前。
 
@@ -205,17 +205,17 @@ aegis/
 │
 ├── .ai/                      规范真相源（唯一真相，按阶段拆分省 token）
 │   ├── 00-core.md            核心原则与状态机总览（必读）
-│   ├── 01-S1-init.md         立项
-│   ├── 015-S2-align.md      意图校准（两轮讨论 + 小白语言）
-│   ├── 02-S3-ideate.md       构思
-│   ├── 03-S4-design.md       设计（HTML demo 硬要求）
-│   ├── 04-S5-validate.md     验证（12 项 + 意图复核 + 历史回灌）
-│   ├── 05-S6-implement.md    实现（TDD + INC 触发）
-│   ├── 06-S5-verify.md       校验（三轮 review）
-│   ├── 07-S7-archive.md      归档（STATE 重写 + CHANGELOG + tag）
-│   ├── 17-S8-deliver.md      交付（冒烟验证 + RELEASE + 签收）（冒烟验证 + RELEASE + 签收）
+│   ├── 09-scene-triage.md    场景决断（入口分诊，先于 S1）
+│   ├── 10-S1-title.md        S1 立题（前提清单，假设显式化）
+│   ├── 11-S2-align.md        S2 对齐（两轮讨论 + 小白语言，唯一强制签字）
+│   ├── 12-S3-converge.md     S3 收敛（范围声明 + 失败定义）
+│   ├── 13-S4-expand.md       S4 展开（权衡矩阵 + HTML demo 硬要求）
+│   ├── 14-S5-falsify.md      S5 找破绽（可重复：查设计/查代码）
+│   ├── 15-S6-implement.md    S6 实现（TDD + INC 触发）
+│   ├── 16-S7-solidify.md     S7 固化（STATE 重写 + CHANGELOG + tag）
+│   ├── 17-S8-deliver.md      S8 交付（冒烟验证 + RELEASE + 签收）
 │   ├── 90-preferences.md     用户偏好（必读）
-│   └── 99-reference/         7 份 schema（按需加载）
+│   └── 99-reference/         8 份 schema（按需加载）
 │
 ├── .skills/                  9 个可执行 skill（Superpowers 格式，派生物）
 │   ├── aegis-state/          会话开机自检 + 越界拦截
