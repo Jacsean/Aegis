@@ -59,6 +59,9 @@ if [ -f "$TARGET/AGENTS.md" ]; then
 fi
 cp "$ROOT/templates/v3/AGENTS.md" "$TARGET/AGENTS.md"
 echo "  → AGENTS.md"
+# 偏好文件：始终生效，与 AGENTS.md 同目录
+cp "$ROOT/templates/v3/preferences.md" "$TARGET/preferences.md"
+echo "  → preferences.md"
 # Claude Code 读 CLAUDE.md：用实体副本（Windows 上软链会失效）
 cp "$ROOT/templates/v3/AGENTS.md" "$TARGET/CLAUDE.md"
 echo "  → CLAUDE.md（实体副本）"
