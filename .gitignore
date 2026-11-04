@@ -4,3 +4,10 @@ __pycache__/
 node_modules/
 .tmp/
 .pytest_cache/
+
+# Reasonix / 各 agent 的运行时目录（不进版本库）
+.reasonix/
+
+# 交付打包产物（deliver.sh 输出到 ../out/，这里兜底）
+*.tar.gz
+*.tgz

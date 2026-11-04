@@ -1,1 +1,157 @@
-AGENTS.md
+# AGENTS.md
+
+> 本项目所有 AI agent 的唯一入口。**任何会话开始前必读本文件。**
+> 详细规范在 `.ai/`，按当前阶段按需加载，不要一次全读。
+> 本套方案代号：**Aegis** — 状态机 + 制品 + 门禁。
+
+---
+
+## 会话启动协议（按序执行，约 1050 tokens）
+
+1. 读 **本文件**
+2. 读 **`STATE.md`** — 当前阶段、已完成、下一步
+3. 读 **`.ai/00-core.md`** — 七条铁律
+4. 读 **`.ai/90-preferences.md`** — 用户偏好
+5. 读 **`docs/CONCEPTS.md` 的「目录」一节** — 只读一句话列，约 200 tokens；遇到生词再按锚点跳条目
+6. 跑**场景决断**（`.ai/09-scene-triage.md`）：按会话关键字定场景与阶段组合
+7. 按 `STATE.md` 的当前阶段，加载 `.ai/1X-Sn-*.md`
+8. 声明：**「场景 X · 当前阶段 Sn，本次目标 X，已加载文件 Y」**，再动手
+
+> **为什么第 5 步不能省**：会话一结束上下文就没了。概念表是唯一能跨会话传递「这些词在这里是什么意思」的地方，
+> 不读它，下一轮就会把「地点」又理解成「文件存在哪」。规则见 `docs/CONCEPTS.md`。
+
+> 遇设计问题，先查 `docs/INDEX.md` 的「状态」列与 `.ai/` 文件头状态行；标「已作废」的设计**禁止引用**，按其指向找到定稿。规则见 `.ai/00-core.md` 3.2。
+
+---
+
+## 七条铁律（摘要，全文见 `.ai/00-core.md`）
+
+1. **阶段不可跳** — 未过出口门禁，禁止进下一阶段
+2. **设计前必须可视** — 前端项目没出 HTML demo 并获得确认，禁止写业务代码
+3. **完成必须留证** — 说"完成"必须贴验证输出，"应该可以"不算
+4. **问题必须沉淀** — 调试超 15 分钟或试错 2 次以上，必须建 `docs/incidents/INC-*.md`，且必须填「预防」
+5. **单一真相源** — `.ai/` 是唯一真相，`.skills/` 与 `adapters/` 是派生物，禁止手工维护两份
+6. **讨论前置** — 新要求禁止直接给方案。必须先走 S2 两轮讨论，每轮先建**选项式** checklist（每条必须含「其他___」），用日常语言，结论落文档
+7. **分支隔离** — 每个新任务必须建独立分支，禁止在 main 上直接改
+
+---
+
+## 讨论形式（铁律六的落地要求）
+
+每个关键点由 agent 提供**上下文（从哪来 / 不问会怎样 / 你该怎么判断）+ 3-4 个理解方向 + 「其他」兜底**，用户只做选择。
+
+两条原则：
+1. 先给描述或标准，用户据此回复
+2. 列出可能的理解偏差，用户指认正确方向
+
+**禁止**：开放式提问（"你想怎么处理"）、选项里没有「其他」、只给 2 个选项。
+
+---
+
+## 八阶段状态机（含 S2）
+
+```
+S1 立题 → S2 对齐 → S3 收敛 → S4 展开 → S5 找破绽（可重复：查设计/查代码） → S6 实现 → S7 固化 → S8 交付
+```
+
+| 阶段 | 加载文件 | 人工签字 |
+|---|---|---|
+| 场景决断 | `.ai/09-scene-triage.md`（入口分诊，先于 S1） | ❌ |
+| S1 立题 | `.ai/10-S1-title.md` | ❌ |
+| **S2 对齐** | **`.ai/11-S2-align.md` + `99-reference/align-schema.md` + `checklist-schema.md`** | ✅ **强制（全流程唯一强制签字点）** |
+| S3 收敛 | `.ai/12-S3-converge.md` + `99-reference/prd-schema.md` | ✅ 与 S2 一致时自动继承 |
+| S4 展开 | `.ai/13-S4-expand.md` + `99-reference/adr-schema.md` | ✅ **强制（看 demo 后）** |
+| S5 找破绽 | `.ai/14-S5-falsify.md` + `99-reference/design-review-checklist.md`（查设计用 REVIEW-DESIGN，查代码用 REVIEW-CODE） | ⚠️ 建议 |
+| S6 实现 | `.ai/15-S6-implement.md` | ❌ |
+| S7 固化 | `.ai/16-S7-solidify.md` + `99-reference/state-schema.md` | ❌ |
+| S8 交付 | `.ai/17-S8-deliver.md` | ✅ 强制 |
+
+**一句话记住每个阶段在防什么：**
+
+| 阶段 | 防的失控 |
+|---|---|
+| S2 | 没搞清要什么就动手 |
+| S3 | 需求范围悄悄膨胀 |
+| S4 | 前端风格全靠猜 |
+| S5 | 带缺陷进实现（查设计）/ 老毛病复发（查代码） |
+| S6 | 没测试就宣称做完 / 坑不记录 |
+| S7 | 下个会话从零读全部文档 |
+| S8 | 交付了但别人用不了 |
+
+---
+
+## 分支规则（每个任务必做）
+
+```bash
+make branch NAME=user-login      # 建 feat/user-login
+# ... 走 S2 → S8 ...
+make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
+```
+
+| 类型 | 用途 |
+|---|---|
+| `feat/` | 新功能 |
+| `fix/` | 修问题 |
+| `docs/` | 文档改动 |
+| `refactor/` `test/` `chore/` `spike/` | 其他 |
+
+**禁止**在 main/master 上直接改动 —— `gate.sh` 会拦截。
+
+---
+
+## 制品位置（不许乱放）
+
+```
+docs/align/CHECKLIST-<任务>-R1.md / R2.md   两轮讨论清单（S2）
+docs/align/ALIGN-<任务>-R1.md / R2.md       两轮讨论记录（S2）
+docs/align/ALIGN-<任务>.md                   意图校准结论（S2）⭐
+docs/prd.md                    需求（S3）
+docs/design/DESIGN.md          设计主文档（S4）
+docs/design/STYLE.md           样式与交互规范（S4）
+docs/design/demo/*.html        HTML demo（S4，前端必需）
+docs/design/REVIEW-DESIGN.md   设计评审（S5）
+docs/adr/ADR-*.md              架构决策（S4）
+src/  tests/                   源码与测试（S6）
+docs/incidents/INC-*.md        故障与问题库（S6/S5，预防必填）
+docs/reviews/REVIEW-CODE-*.md  代码评审（S5，三轮）
+dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说明（S7）【设计者维度，交付不包含】
+CHANGELOG.md                   变更日志（S7）
+docs/release/RELEASE-*.md      交付说明（S8）
+docs/CONCEPTS.md       全局概念表（唯一概念定义处，改词只改这里）
+dev/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
+dev/handoff/H-*.md    开发事件记录（每个任务结束必写，七要素）
+docs/public/                   交付文档（给项目使用者看的，与开发文档分开）
+STATE.md                       状态快照（始终，≤40 行）
+docs/INDEX.md                  文档总索引（始终）
+```
+
+---
+
+## 冲突仲裁
+
+```
+1. 用户当前明确指令
+2. 00-core.md 七条铁律
+3. 当前阶段 .ai/0X-*.md
+4. 90-preferences.md
+5. 通用方法论框架（Superpowers 等）
+6. agent 默认行为
+```
+
+无法判断时：**向用户指出冲突，不自行裁决。**
+
+---
+
+## 常用命令
+
+```bash
+make setup                       # 重建环境
+make branch NAME=<任务短名>       # 建任务分支
+make gate                        # 检查当前阶段门禁
+make gate S2                    # 检查指定阶段
+make status                      # 查看状态快照
+make phase S2                   # 切换阶段（自动检查门禁）
+make sign S2 "原话"              # 记录签字
+make branch-finish NAME=<短名>    # 合并回主分支
+make sync                        # .ai/ 同步到 .skills/ 与 adapters/
+```

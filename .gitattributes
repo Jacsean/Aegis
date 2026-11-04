@@ -1,0 +1,29 @@
+# 统一行尾，避免 Windows 上 CRLF 污染脚本（导致 bash: bad interpreter）
+* text=auto eol=lf
+
+# 脚本必须 LF（git bash / WSL 都要求）
+*.sh   text eol=lf
+*.bash text eol=lf
+
+# 文档统一 LF，保证跨平台 diff 稳定
+*.md   text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Windows 批处理必须 CRLF
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# 二进制：不做任何转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.gz   binary
+*.zip  binary
+*.tar  binary
+*.sqlite binary
