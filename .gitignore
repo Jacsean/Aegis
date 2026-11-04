@@ -11,3 +11,6 @@ node_modules/
 # 交付打包产物（deliver.sh 输出到 ../out/，这里兜底）
 *.tar.gz
 *.tgz
+
+# 交付包标记（deliver.sh 在临时目录创建，主仓库不应有）
+.aegis-package
