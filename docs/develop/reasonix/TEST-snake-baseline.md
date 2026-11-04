@@ -48,19 +48,30 @@
 
 ## 四、装 Aegis 的执行步骤
 
+> 路径按你的实际项目区写死，Git Bash 里用 `/d/...` 形式。
+
 ```bash
-# 1. 建一个空目录当项目
-mkdir -p ~/projects/snake-with-aegis
+# 1. 建两个空目录（一个装 Aegis，一个不装）
+mkdir -p /d/example/projects/snake-with-aegis
+mkdir -p /d/example/projects/snake-baseline
 
-# 2. 装上最小闭环
+# 2. 只给第一个装最小闭环
 cd /d/example/projects/Aegis
-bash scripts/install-v3.sh ~/projects/snake-with-aegis
+bash scripts/install-v3.sh /d/example/projects/snake-with-aegis
 
-# 3. 在该目录打开 Reasonix 新会话
-# 4. 把"需求原文"一字不改地发出去
+# 3. 在 snake-with-aegis 里打开 Reasonix 新会话
+#    把「需求原文」一字不改地发出去
 ```
 
-**不装的那组**：同样的空目录、同样的需求原文，只是不跑安装脚本。
+**不装的那组**：进 `snake-baseline`，同样开 Reasonix 新会话，发同一句需求原文。
+
+装完后 `snake-with-aegis` 里应该有：
+
+```
+AGENTS.md  CLAUDE.md  NOTES.md  preferences.md
+.agents/skills/aegis-think/{SKILL.md, references/*12}
+.claude/skills/aegis-think/{...}   ← Claude Code 用
+```
 
 ---
 
