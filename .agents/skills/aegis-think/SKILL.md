@@ -1,6 +1,6 @@
 ---
 name: aegis-think
-description: Use when a new request or task arrives and before any plan, design, code, or answer is produced — especially when the request is short, ambiguous, or could reasonably mean several different things. Forces one deliberate pass over what the user actually needs (including what they did not say) before doing anything.
+description: Use when a request is short, ambiguous, or could reasonably mean several different things — before interpreting it as a task. Judges whether what the user asked for is what they actually need, including what they did not say. Do NOT use for creative divergence, idea generation, or option listing (that is brainstorming's job); do NOT use when the instruction is already unambiguous, and do NOT use for executing a plan that is already agreed.
 ---
 
 # 先想再做

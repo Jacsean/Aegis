@@ -51,20 +51,41 @@ if [ -d "$TARGET/.claude" ] || [ "$CAP_HOOK" = "yes" ]; then
 fi
 echo ""
 
-# ---------- 3. 装入口 ----------
+# ---------- 3. 装入口（标记追加，绝不覆盖已有内容）----------
 echo "[3/4] 安装入口文件"
-if [ -f "$TARGET/AGENTS.md" ]; then
-  cp "$TARGET/AGENTS.md" "$TARGET/AGENTS.md.bak.$(date +%Y%m%d%H%M%S)"
-  echo "  ! 已有 AGENTS.md，已备份后覆盖"
-fi
-cp "$ROOT/templates/v3/AGENTS.md" "$TARGET/AGENTS.md"
-echo "  → AGENTS.md"
-# 偏好文件：始终生效，与 AGENTS.md 同目录
-cp "$ROOT/templates/v3/preferences.md" "$TARGET/preferences.md"
-echo "  → preferences.md"
-# Claude Code 读 CLAUDE.md：用实体副本（Windows 上软链会失效）
-cp "$ROOT/templates/v3/AGENTS.md" "$TARGET/CLAUDE.md"
-echo "  → CLAUDE.md（实体副本）"
+
+BEGIN_MARK='<!-- BEGIN AEGIS -->'
+END_MARK='<!-- END AEGIS -->'
+
+# 把 Aegis 的内容写进目标文件：
+#   文件不存在      → 新建（含标记）
+#   已有 AEGIS 段   → 只替换段内内容，段外一字不动
+#   无 AEGIS 段     → 追加到末尾，原文完整保留
+install_block() {
+  local target="$1" src="$2"
+
+  if [ ! -f "$target" ]; then
+    { printf '%s\n' "$BEGIN_MARK"; cat "$src"; printf '%s\n' "$END_MARK"; } > "$target"
+    echo "  → $target（新建）"
+    return
+  fi
+
+  if grep -qF "$BEGIN_MARK" "$target"; then
+    awk -v b="$BEGIN_MARK" -v e="$END_MARK" -v srcfile="$src" '
+      $0 == b { print; while ((getline line < srcfile) > 0) print line; close(srcfile); skip=1; next }
+      $0 == e { skip=0 }
+      !skip   { print }
+    ' "$target" > "$target.aegis.tmp" && mv "$target.aegis.tmp" "$target"
+    echo "  → $target（替换 AEGIS 段，段外未动）"
+  else
+    { printf '\n%s\n' "$BEGIN_MARK"; cat "$src"; printf '%s\n' "$END_MARK"; } >> "$target"
+    echo "  → $target（追加 AEGIS 段，原文完整保留）"
+  fi
+}
+
+install_block "$TARGET/AGENTS.md"      "$ROOT/templates/v3/AGENTS.md"
+install_block "$TARGET/CLAUDE.md"      "$ROOT/templates/v3/AGENTS.md"
+install_block "$TARGET/preferences.md" "$ROOT/templates/v3/preferences.md"
 echo ""
 
 # ---------- 4. 初始化记录 ----------
