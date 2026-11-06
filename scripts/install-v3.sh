@@ -103,6 +103,11 @@ else
 fi
 echo ""
 
+# ---------- 5. 生成分工约定 ----------
+echo "[5/5] 生成分工约定（探测已有 skills，说明谁管什么）"
+bash "$ROOT/scripts/gen-division.sh" "$TARGET" 2>&1 | sed 's/^/  /'
+echo ""
+
 echo "=== 完成 ==="
 echo ""
 echo "下一步："
