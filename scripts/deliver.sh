@@ -26,17 +26,20 @@ echo "  → 已剔除 docs/internal/ 与 docs/rfc/（设计者维度）"
 
 
 # 2a2. 重置自举产生的本地状态（这些是「框架自己这个项目」的，不是「给使用者的模板」）
-#      NOTES.md 里是框架开发过程中的决策记录，不该随交付包发给使用者；
-#      AEGIS-分工.md 是安装时按本机环境探测生成的，使用者要自己跑一次。
-rm -f "$TMP/$NAME/NOTES.md" "$TMP/$NAME/AEGIS-分工.md"
-echo "  → 已剔除 NOTES.md 与 AEGIS-分工.md（自举本地状态，使用者需自行生成）"
+#      使用者在自己的项目里跑 install-v3.sh 时，这些文件会从 templates/v3/ 生成；
+#      交付包里带着 Aegis 仓库自己那份，只会让人误以为"已经是装好的状态"。
+#      保留的：AGENTS.md（框架入口）/ CLAUDE.md GEMINI.md（入口副本）/
+#              README.md CHANGELOG.md VERSION STATE.md Makefile（框架本体）
+LOCAL_STATE="NOTES.md AEGIS-分工.md CORE-CHECKLIST.md CHECKLIST-GROWTH.md constraints.md EXTERNAL.md preferences.md"
+for f in $LOCAL_STATE; do rm -f "$TMP/$NAME/$f"; done
+echo "  → 已剔除自举本地状态（使用者需自行 install-v3.sh 生成）：$LOCAL_STATE"
 
 # 2b. 清 git 索引里已剔除项的跟踪（否则包内 git status 永远脏，branch.sh 第一步就卡）
 git -C "$TMP/$NAME" rm -r --cached --quiet docs/internal 2>/dev/null || true
 git -C "$TMP/$NAME" rm -r --cached --quiet docs/rfc 2>/dev/null || true
-git -C "$TMP/$NAME" rm --cached --quiet NOTES.md "AEGIS-分工.md" 2>/dev/null || true
+git -C "$TMP/$NAME" rm --cached --quiet $LOCAL_STATE 2>/dev/null || true
 git -C "$TMP/$NAME" -c user.name=deliver -c user.email=deliver@aegis.local \
-  commit --quiet --allow-empty -m "chore: 交付包索引剔除设计者维度（deliver.sh 自动提交）"
+  commit --quiet --allow-empty -m "chore: 交付包索引剔除设计者维度与自举状态（deliver.sh 自动提交）"
 
 # 2c. STATE.md 换成新项目起始态（包内不该带着框架自己的 S8 待复签状态）
 cat > "$TMP/$NAME/STATE.md" <<'STATE'
@@ -73,8 +76,21 @@ for f in AGENTS.md STATE.md docs/reference/concepts.md .ai/00-core.md .skills/ae
 done
 [ ! -e docs/internal ] && echo "  ✓ docs/internal/ 已剔除（设计者维度）"
 [ ! -e docs/rfc ] && echo "  ✓ docs/rfc/ 已剔除（设计者维度）" || { echo "✗ docs/rfc/ 未剔除"; exit 1; }
-[ ! -e NOTES.md ] && echo "  ✓ NOTES.md 已剔除（自举本地状态）"
-[ ! -e "AEGIS-分工.md" ] && echo "  ✓ AEGIS-分工.md 已剔除（使用者需自行生成）"
+# 自举运行时文件：一个都不许留（使用者跑 install-v3.sh 时从 templates/v3/ 生成）
+leftover=""
+for f in NOTES.md "AEGIS-分工.md" CORE-CHECKLIST.md CHECKLIST-GROWTH.md constraints.md EXTERNAL.md preferences.md; do
+  [ -e "$f" ] && leftover="$leftover $f"
+done
+if [ -z "$leftover" ]; then
+  echo "  ✓ 自举运行时文件已全部剔除（7 个）"
+else
+  echo "✗ 交付包内仍有自举运行时文件:$leftover"; exit 1
+fi
+# 框架本体必须在
+for f in AGENTS.md README.md CHANGELOG.md VERSION Makefile; do
+  [ -f "$f" ] || { echo "✗ 缺框架本体文件: $f"; exit 1; }
+done
+echo "  ✓ 框架本体文件齐全"
 
 # 断链检查：docs/README.md「一、随交付」里列出的路径必须真实存在
 miss=0
