@@ -11,6 +11,17 @@ fi
 
 OUT="$TARGET/AEGIS-分工.md"
 
+# ---------- 探测用户级规则文件（各 agent 位置不同）----------
+USER_RULES=""
+for p in \
+  "$HOME/.reasonix/AGENTS.md" \
+  "$HOME/AppData/Roaming/reasonix/AGENTS.md" \
+  "$HOME/.claude/CLAUDE.md" \
+  "$HOME/.codex/AGENTS.md" \
+  "$HOME/.config/reasonix/AGENTS.md"; do
+  if [ -f "$p" ]; then USER_RULES="$USER_RULES $p"; fi
+done
+
 # ---------- 职责表 ----------
 # 输出格式: 关系|它负责什么|怎么相处
 relation_of() {
@@ -162,6 +173,58 @@ done
   echo "| 验证「结论内容对不对」 | 只能验证形式（有没有标来源），不能验证真假 |"
   echo ""
   echo "**所以 Aegis 的定位是：审计 + 否决权，不是控制权。** 它能说「这不算完成」，不能说「你不能这么想」。"
+  echo ""
+  echo "---"
+  echo ""
+  echo "## 五、规则文件（rules）冲突怎么办"
+  echo ""
+  echo "一个 agent 会话会**同时加载多套规则**：用户级（全局，所有项目都吃）+ 项目级（只这个项目）。"
+  echo "两套规则对同一件事给出不同要求时，就是冲突。"
+  echo ""
+  echo "### 本机检测到的规则文件"
+  echo ""
+  echo "| 级别 | 路径 | 大小 | 说明 |"
+  echo "|---|---|---|---|"
+  echo "| **项目级** | \`./AGENTS.md\` | $(wc -c < AGENTS.md 2>/dev/null | tr -d ' ') 字节 | Aegis 入口，只在本项目生效 |"
+  if [ -n "$USER_RULES" ]; then
+    for u in $USER_RULES; do
+      echo "| 用户级 | \`$u\` | $(wc -c < "$u" 2>/dev/null | tr -d ' ') 字节 | 全局规则，**每个项目都会被加载** |"
+    done
+  else
+    echo "| 用户级 | （未检测到） | — | — |"
+  fi
+  echo ""
+  echo "### 冲突时按这个顺序判"
+  echo ""
+  echo "1. **用户当前明确指令**（最高）"
+  echo "2. **项目级 rules** —— 更具体，只管这个项目"
+  echo "3. **用户级 rules** —— 更通用，被项目级覆盖"
+  echo ""
+  echo "> 依据：具体优于通用。用户级写「文档放 docs/develop」、项目级写「放 docs/internal」时，"
+  echo "> 本项目按项目级的走——在这个项目里，项目约定更贴近意图。"
+  echo ""
+  echo "### 怎么发现冲突"
+  echo ""
+  echo "| 冲突类型 | 例子 |"
+  echo "|---|---|"
+  echo "| **同一件事两种要求** | 用户级说文档放 \`docs/develop/\`，项目级说放 \`docs/internal/\` |"
+  echo "| **同一动作两种权限** | 用户级说允许直接提交，项目级说 main 上禁止提交 |"
+  echo "| **同一流程两种阶段** | 用户级分 4 阶段，项目级分 8 阶段 |"
+  echo ""
+  echo "### 发现冲突怎么办"
+  echo ""
+  echo "**不要自己裁决，也不要沉默照做一个。** 按这个格式报告："
+  echo ""
+  echo '```'
+  echo "发现规则冲突："
+  echo "  用户级（<路径> 第 X 条）要求：A"
+  echo "  项目级（AGENTS.md 第 Y 条）要求：B"
+  echo "  我按 B 做了，理由是：本项目的约定更具体。"
+  echo "  如果你希望按 A，告诉我，我改。"
+  echo '```'
+  echo ""
+  echo "**为什么不能沉默**：用户级规则是用户亲手写的，他没意识到会被项目级覆盖——"
+  echo "不报告就等于悄悄推翻了他的意图。"
 } > "$OUT"
 
 echo "→ 已生成：$OUT"

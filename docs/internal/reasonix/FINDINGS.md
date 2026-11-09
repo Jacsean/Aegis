@@ -24,7 +24,7 @@
 | # | 问题 | 证据 | 状态 |
 |:--:|---|---|:--:|
 | 8 | **Aegis 仓库自己没装 Aegis**（医者不自医） | 自举前 `NOTES.md` / `CORE-CHECKLIST.md` / `.reasonix/hooks` 全不存在，跑了 20+ 轮机制零生效 | ✅ 已自举 |
-| 9 | **分工约定只覆盖 skills，不覆盖 rules 冲突** | agent 实测发现"用户级 AGENTS.md v2.0 与项目级 v3 冲突"，靠它临场判断 | ⏳ 待补 |
+| 9 | **分工约定只覆盖 skills，不覆盖 rules 冲突** | agent 实测发现"用户级 AGENTS.md v2.0 与项目级 v3 冲突"，靠它临场判断 | ✅ 已补（AEGIS-分工.md 第五节，含本机规则文件探测） |
 | 10 | **`deliver.sh` 只剔除 `dev/`，不剔除测试产物** | `docs/internal/` 和仓库根的 `NOTES.md` 会被打进交付包 | 🔧 本次修 |
 
 ## 三、验证结果（哪些设计真的有效）
