@@ -8,6 +8,84 @@
 
 ---
 
+## [3.0.0] - 2026-11-06
+
+> **这是一次重写，不是改版。** v3 把 Aegis 从「流程规范」变成「能长、能拦、能接续的约束层」。
+> 旧版的所有文件布局都不再适用。
+
+### 新增
+
+**约束层（监管模块）**
+- `CORE-CHECKLIST.md` —— 三层检查：第 1 层 40 token 常驻（认知·事实·语义·时间）/ 第 2 层四问自检 + 四个维度展开 / 第 3 层细化判据
+- `CHECKLIST-GROWTH.md` —— 生长机制：失效记录 → 上升判据（≥2 项目或 ≥3 次复发）→ 修剪记录
+- `constraints.md` —— 项目级扩展，最多 3 条（内置 4 + 项目 3 = 7，落在 5–9 的安全区间）
+- `EXTERNAL.md` —— 外接能力三头管控（调用前定验收 / 调用中不管 / 调用后验收记账），单任务 ≤2 个
+
+**能力层**
+- `.agents/skills/aegis-think/` —— 16 个思维模型（1-12 分析型 / 13-15 主张型 / 16 双环反思），三层按需加载
+- 新增「四问自检」判定高迷惑性任务（自指 / 多角色 / 被测物与环境重叠 / 结论依赖不可靠数据），并在 `aegis-think` 里规定「做完强制二次独立判断」
+
+**执行层（Reasonix）**
+- `scripts/install-v3.sh` —— 六步安装：探测宿主 / 装技能 / 装入口（标记追加）/ 初始化记录 / 挂 hooks / 生成分工约定
+- `templates/v3/reasonix/hooks/` —— 四个 hook：
+  - `aegis-session-start.sh` 入口注入约束摘要（timeout 15s，Windows 上 Git Bash 冷启动慢）
+  - `aegis-guard-write.sh` 无 `NOTES.md` 时拦写文件
+  - `aegis-guard-bash.sh` 主干上拦 commit / merge / push
+  - `aegis-stop-check.sh` 收尾提醒（只能提醒，平台不允许阻断）
+- `scripts/gen-division.sh` —— 探测已装能力，生成 `AEGIS-分工.md`（自有/串联/并列/让路 四类关系 + 第五节规则冲突处理）
+
+**其他**
+- `preferences.md` —— 沟通格式（不输出中间过程、答复与待确认分开）与工程约束
+- `docs/reference/concepts.md` —— 「外接」等新词条（严格 5W2H）
+
+### 变更（**不兼容**）
+
+**目录结构按行业约定重排**（Diátaxis + ADR + SRE 标准）
+
+| 旧 | 新 |
+|---|---|
+| `dev/align/` | `docs/rfc/` |
+| `dev/handoff/` `dev/archive/` `dev/legacy/` | `docs/internal/*` |
+| `dev/HANDOFF.md` `dev/PATH-MAP.md` | `docs/internal/` |
+| `docs/develop/` | `docs/internal/` |
+| `docs/public/` | `docs/guides/` |
+| `docs/CONCEPTS.md` | `docs/reference/concepts.md` |
+| `docs/INDEX.md` | `docs/README.md` |
+
+**安装方式全新**：`bash scripts/install-v3.sh <项目目录>`，六步全部不覆盖已有内容。
+
+### 修复（全部有实测证据，详见 `docs/internal/reasonix/FINDINGS.md`）
+
+- **hook 的 `match` 是锚定正则**：配 `write` 匹配不到 `write_file` → hook 从头到尾没触发过（🔴 最严重，等于整层不存在）
+- **SessionStart 5s 超时**：Windows 上 Git Bash 冷启动超过默认值，注入从未生效 → timeout 放宽到 15s
+- **`ask` 被 guard-bash 误伤**：提问里提到 "git commit" 就被当命令拦 → 要求 payload 含 `"command"` 字段
+- **`git branch -r --no-merged` 被误判成合并命令**：`*git*merge*` 吃进了 `--no-merged`，把 AGENTS.md 规定的标准动作锁死 → 改成匹配 `git merge` 的确定形态
+- **安装覆盖已有 `AGENTS.md`** → 改为 `<!-- BEGIN AEGIS -->` 标记追加
+- **合并 hook 配置时同 command 只跳过不更新** → 改为覆盖更新（否则重装修不好 `match`）
+- **`AEGIS-分工.md` 指向目标项目里不存在的脚本** → 生成器装入 `.aegis/gen-division.sh`
+- **`constraints.md` 空 checkbox 被误解成「3 条空约束」** → 改成「（未定）」并加状态说明
+- **`deliver.sh` 只剔除 `docs/internal/`，漏了 `docs/rfc/`** → 两个都剔除
+- **交付包索引断链**：`docs/README.md` 声称随交付的 `docs/prd.md` 实际不存在 → 索引区分「随交付」与「新项目才有（由模板提供）」，并加自动断链检查
+- **`install-v3.sh` 提示语指向已移走的文件** → 改为不引用具体文件
+
+### 移除
+
+- `dev/` 目录整体（内容迁入 `docs/internal/`）
+- v2 的部分旧文档（`docs/develop/reasonix/` 里的测试产物移出仓库，见下）
+
+### 未进版
+
+- **Stop 层不能阻断**：平台只允许 PreToolUse / UserPromptSubmit 返回 exit 2，Stop 只能提醒
+- **只实现 Reasonix 一个平台**：Claude Code / Trae 的 hook 格式已知但未实现
+- **「NOTES 自写质量」未验证**：跨会话接续测的是「读 NOTES 能不能接上」，不是「能不能自己写清楚」
+
+### 已知限制
+
+- `origin` 指向 `/workspace/aegis`，在 Windows 上不可达，本次只能本地 tag 未推送
+- 4 个维度能查「言行是否一致」，**查不了「判断是否正确」**（这条已写进 `FINDINGS.md` 的能力边界）
+
+---
+
 ## [2.0.1] - 2026-10-29
 
 ### 修复（v2.0.0 真机验收不合格，H-0023）
