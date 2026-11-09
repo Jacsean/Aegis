@@ -89,18 +89,29 @@ install_block "$TARGET/preferences.md" "$ROOT/templates/v3/preferences.md"
 echo ""
 
 # ---------- 4. 初始化记录 ----------
-echo "[4/4] 初始化记录文件"
+echo "[4/5] 初始化记录文件"
 if [ ! -f "$TARGET/NOTES.md" ]; then
   cat > "$TARGET/NOTES.md" <<'EOF'
 # 决策记录
 
 > 每条一次。上限 200 行，超了把已确认的移到 NOTES-ARCHIVE.md。
+> 每条必须含：用了什么 / 判断是什么 / 排除了什么 / 用户明确否定的 / 什么情况说明我错了
 
 EOF
-  echo "  → NOTES.md（空）"
+  echo "  → NOTES.md（新建）"
 else
   echo "  → NOTES.md 已存在，保留"
 fi
+
+# 核心检查清单 + 生长记录：不存在才装（这两个是使用者要长期维护的，不许覆盖）
+for f in CORE-CHECKLIST.md CHECKLIST-GROWTH.md; do
+  if [ ! -f "$TARGET/$f" ]; then
+    cp "$ROOT/templates/v3/$f" "$TARGET/$f"
+    echo "  → $f（新建）"
+  else
+    echo "  → $f 已存在，保留（它可能已被你改过）"
+  fi
+done
 echo ""
 
 # ---------- 5. 生成分工约定 ----------
