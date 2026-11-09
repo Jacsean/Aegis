@@ -162,6 +162,11 @@ echo ""
 
 # ---------- 6. 生成分工约定 ----------
 echo "[6/6] 生成分工约定（探测已有 skills，说明谁管什么）"
+# 把生成器也装进目标项目，否则 AEGIS-分工.md 里写的"重新生成"命令会指向不存在的脚本
+mkdir -p "$TARGET/.aegis"
+cp "$ROOT/scripts/gen-division.sh" "$TARGET/.aegis/gen-division.sh"
+chmod +x "$TARGET/.aegis/gen-division.sh" 2>/dev/null || true
+echo "  → .aegis/gen-division.sh（装了技能后可自行重新生成分工表）"
 bash "$ROOT/scripts/gen-division.sh" "$TARGET" 2>&1 | sed 's/^/  /'
 echo ""
 

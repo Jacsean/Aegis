@@ -94,7 +94,7 @@ done
   echo ""
   echo "> 生成时间：$(date '+%Y-%m-%d %H:%M')"
   echo "> 本文件说明：这个项目里 Aegis 和已有能力怎么分工。**换 agent 接手时，先读这份再动手。**"
-  echo "> 重新生成：\`bash scripts/gen-division.sh .\`（会覆盖本文件）"
+  echo "> 重新生成：\`bash .aegis/gen-division.sh .\`（会覆盖本文件；脚本由 install-v3.sh 一并装入）"
   echo ""
   echo "---"
   echo ""
