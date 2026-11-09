@@ -115,8 +115,50 @@ for f in CORE-CHECKLIST.md CHECKLIST-GROWTH.md constraints.md EXTERNAL.md; do
 done
 echo ""
 
-# ---------- 5. 生成分工约定 ----------
-echo "[5/5] 生成分工约定（探测已有 skills，说明谁管什么）"
+# ---------- 5. 挂载 Reasonix hooks（只在用 Reasonix 时）----------
+echo "[5/6] 挂载约束（Reasonix hooks）"
+if [ "$CAP_HOOK" = "yes" ]; then
+  mkdir -p "$TARGET/.reasonix/hooks"
+  cp "$ROOT/templates/v3/reasonix/hooks/"*.sh "$TARGET/.reasonix/hooks/"
+  chmod +x "$TARGET/.reasonix/hooks/"*.sh 2>/dev/null || true
+  echo "  → .reasonix/hooks/（4 个脚本）"
+
+  if command -v node >/dev/null 2>&1; then
+    node -e '
+      const fs=require("fs");
+      const [tgt, src] = process.argv.slice(1);
+      const add = JSON.parse(fs.readFileSync(src,"utf8"));
+      let cur = {};
+      if (fs.existsSync(tgt)) { try { cur = JSON.parse(fs.readFileSync(tgt,"utf8")); } catch(e){ cur={}; } }
+      cur.hooks = cur.hooks || {};
+      let added = 0;
+      for (const [ev, arr] of Object.entries(add.hooks || {})) {
+        cur.hooks[ev] = cur.hooks[ev] || [];
+        for (const h of arr) {
+          if (!cur.hooks[ev].some(x => x.command === h.command)) { cur.hooks[ev].push(h); added++; }
+        }
+      }
+      fs.writeFileSync(tgt, JSON.stringify(cur, null, 2) + "\n");
+      console.log("  → .reasonix/settings.json（合并，新增 " + added + " 条 hook）");
+    ' "$TARGET/.reasonix/settings.json" "$ROOT/templates/v3/reasonix/settings.json"
+  else
+    if [ -f "$TARGET/.reasonix/settings.json" ]; then
+      cp "$TARGET/.reasonix/settings.json" "$TARGET/.reasonix/settings.json.bak"
+      echo "  ! 已有 settings.json 且没装 node，无法安全合并"
+      echo "    已备份为 settings.json.bak；请手动把 $ROOT/templates/v3/reasonix/settings.json 里的 hooks 并进去"
+    else
+      cp "$ROOT/templates/v3/reasonix/settings.json" "$TARGET/.reasonix/settings.json"
+      echo "  → .reasonix/settings.json（新建）"
+    fi
+  fi
+  echo "  ! 保存后需重启 Reasonix 才生效；项目级 hooks 新版本可能需要 /hooks trust"
+else
+  echo "  跳过（未探测到 Reasonix/Claude 配置目录）"
+fi
+echo ""
+
+# ---------- 6. 生成分工约定 ----------
+echo "[6/6] 生成分工约定（探测已有 skills，说明谁管什么）"
 bash "$ROOT/scripts/gen-division.sh" "$TARGET" 2>&1 | sed 's/^/  /'
 echo ""
 
