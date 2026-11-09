@@ -55,7 +55,7 @@ S5 就是补这两个缺口：
 - `docs/design/demo/*.html`
 - `docs/adr/*.md`
 - `docs/prd.md`（验收标准，用于对照）
-- `docs/align/ALIGN-<任务>.md`（**真实意图，最高依据**）
+- `docs/rfc/ALIGN-<任务>.md`（**真实意图，最高依据**）
 - `docs/incidents/`（历史故障库）
 
 ---
@@ -118,7 +118,7 @@ S5 就是补这两个缺口：
 | 制品 | 路径 | 要求 |
 |---|---|---|
 | 设计评审记录 | `docs/design/REVIEW-DESIGN.md` | 12 项逐条有结论 + 意图复核 + 历史回灌 |
-| 索引登记 | `docs/INDEX.md` | 已登记 |
+| 索引登记 | `docs/README.md` | 已登记 |
 | 状态更新 | `STATE.md` | 阶段 = S5，结论已记录 |
 
 ---
@@ -229,7 +229,7 @@ S5 设计评审完成，结论：<通过 / 修正后通过 / 退回 S4>
 - `src/`、`tests/`
 - `docs/prd.md`（验收标准）
 - `docs/design/DESIGN.md`
-- `docs/align/ALIGN-<任务>.md`（真实意图）
+- `docs/rfc/ALIGN-<任务>.md`（真实意图）
 - `docs/incidents/`（历史故障库）
 - `docs/design/REVIEW-DESIGN.md`（S5 遗留待验证项）
 
@@ -310,7 +310,7 @@ S5 设计评审完成，结论：<通过 / 修正后通过 / 退回 S4>
 |---|---|---|
 | 代码评审记录 | `docs/reviews/REVIEW-CODE-<日期>.md` | 三轮齐备，含 INC 对照表 |
 | 修复记录 | 同上 | Critical/Major 的修复位置 |
-| 索引登记 | `docs/INDEX.md` | 已登记 |
+| 索引登记 | `docs/README.md` | 已登记 |
 
 ---
 

@@ -37,7 +37,7 @@
 ## 输入
 
 - 用户的需求描述（一句话也可以）
-- `docs/INDEX.md`（了解已有资产，避免重复）
+- `docs/README.md`（了解已有资产，避免重复）
 
 ---
 
@@ -92,7 +92,7 @@ PRD 已写入 docs/prd.md，请逐条确认：
 
 ### 4. 登记
 
-- 在 `docs/INDEX.md` 登记 `prd.md`
+- 在 `docs/README.md` 登记 `prd.md`
 - 更新 `STATE.md`
 
 ---
@@ -102,7 +102,7 @@ PRD 已写入 docs/prd.md，请逐条确认：
 | 制品 | 路径 | 要求 |
 |---|---|---|
 | 需求文档 | `docs/prd.md` | 六节齐全，**非目标非空**，验收标准可测 |
-| 索引登记 | `docs/INDEX.md` | 含 prd.md 一行 |
+| 索引登记 | `docs/README.md` | 含 prd.md 一行 |
 | 状态更新 | `STATE.md` | 阶段 = S3，下一步指向 S4 |
 
 ---

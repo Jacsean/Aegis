@@ -33,7 +33,7 @@
 ## 输入
 
 - `docs/prd.md`（已由用户签字确认）
-- `docs/INDEX.md`（避免与已有设计冲突）
+- `docs/README.md`（避免与已有设计冲突）
 
 ---
 
@@ -102,7 +102,7 @@
 
 ### 5. 登记
 
-- `docs/INDEX.md` 登记所有新文档
+- `docs/README.md` 登记所有新文档
 - 更新 `STATE.md`
 
 ---
@@ -115,7 +115,7 @@
 | 样式规范 | `docs/design/STYLE.md` | 前端项目必需 |
 | **HTML demo** | `docs/design/demo/*.html` | **前端项目：每个关键界面一个，自包含可开** |
 | 决策记录 | `docs/adr/ADR-*.md` | 每个重大选择一篇，含负面后果 |
-| 索引 | `docs/INDEX.md` | 全部登记 |
+| 索引 | `docs/README.md` | 全部登记 |
 | 状态 | `STATE.md` | 阶段 = S4 |
 
 ---

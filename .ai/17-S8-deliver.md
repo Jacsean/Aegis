@@ -194,7 +194,7 @@ make branch-finish NAME=<任务短名>
 | 制品 | 路径 | 要求 |
 |---|---|---|
 | 交付说明 | `docs/release/RELEASE-v<X.Y.Z>.md` | 六节，四节强制，含真实冒烟输出 |
-| 索引登记 | `docs/INDEX.md` | 已登记 |
+| 索引登记 | `docs/README.md` | 已登记 |
 | 用户签收 | `STATE.md` | `S8 确认：... ✅「原话」` |
 | 版本标签 | git tag | 已合并到 main 并打 tag |
 

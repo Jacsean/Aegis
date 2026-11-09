@@ -16,7 +16,7 @@
 - 项目前提清单顺带确认（S1 产物）
 
 ## 门禁要点
-对齐留档（`docs/align/`）两轮齐全、清单选项式、无未解释技术词、签字非空。详细规范见附录（自 015 迁移）。
+对齐留档（`docs/rfc/`）两轮齐全、清单选项式、无未解释技术词、签字非空。详细规范见附录（自 015 迁移）。
 
 
 ---
@@ -27,7 +27,7 @@
 
 
 > 目的：在写任何需求文档、任何方案之前，**先确认我到底想要什么**。
-> 本阶段产出 `docs/align/ALIGN-<任务名>.md`，作为 S3 写 PRD 的**唯一依据**。
+> 本阶段产出 `docs/rfc/ALIGN-<任务名>.md`，作为 S3 写 PRD 的**唯一依据**。
 
 ---
 
@@ -69,7 +69,7 @@ S3 是"把确认过的意图写成 PRD"；而 S2 是"**确认意图本身**"。
 
 不能边讨论边想问题，也不能讨论完了再补 checklist。
 
-checklist 存为 `docs/align/CHECKLIST-<任务名>-R<n>.md`。
+checklist 存为 `docs/rfc/CHECKLIST-<任务名>-R<n>.md`。
 
 ### 规则三：选项式，不是开放式
 
@@ -603,12 +603,12 @@ A. 存本地文件 ...
 
 | 制品 | 路径 | 要求 |
 |---|---|---|
-| R1 checklist | `docs/align/CHECKLIST-<任务>-R1.md` | 5 条以上，全小白语言 |
-| R1 讨论记录 | `docs/align/ALIGN-<任务>-R1.md` | 每条问题 + 你的回答 + 结论 |
-| R2 checklist | `docs/align/CHECKLIST-<任务>-R2.md` | 覆盖四类，全小白语言 |
-| R2 讨论记录 | `docs/align/ALIGN-<任务>-R2.md` | 同上 |
-| 汇总 | `docs/align/ALIGN-<任务>.md` | 意图结论 + 边界 + 成功标准 |
-| 索引登记 | `docs/INDEX.md` | 全部登记 |
+| R1 checklist | `docs/rfc/CHECKLIST-<任务>-R1.md` | 5 条以上，全小白语言 |
+| R1 讨论记录 | `docs/rfc/ALIGN-<任务>-R1.md` | 每条问题 + 你的回答 + 结论 |
+| R2 checklist | `docs/rfc/CHECKLIST-<任务>-R2.md` | 覆盖四类，全小白语言 |
+| R2 讨论记录 | `docs/rfc/ALIGN-<任务>-R2.md` | 同上 |
+| 汇总 | `docs/rfc/ALIGN-<任务>.md` | 意图结论 + 边界 + 成功标准 |
+| 索引登记 | `docs/README.md` | 全部登记 |
 
 ---
 
@@ -632,7 +632,7 @@ A. 存本地文件 ...
 
 ✅ **强制**，且必须是你**逐条回复过 checklist**之后的确认。
 
-签字格式（写入 `docs/align/ALIGN-<任务>.md` 末尾）：
+签字格式（写入 `docs/rfc/ALIGN-<任务>.md` 末尾）：
 ```
 ## 确认
 
@@ -676,5 +676,5 @@ Superpowers 的 `brainstorming` 只做一轮开放式提问，且不要求 check
 ## 新词清单（铁律七挂点，不可跳；本阶段现行编号 S2，八阶段定稿中为 S2 对齐）
 
 校准开始时，agent 必须产出**本次工作的新词候选清单**：复述用户意图中反复出现、
-但概念表（`docs/CONCEPTS.md` 目录）里没有的词。每个候选用五元素问用户
+但概念表（`docs/reference/concepts.md` 目录）里没有的词。每个候选用五元素问用户
 「这个词你怎么理解」。答完的当场按答案起草词条（标 `暂定`），不硬凑、没有就写「无」。

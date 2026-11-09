@@ -46,7 +46,7 @@ case "${1:-show}" in
 
 1. 与用户确认技术栈与项目类型
 2. make setup 建环境
-3. 填 docs/INDEX.md
+3. 填 docs/README.md
 4. 过 P0 门禁 → 进 P1
 
 ## 门禁签字

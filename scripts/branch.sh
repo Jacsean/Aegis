@@ -75,15 +75,15 @@ case "${1:-status}" in
     ok "已建分支: $BR"
 
     # 建对应的 align 目录占位
-    mkdir -p docs/align
-    if [ ! -f "docs/align/.gitkeep" ]; then touch "docs/align/.gitkeep"; fi
+    mkdir -p docs/rfc
+    if [ ! -f "docs/rfc/.gitkeep" ]; then touch "docs/rfc/.gitkeep"; fi
 
     echo ""
     echo "下一步（铁律六）："
-    echo "  1. 写 docs/align/CHECKLIST-${SLUG}-R1.md"
-    echo "  2. 与用户逐条讨论，记录 docs/align/ALIGN-${SLUG}-R1.md"
+    echo "  1. 写 docs/rfc/CHECKLIST-${SLUG}-R1.md"
+    echo "  2. 与用户逐条讨论，记录 docs/rfc/ALIGN-${SLUG}-R1.md"
     echo "  3. 再写 R2 checklist，重复一轮"
-    echo "  4. 汇总 docs/align/ALIGN-${SLUG}.md 并请用户签字"
+    echo "  4. 汇总 docs/rfc/ALIGN-${SLUG}.md 并请用户签字"
     ;;
 
   list)
@@ -117,10 +117,10 @@ case "${1:-status}" in
     if [ -n "$NAME" ]; then
       SLUG="$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g')"
       # 校验 align 签字存在
-      if [ -f "docs/align/ALIGN-${SLUG}.md" ]; then
-        grep -q '总确认原话' "docs/align/ALIGN-${SLUG}.md" && ok "ALIGN 签字存在" || err "ALIGN 缺签字"
+      if [ -f "docs/rfc/ALIGN-${SLUG}.md" ]; then
+        grep -q '总确认原话' "docs/rfc/ALIGN-${SLUG}.md" && ok "ALIGN 签字存在" || err "ALIGN 缺签字"
       else
-        info "未找到 docs/align/ALIGN-${SLUG}.md（若已过 S2 对齐应存在）"
+        info "未找到 docs/rfc/ALIGN-${SLUG}.md（若已过 S2 对齐应存在）"
       fi
     fi
 

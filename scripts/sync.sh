@@ -152,12 +152,12 @@ extract() { # $1=文件 $2=起始标记 $3=结束标记
 }
 
 CORE_SNIP="$(extract .ai/00-core.md '## 3. 七条铁律' '## 4.')"
-CONCEPT_SNIP="$(extract docs/CONCEPTS.md '## 目录（一句话列' '\037')"   # 到文件尾
+CONCEPT_SNIP="$(extract docs/reference/concepts.md '## 目录（一句话列' '\037')"   # 到文件尾
 PREF_SNIP="$(extract .ai/90-preferences.md '## 分工原则' '### 技术词使用规则')"
 
 BUILD_BLOCK() {
   cat <<'EOS'
-<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/CONCEPTS.md 生成，勿手改；改真相源后运行 make sync）-->
+<!-- BEGIN GENERATED BLOCK（由 scripts/sync.sh 从 .ai/ 与 docs/reference/concepts.md 生成，勿手改；改真相源后运行 make sync）-->
 
 ## 同步块（真相源摘录，会话必读）
 

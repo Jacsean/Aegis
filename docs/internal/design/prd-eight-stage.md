@@ -1,6 +1,6 @@
 # PRD · eight-stage（范围声明 + 失败定义）
 
-> 状态：定稿 · 2026-10-21 · 对齐留档见 docs/align/ALIGN-eight-stage
+> 状态：定稿 · 2026-10-21 · 对齐留档见 docs/rfc/ALIGN-eight-stage
 
 ## 背景
 九阶段（含 P0.5）经结构审计被判分类错误（H-0021/H-0022），八阶段为讨论定稿；本任务将其落地。

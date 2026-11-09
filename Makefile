@@ -26,7 +26,7 @@ help:
 	@echo "  make next \"a|b\"       更新下一步"
 	@echo "  make sync             同步 .ai/ 派生物（.skills/ + adapters/）"
 	@echo "  make check-sync       只检查是否需同步"
-	@echo "  make deliver V=1.6.0  打使用者维度交付包（剔除 dev/）"
+	@echo "  make deliver V=1.6.0  打使用者维度交付包（剔除 docs/internal/）"
 	@echo "  make demo             打开第一个 HTML demo"
 	@echo ""
 

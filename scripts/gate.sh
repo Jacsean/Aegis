@@ -35,7 +35,7 @@ if [ "$SELF_RELEASE" -eq 1 ]; then DOCS="templates/docs"; else DOCS="docs"; fi
 # 代码根：项目用 src/；框架自检时把 scripts/ 当代码根（框架没有业务代码）
 if [ "$SELF_RELEASE" -eq 1 ]; then CODE="scripts"; else CODE="src"; fi
 
-# 交付包内：设计者维度文件（dev/）被剔除。此后的「项目内容」检查（S1~S8）一律跳过——
+# 交付包内：设计者维度文件（docs/internal/）被剔除。此后的「项目内容」检查（S1~S8）一律跳过——
 # 交付包是"还能不能装进新项目"的骨架，不是某个具体项目的制品；跑项目门禁只会刷一堆缺项噪音。
 IN_PACKAGE=0
 [ -f "$ROOT/.aegis-package" ] && IN_PACKAGE=1   # deliver.sh 出包时写入标记；交付包只跑框架自检
@@ -88,7 +88,7 @@ if [ "$IN_PACKAGE" -eq 1 ]; then
       [ -f ".ai/$f.md" ] || { die "缺 .ai/$f.md"; miss_spec=$((miss_spec+1)); }
     done
     [ "$miss_spec" -eq 0 ] && ok ".ai/ 阶段规范齐全（11 份）"
-    [ -d dev ] && die "交付包内出现 dev/（设计者维度未剔除）" || ok "设计者维度已剔除（无 dev/）"
+    [ -d docs/internal ] && die "交付包内出现 docs/internal/（设计者维度未剔除）" || ok "设计者维度已剔除（无 docs/internal/）"
     bash scripts/check-no-legacy.sh . >/dev/null 2>&1 \
       && ok "旧版流程设计不可见（check-no-legacy PASS）" \
       || die "使用者维度仍有旧版流程残留（跑 bash scripts/check-no-legacy.sh 看详情）"
@@ -132,7 +132,7 @@ if [[ "$PHASE" == "S1" || "$PHASE" == "ALL" ]]; then
   [ -f .ai/00-core.md ] && ok ".ai/00-core.md 存在" || die "缺 .ai/00-core.md"
   [ -f .ai/90-preferences.md ] && ok ".ai/90-preferences.md 存在" || die "缺 .ai/90-preferences.md"
   [ -f STATE.md ] && ok "STATE.md 存在" || die "缺 STATE.md"
-  [ -f "$DOCS/INDEX.md" ] && ok "$DOCS/INDEX.md 存在" || die "缺 $DOCS/INDEX.md"
+  [ -f "$DOCS/README.md" ] && ok "$DOCS/README.md 存在" || die "缺 $DOCS/README.md"
 
   # 概念表（启动协议第 5 步要读它；没有它，词义无从校准）
   # 3.2 修订留痕：.ai/ 文档状态行检查（告警级）
@@ -140,7 +140,7 @@ if [[ "$PHASE" == "S1" || "$PHASE" == "ALL" ]]; then
     [ -f "$f" ] || continue
     grep -q '^> 状态：' "$f" || warn "$f 缺状态行（00-core 3.2：定稿/暂定/已作废→指向）"
   done
-  CF="$DOCS/CONCEPTS.md"
+  CF="$DOCS/reference/concepts.md"
   if [ -f "$CF" ]; then
     ok "CONCEPTS.md 存在"
     if grep -q '^## 目录' "$CF" && [ "$(grep -c '^| ' "$CF")" -ge 5 ]; then
@@ -195,10 +195,10 @@ if [ "$SELF_RELEASE" -eq 1 ]; then
 
   # 模板
   miss_tpl=0
-  for f in prd.md INDEX.md design/DESIGN.md design/STYLE.md design/REVIEW-DESIGN.md \
+  for f in prd.md README.md design/DESIGN.md design/STYLE.md design/REVIEW-DESIGN.md \
            adr/ADR-0001-template.md incidents/INC-0001-template.md \
-           release/RELEASE-template.md reviews/REVIEW-CODE-template.md \
-           HANDOFF-index.md handoff/README.md; do
+           release/RELEASE-template.md internal/reviews/REVIEW-CODE-template.md \
+           internal/handoff-index.md internal/handoff/README.md; do
     [ -f "$DOCS/$f" ] || { die "缺模板 $DOCS/$f"; miss_tpl=$((miss_tpl+1)); }
   done
   [ "$miss_tpl" -eq 0 ] && ok "templates/docs/ 模板齐全（11 份）"
@@ -214,10 +214,10 @@ fi
 if [[ "$PHASE" == "S2" || "$PHASE" == "ALL" ]]; then
   head_ S2 "S2 对齐：两轮讨论 + checklist + 小白语言"
 
-  ALIGN_DIR="$DOCS/align"
+  ALIGN_DIR="$DOCS/rfc"
   # 任务短名来源，按可信度排序：
   #   1) 分支名 <类型>/<短名>（最准；在 main/master 上没有短名）
-  #   2) docs/align/ 下实际存在的文件（去掉 -R1/-R2 后缀）
+  #   2) docs/rfc/ 下实际存在的文件（去掉 -R1/-R2 后缀）
   #   3) 都不行才报错
   CUR_BR=$(git branch --show-current 2>/dev/null || echo "")
   SLUG=""
@@ -625,7 +625,7 @@ if [[ "$PHASE" == "S7" || "$PHASE" == "ALL" ]]; then
   fi
 
   # HANDOFF 开发事件记录（七要素，见 .ai/99-reference/handoff-schema.md）
-  HF="$ROOT/dev/HANDOFF.md"
+  HF="$ROOT/docs/internal/handoff.md"
   if [ -f "$HF" ]; then
     ok "HANDOFF 索引存在"
     # 索引层：必须是有表头的一行一条
@@ -683,7 +683,7 @@ if [[ "$PHASE" == "S7" || "$PHASE" == "ALL" ]]; then
           fi
         done
       else
-        die "$hid 在索引里但没有对应记录文件（$ROOT/dev/handoff/${hid}-*.md）"
+        die "$hid 在索引里但没有对应记录文件（$ROOT/docs/internal/handoff/${hid}-*.md）"
       fi
       # 逐一核对索引里所有未划掉的编号都有记录文件
       orphan=""
@@ -706,20 +706,20 @@ if [[ "$PHASE" == "S7" || "$PHASE" == "ALL" ]]; then
   fi
 
   # INDEX 完整性
-  if [ -f "$DOCS/INDEX.md" ]; then
+  if [ -f "$DOCS/README.md" ]; then
     missing=0
     for f in $(find docs -type f \( -name '*.md' -o -name '*.html' \) ! -name 'INDEX.md' 2>/dev/null); do
       # 登记方式二选一：写全文件名，或写所在目录（如 `align/`、`adr/`）代表该目录已概括
       base=$(basename "$f")
       dir=$(dirname "$f")
-      if grep -q "$base" "$DOCS/INDEX.md"; then continue; fi
-      if grep -qF "$(printf '%s/' "$dir")" "$DOCS/INDEX.md"; then continue; fi
-      if grep -qF "$(printf '%s' "$dir" | sed -E 's#^(docs|templates/docs)/##')/" "$DOCS/INDEX.md"; then continue; fi
+      if grep -q "$base" "$DOCS/README.md"; then continue; fi
+      if grep -qF "$(printf '%s/' "$dir")" "$DOCS/README.md"; then continue; fi
+      if grep -qF "$(printf '%s' "$dir" | sed -E 's#^(docs|templates/docs)/##')/" "$DOCS/README.md"; then continue; fi
       die "文档未登记进 INDEX: $f"; missing=$((missing+1))
     done
     [ "$missing" -eq 0 ] && ok "$DOCS/ 下全部文档已登记 INDEX"
   else
-    die "缺 $DOCS/INDEX.md"
+    die "缺 $DOCS/README.md"
   fi
 
   # 代码改动检查（相对 main）

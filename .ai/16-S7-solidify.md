@@ -149,12 +149,12 @@ STATE.md 是下一个会话的**唯一入口**。它在 S7 必须被整体重写
 - 版本号：新功能 → MINOR；只有修复 → PATCH；破坏性变更 → MAJOR
 - 不写"优化若干细节"这类无法追溯的话
 
-### 4. `docs/INDEX.md` 完整性检查
+### 4. `docs/README.md` 完整性检查
 
 ```bash
 # 找出 docs/ 下没登记进 INDEX 的文件
 for f in $(find docs -name '*.md' -o -name '*.html' | sort); do
-  grep -q "$(basename "$f")" docs/INDEX.md || echo "未登记: $f"
+  grep -q "$(basename "$f")" docs/README.md || echo "未登记: $f"
 done
 ```
 
@@ -221,11 +221,11 @@ dev/HANDOFF.md
 | 目录 | 放什么 | 读者 |
 |---|---|---|
 | `dev/` | 开发过程文档：align / prd / design / adr / incidents / reviews / handoff | 开发时的人和 agent |
-| `docs/public/` | 交付文档：给项目使用者看的说明、验收材料 | 项目使用者 |
+| `docs/guides/` | 交付文档：给项目使用者看的说明、验收材料 | 项目使用者 |
 
 **判据只有一条：这份文档是「做的时候用的」还是「交出去给人看的」。**
 
-`STATE.md`、`CHANGELOG.md`、`docs/INDEX.md` 留在根目录，不归任何一边。
+`STATE.md`、`CHANGELOG.md`、`docs/README.md` 留在根目录，不归任何一边。
 
 ### 5. 归档 demo 与临时产物
 
@@ -277,7 +277,7 @@ git commit -m "chore(archive): v1.3.0 归档 — STATE / CHANGELOG / INDEX / tag
 | 事件索引 | `dev/HANDOFF.md` | 一行一条，表头齐全，与记录文件一一对应 |
 | 事件记录 | `dev/handoff/H-*.md` | 七要素齐全，「试过什么」非空，上下游链接非空 |
 | 变更日志 | `CHANGELOG.md` | 本版本条目含变更类型 + 可追溯编号 |
-| 文档索引 | `docs/INDEX.md` | 所有 docs/ 下文件已登记 |
+| 文档索引 | `docs/README.md` | 所有 docs/ 下文件已登记 |
 | 版本标签 | git tag | `v<X.Y.Z>`，与 CHANGELOG 一致 |
 | 归档说明 | `archive/README.md` | 首次归档时创建 |
 
@@ -288,7 +288,7 @@ git commit -m "chore(archive): v1.3.0 归档 — STATE / CHANGELOG / INDEX / tag
 - [ ] `STATE.md` 已更新，**全文 ≤ 40 行**
 - [ ] `STATE.md` 的「当前阶段」已推进，「下一步」是可执行动作（不是"继续开发"）
 - [ ] `CHANGELOG.md` 有本版本条目，版本号与 tag 一致
-- [ ] `docs/INDEX.md` 无未登记文件（`gate.sh` 会扫）
+- [ ] `docs/README.md` 无未登记文件（`gate.sh` 会扫）
 - [ ] 本版本 tag 已打，且在当前 HEAD
 - [ ] **S7 的提交里没有代码文件改动**（只允许 .md / tag）
 - [ ] `bash scripts/gate.sh S7` 输出 PASS

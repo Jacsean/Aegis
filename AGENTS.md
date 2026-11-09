@@ -12,15 +12,15 @@
 2. 读 **`STATE.md`** — 当前阶段、已完成、下一步
 3. 读 **`.ai/00-core.md`** — 七条铁律
 4. 读 **`.ai/90-preferences.md`** — 用户偏好
-5. 读 **`docs/CONCEPTS.md` 的「目录」一节** — 只读一句话列，约 200 tokens；遇到生词再按锚点跳条目
+5. 读 **`docs/reference/concepts.md` 的「目录」一节** — 只读一句话列，约 200 tokens；遇到生词再按锚点跳条目
 6. 跑**场景决断**（`.ai/09-scene-triage.md`）：按会话关键字定场景与阶段组合
 7. 按 `STATE.md` 的当前阶段，加载 `.ai/1X-Sn-*.md`
 8. 声明：**「场景 X · 当前阶段 Sn，本次目标 X，已加载文件 Y」**，再动手
 
 > **为什么第 5 步不能省**：会话一结束上下文就没了。概念表是唯一能跨会话传递「这些词在这里是什么意思」的地方，
-> 不读它，下一轮就会把「地点」又理解成「文件存在哪」。规则见 `docs/CONCEPTS.md`。
+> 不读它，下一轮就会把「地点」又理解成「文件存在哪」。规则见 `docs/reference/concepts.md`。
 
-> 遇设计问题，先查 `docs/INDEX.md` 的「状态」列与 `.ai/` 文件头状态行；标「已作废」的设计**禁止引用**，按其指向找到定稿。规则见 `.ai/00-core.md` 3.2。
+> 遇设计问题，先查 `docs/README.md` 的「状态」列与 `.ai/` 文件头状态行；标「已作废」的设计**禁止引用**，按其指向找到定稿。规则见 `.ai/00-core.md` 3.2。
 
 ---
 
@@ -102,9 +102,9 @@ make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
 ## 制品位置（不许乱放）
 
 ```
-docs/align/CHECKLIST-<任务>-R1.md / R2.md   两轮讨论清单（S2）
-docs/align/ALIGN-<任务>-R1.md / R2.md       两轮讨论记录（S2）
-docs/align/ALIGN-<任务>.md                   意图校准结论（S2）⭐
+docs/rfc/CHECKLIST-<任务>-R1.md / R2.md   两轮讨论清单（S2）
+docs/rfc/ALIGN-<任务>-R1.md / R2.md       两轮讨论记录（S2）
+docs/rfc/ALIGN-<任务>.md                   意图校准结论（S2）⭐
 docs/prd.md                    需求（S3）
 docs/design/DESIGN.md          设计主文档（S4）
 docs/design/STYLE.md           样式与交互规范（S4）
@@ -117,12 +117,12 @@ docs/reviews/REVIEW-CODE-*.md  代码评审（S5，三轮）
 dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说明（S7）【设计者维度，交付不包含】
 CHANGELOG.md                   变更日志（S7）
 docs/release/RELEASE-*.md      交付说明（S8）
-docs/CONCEPTS.md       全局概念表（唯一概念定义处，改词只改这里）
+docs/reference/concepts.md       全局概念表（唯一概念定义处，改词只改这里）
 dev/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
 dev/handoff/H-*.md    开发事件记录（每个任务结束必写，七要素）
-docs/public/                   交付文档（给项目使用者看的，与开发文档分开）
+docs/guides/                   交付文档（给项目使用者看的，与开发文档分开）
 STATE.md                       状态快照（始终，≤40 行）
-docs/INDEX.md                  文档总索引（始终）
+docs/README.md                  文档总索引（始终）
 ```
 
 ---

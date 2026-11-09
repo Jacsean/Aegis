@@ -24,15 +24,15 @@ EXTRA_FILES=(AGENTS.md README.md STATE.md Makefile)
 # 旧编号体系 / 旧文件名 / 旧流转图
 PAT='P0\.5|\bP05\b|0[1-8]-P[0-9]|阶段流转图（九阶段'
 # docs/ 内允许的「切换动作陈述」文件（发布说明与 PRD 必须能说清"从什么切到什么"）
-DOCS_EXEMPT='docs/CHANGELOG|CHANGELOG\.md|docs/prd\.md|docs/align/|docs/release/|docs/CONCEPTS\.md|docs/PATH-MAP\.md|docs/INDEX\.md'
+DOCS_EXEMPT='CHANGELOG\.md|docs/reference/concepts\.md|docs/release/|docs/rfc/'
 
 hits=0
 scan=()
 for d in "${SCAN_DIRS[@]}"; do [ -d "$d" ] && scan+=("$d"); done
 for f in "${EXTRA_FILES[@]}"; do [ -f "$f" ] && scan+=("$f"); done
 
-# 1. dev/ 不得在交付包内
-[ -d dev ] && echo "  ! 检测到 dev/（设计者维度）——若是交付包，说明剔除失败"
+# 1. docs/internal/ 不得在交付包内
+[ -d docs/internal ] && echo "  ! 检测到 docs/internal/（设计者维度）——若是交付包，说明剔除失败"
 
 # 2. 旧编号/旧文件名扫描
 while IFS= read -r line; do
@@ -54,7 +54,7 @@ while IFS= read -r line; do
   echo "  ✗ $line"
   hits=$((hits+1))
 done < <(grep -rnE '^> 状态：.*H-0[0-9]{3}' .ai/ templates/ adapters/ 2>/dev/null)
-[ -f docs/PATH-MAP.md ] && { echo "  ✗ docs/PATH-MAP.md 在使用者维度（应移设计者维度）"; hits=$((hits+1)); }
+[ -f docs/internal/path-map.md ] && { echo "  ✗ docs/internal/path-map.md 在使用者维度（应移设计者维度）"; hits=$((hits+1)); }
 while IFS= read -r f; do
   echo "  ✗ $f 含框架内部对齐签字（应移设计者维度）"; hits=$((hits+1))
 done < <(grep -rln '签字（用户原话）' docs/ 2>/dev/null)

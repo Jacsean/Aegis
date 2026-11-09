@@ -6,17 +6,17 @@
 
 | v1.5.0 及更早（旧路径） | v1.6.0 起（新路径） | 维度 | 说明 |
 |---|---|---|---|
-| `docs/develop/CONCEPTS.md` | `docs/CONCEPTS.md` | 使用者 | 概念表搬家，内容不变 |
-| `docs/develop/HANDOFF.md` | `dev/HANDOFF.md` | 设计者 | 交付包内不存在（被 deliver.sh 剔除）|
-| `docs/develop/handoff/H-*.md` | `dev/handoff/H-*.md` | 设计者 | 同上 |
+| `docs/internal/CONCEPTS.md` | `docs/reference/concepts.md` | 使用者 | 概念表搬家，内容不变 |
+| `docs/internal/HANDOFF.md` | `dev/HANDOFF.md` | 设计者 | 交付包内不存在（被 deliver.sh 剔除）|
+| `docs/internal/handoff/H-*.md` | `dev/handoff/H-*.md` | 设计者 | 同上 |
 | `archive/` | `dev/archive/` | 设计者 | 同上 |
-| `docs/develop/`（其余内容） | `dev/` | 设计者 | 均不在交付包内 |
+| `docs/internal/`（其余内容） | `dev/` | 设计者 | 均不在交付包内 |
 | `.ai/01~08`（九阶段阶段文件） | `dev/legacy/`（v2.0.0 起） | 设计者 | 九阶段已作废；阶段卡+附录在 `.ai/09~17`；git 历史可回溯 |
 
 ## 三个口径
 
 1. **旧 tag 工作树 = 旧结构**：`git checkout v1.5.0`（或更早）后，`dev/` 不存在，一切在旧路径——这不是坏了，是当时的结构。回退点功能不受分离影响。
 2. **新交付包工作树 = 使用者维度**：没有 `dev/`；要查开发过程档案（handoff、归档），去设计者仓库或用旧 tag。
-3. **历史 commit 里的 dev 文件对象仍存在**（.git 内），`git show v1.5.0:docs/develop/CONCEPTS.md` 这类命令照常可用——分离只改工作树打包，不改历史。
+3. **历史 commit 里的 dev 文件对象仍存在**（.git 内），`git show v1.5.0:docs/internal/CONCEPTS.md` 这类命令照常可用——分离只改工作树打包，不改历史。
 
 > 起因与决策见 `dev/handoff/H-0019`（设计者维度，交付包内不可见；本表是它在使用者侧的镜像）。
