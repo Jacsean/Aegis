@@ -22,12 +22,6 @@ rm -rf "$TMP/$NAME/dev"
 touch "$TMP/$NAME/.aegis-package"   # 交付包标记：gate.sh 见此只跑框架自检
 say="已剔除 dev/（设计者维度）"; echo "  → $say"
 
-# 2a. 剔除测试产物（跑任务的内容，不是框架本身）
-#     分工：docs/develop/reasonix/FINDINGS.md 是「Aegis 实测发现」（设计依据，保留）；
-#           docs/develop/reasonix/tests/ 是「测试任务的内容」（样本，剔除）。
-#     判断标准：换个任务还会不会发生？会 → FINDINGS；只对这个任务成立 → tests/。
-rm -rf "$TMP/$NAME/docs/develop/reasonix/tests"
-echo "  → 已剔除 docs/develop/reasonix/tests/（测试任务产物）"
 
 # 2a2. 重置自举产生的本地状态（这些是「框架自己这个项目」的，不是「给使用者的模板」）
 #      NOTES.md 里是框架开发过程中的决策记录，不该随交付包发给使用者；
@@ -76,7 +70,6 @@ for f in AGENTS.md STATE.md docs/CONCEPTS.md .ai/00-core.md .skills/aegis-state/
   [ -f "$f" ] || { echo "✗ 缺使用者维度文件: $f"; exit 1; }
 done
 [ ! -e dev ] && echo "  ✓ dev/ 已剔除"
-[ ! -e docs/develop/reasonix/tests ] && echo "  ✓ tests/ 已剔除（测试任务产物）"
 [ ! -e NOTES.md ] && echo "  ✓ NOTES.md 已剔除（自举本地状态）"
 [ ! -e "AEGIS-分工.md" ] && echo "  ✓ AEGIS-分工.md 已剔除（使用者需自行生成）"
 if [ -f docs/develop/reasonix/FINDINGS.md ]; then
