@@ -1,85 +1,97 @@
+<div align="center">
+
 # Aegis
 
-> 让 AI 助手**说的和做的对得上**，**换个会话接得上**，**交付时有据可查**。
+**Make your AI assistant's words match its work.**
 
-装在你的项目里，60 秒生效。不改变你已有的 skills、规则和工具。
+It remembers across sessions. It leaves a trail you can check. It blocks the moves that break your rules.
 
-**v3.0.0** ｜ 当前支持 Reasonix（Claude Code / Trae 适配中）
+Install into any project in 60 seconds. Non-destructive — keeps your existing skills, rules and tools untouched.
 
----
+`v3.0.0` · Reasonix (Claude Code / Trae in progress)
 
-## 你可能遇到过这些
+**English** · [简体中文](README.zh-CN.md)
 
-不是你的问题——这是现在的 AI 编程助手普遍存在的现象。
-
-| 你会遇到的 | 通常的后果 |
-|---|---|
-| **换个会话，它全忘了** | 你要重新解释一遍项目背景、技术选型、已经否掉的方案 |
-| **它说"用了第一性原理分析"，你找不到分析在哪** | 方法成了口号，你说不出哪里不对，但就是不放心 |
-| **它说"做完了"，你一检查发现有遗漏** | 你得自己逐条核对，比自己做还累 |
-| **它自作主张改了你没让改的地方** | 出了问题你分不清是它干的还是原来就这样 |
-| **同一个坑踩第二次** | 上次明明讨论过、否掉了，这次它又提出来 |
-
-### 这不是个别现象，业内已经量化过
-
-- 给 AI 助手一份 **824 条**的确定性标准，最好的模型在严格评分下只通过 **36.2%**——失败模式包括「跳过验证」「检查了但忽略」「虚假报告合规」
-- 在 **679 份**真实项目的规则文件、**5,000+ 次**运行中测出：**负向约束（"不许做什么"）是唯一单独有效的规则类型**，正向指令单独加反而有害
-- 结构化要求累积时，AI 助手表现会**显著下降**——约束会随上下文增长而衰减
-
-**结论很清楚**：写更多的规范文档不管用。**关键约束必须放在模型外面强制执行。**
+</div>
 
 ---
 
-## 用了 Aegis 之后
+## Sound familiar?
 
-### 1️⃣ 每个决定都有记录，换会话 30 秒接上
+These are not your fault — they're what happens with most AI coding assistants today.
 
-它会在 `NOTES.md` 里记下：**用了什么方法、判断是什么、排除了什么、你明确否定过什么、什么情况说明它错了**。
-
-新会话开口前先读这份记录。实测：换一个全新会话，只说一句「接着做，把那个功能写完」——
-
-> 它主动读了记录，直接接上进度，**没有重提你之前否掉的方案**。
-
-### 2️⃣ 说的和做的对得上
-
-四个维度逐条核对，**不通过就不算完成**：
-
-| 维度 | 它查什么 |
+| What you hit | What it costs you |
 |---|---|
-| **认知** | 说了用某个方法，输出里有没有对应的痕迹？（说了没做，当场露馅） |
-| **事实** | 标了「有出处」的结论，有没有真给出处？ |
-| **语义** | 有没有自造术语、和你项目里的词对不上？ |
-| **时间** | 该记的记了没？下次能不能接上？ |
+| **New session, it forgot everything** | You re-explain the project, the stack, the options already rejected |
+| **It says "I applied first-principles analysis" — you can't find any** | Methods become slogans. Something feels off, but you can't point at it |
+| **It says "done", you find gaps** | You end up checking line by line — more work than doing it yourself |
+| **It changed things you never asked it to touch** | When something breaks, you can't tell if it was the AI or already broken |
+| **It re-proposes the option you killed last week** | Same trap, second time |
 
-### 3️⃣ 关键节点自动拦截，不靠自觉
+### This is measurable, not anecdotal
+
+- **824 deterministic criteria**: the best frontier model passes only **36.2%** under strict grading. Failure modes include *skipped verification*, *checked-then-ignored*, and *falsely reporting compliance*.
+- **679 real-world rule files, 5,000+ runs**: **negative constraints** ("don't do X") are the only individually-beneficial rule type. Positive directives added alone actually **hurt**.
+- Agent performance **degrades as structural requirements accumulate** — constraints decay as context grows.
+
+**The takeaway is blunt**: writing more specification documents doesn't work.
+**The critical few constraints have to live outside the model and be enforced.**
+
+---
+
+## What changes after you install it
+
+### 1️⃣ Every decision is on record — a new session picks up in 30 seconds
+
+It writes to `NOTES.md`: which method it used, what it concluded, what it ruled out,
+**what you explicitly rejected**, and what would prove it wrong.
+
+A new session reads this first. Measured: a fresh context, given only *"continue, finish that feature"* —
+
+> It read the notes on its own, picked up the exact state, and **did not re-propose anything you had rejected**.
+
+### 2️⃣ What it says matches what it shipped
+
+Four dimensions, checked one by one — **anything that fails doesn't count as done**:
+
+| Dimension | What it checks |
+|---|---|
+| **Cognition** | Claims a method was used — is there any trace of it in the output? |
+| **Evidence** | Marked "sourced" — is there an actual source? |
+| **Semantics** | Invented terminology that doesn't match your project's vocabulary? |
+| **Continuity** | Was it recorded? Can the next session pick it up? |
+
+### 3️⃣ The critical gates enforce themselves
 
 ```
-动手写文件时    没有 NOTES.md 就拦下     ← 强制你留下记录
-在主干上提交时  拦下，要求先建分支       ← 强制任务隔离
+Writing files      → blocked when NOTES.md is missing     ← forces a trail
+Committing on main → blocked, asks for a branch first      ← forces task isolation
 ```
 
-这不是提示、不是建议，是**真的拦住**——等你补齐前置条件才能继续。
+Not a suggestion. Not a reminder in the prompt. **It actually stops**, explains why,
+and tells the agent how to unblock itself.
 
-### 4️⃣ 需要深入时可以调用 16 个思维模型
+### 4️⃣ 16 thinking models, only when the request is vague
 
-需求含糊时它会主动多想一想（第一性原理、逆向、Kano、事前验尸、双环反思…），
-需求明确时**不打扰你**——日常只占约 40 token。
+First principles, inversion, pre-mortem, Kano, double-loop reflection, and 11 more.
+Ambiguous request → it thinks harder. Clear request → **it stays out of your way**
+(about 40 tokens resident per turn).
 
 ---
 
-## 用它之前 vs 之后
+## Before / After
 
-| | 之前 | 之后 |
+| | Before | After |
 |---|---|---|
-| 换会话 | 从零解释一遍 | 读记录，接上进度 |
-| 交付检查 | 你自己逐条核对 | 四个维度先过一遍，**没过会告诉你哪里没过** |
-| 关键动作 | 靠它自觉 | 自动拦截，拦下会说明原因和解法 |
-| 同一个坑 | 可能踩第二次 | 否定过的会留在记录里，下次不会再提 |
-| 你对它的信任 | 靠感觉 | 可以逐条查证 |
+| New session | Re-explain from scratch | Reads the record, resumes |
+| Delivery check | You verify line by line | Four dimensions run first, **failures are named** |
+| Critical actions | Depends on good behavior | Blocked automatically, with the reason and the fix |
+| Same mistake | Can happen twice | Rejections persist, won't be re-proposed |
+| Trust | Gut feeling | Every claim is checkable |
 
 ---
 
-## 60 秒开始用
+## Start in 60 seconds
 
 ```bash
 git clone https://github.com/Jacsean/Aegis.git
@@ -87,82 +99,83 @@ cd Aegis
 bash scripts/install-v3.sh /path/to/your-project
 ```
 
-**不会覆盖你的任何东西**：
+**Nothing existing gets overwritten**:
 
-- 已有的 `AGENTS.md` / `CLAUDE.md` → **末尾追加**，原文完整保留
-- 已有的 hooks 配置 → **合并进去**，原有的不动
-- 已有的 skills → 只新增 Aegis 的，其余照旧
+- Existing `AGENTS.md` / `CLAUDE.md` → **appended** between markers, original text intact
+- Existing hooks config → **merged**, your entries preserved
+- Existing skills → only Aegis's are added
 
-装完重开一次会话即可。Windows 上 Git Bash 冷启动慢，超时已给到 15 秒。
+Reopen your agent session afterwards. On Windows, Git Bash cold start is slow — timeout is set to 15s.
 
-**卸载**：删掉追加的那一段 + `.reasonix/hooks/aegis-*.sh` 四个文件，其余无残留。
+**To uninstall**: delete the appended block and the four `.reasonix/hooks/aegis-*.sh` files. Nothing else is left behind.
 
 ---
 
-## 它管什么，不管什么
+## What it does — and doesn't
 
-**明确分工，避免你误以为它什么都能干：**
+**Explicit division, so you don't over-estimate it:**
 
-| Aegis 管 | Aegis 不管 |
+| Aegis handles | Aegis stays out of |
 |---|---|
-| 有没有留下记录 | 你的代码写得好不好 |
-| 说的和做的是否一致 | 你的技术选型对不对 |
-| 关键动作是否守规矩 | 你的测试够不够 |
-| 交付前四个维度过没过 | 你的架构合不合理 |
-| 什么被否定过，有没有再犯 | 你可能没想到的事情 |
+| Whether a record exists | Whether your code is good |
+| Whether claims match output | Whether your design choices are right |
+| Whether critical actions follow the rules | Whether your tests are sufficient |
+| Whether the four dimensions pass | Whether your architecture makes sense |
+| What was rejected, and whether it recurred | Things you haven't thought of yet |
 
-**它是一道保险，不是一位军师。** 它保证你说得出、查得到、接得上，但想什么、怎么想，还是你的事。
+> **It's a seatbelt, not a strategist.** It makes sure what you decided is stated, recorded and pickable-up.
+> What to decide, and how to think it through — that's still yours.
 
-**也不适合**：一次性的小脚本（装了反而是负担）、纯探索性的技术预研（不需要留档）。
+**Not a good fit for**: one-off scripts (overhead exceeds value), or pure exploratory spikes (no trail needed).
 
 ---
 
-## 和你已有的工具什么关系
+## How it coexists with what you already have
 
-**装在任何已有工具之上，不是替换它们。**
+**It layers on top of your existing setup — it does not replace anything.**
 
-| 你已有的 | 怎么共处 |
+| You already have | How they coexist |
 |---|---|
-| 测试、调试、写计划、分支管理、workflow 类 skills | **完全不碰**，Aegis 只做自己的四件事 |
-| 代码评审 / 安全评审 | **各查各的**——它们查内容，Aegis 查记录和一致性 |
-| 需求发散类（brainstorming 等） | **前后串联**——Aegis 先判断「你要的是不是他真需要的」，它再发散 |
+| Testing, debugging, planning, branch management, workflow skills | **Completely untouched** — Aegis does only its four things |
+| Code review / security review | **Side by side** — they judge content, Aegis judges records and consistency |
+| Requirements brainstorming | **Chained** — Aegis asks "is this what you actually need?" first, then brainstorming diverges |
 
-装完会生成 `AEGIS-分工.md`，**自动扫描你已装的能力**并列出关系，还会告诉你
-「你的全局规则和项目规则有哪些潜在冲突」。
+After install it generates `AEGIS-分工.md`, which **scans the capabilities you already have**
+and lists the relationship, including any **rule-file conflicts** between your global and project settings.
 
-**外接能力有上限**：单个任务最多同时用 2 个外部能力。
-依据：同时激活的技能越多，遵循率按乘法下降（4 个各 90% → 66%）。
+**External capability budget**: at most **2** per task. Rationale: skill adherence multiplies down —
+four skills at 90% each yield 66% combined compliance.
 
 ---
 
-## 实测记录
+## Measured
 
-| 场景 | 结果 |
+| Scenario | Result |
 |---|---|
-| 缺记录时写文件 | 被拦下，文件确实没被创建 |
-| 主干上提交 | 被拦下，并给出「先建分支」的解法 |
-| 四个维度检查 | 逐项抓到「说了没做」「标了没给来源」「自造术语」「没留记录」 |
-| 换新会话接手 | 主动读记录、接上进度、没重提被否定的方案 |
-| 被拦后的行为 | 不是放弃，而是去读规则搞清楚原因，然后补齐前置条件 |
+| Writing a file without a record | Blocked; the file was genuinely not created |
+| Committing on main | Blocked, with a "create a branch first" resolution |
+| Four-dimension check | Each caught a real defect: claim-without-trace, source-without-link, invented-term, missing-record |
+| Fresh session resuming | Read the notes unprompted, resumed state, no rejected options re-proposed |
+| Behaviour after being blocked | Read the hook script to understand why, then satisfied the precondition itself |
 
 ---
 
-## 目录与文档
+## Documentation layout
 
 ```
 docs/
-├── guides/         怎么装、怎么用
-├── reference/      术语表（唯一概念定义处）
-├── explanation/    为什么这样设计
-├── adr/            架构决策记录
-├── incidents/      故障记录
-└── release/        发布说明
+├── guides/         How to install and use
+├── reference/      Glossary — the single source of terminology
+├── explanation/    Why it's designed this way
+├── adr/            Architecture decision records
+├── incidents/      Post-mortems
+└── release/        Release notes
 ```
 
-遵循 Diátaxis（Django / Ubuntu / Cloudflare / Kubernetes 采用）+ ADR + SRE 行业约定。
+Follows **Diátaxis** (used by Django, Ubuntu, Cloudflare, Kubernetes) + **ADR** + **SRE** conventions.
 
 ---
 
-## 许可
+## License
 
-[MIT](LICENSE) · 欢迎提 Issue 和 PR，见 [CONTRIBUTING](CONTRIBUTING.md)
+[MIT](LICENSE) · Issues and PRs welcome — see [CONTRIBUTING](CONTRIBUTING.md)
