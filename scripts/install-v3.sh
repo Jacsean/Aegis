@@ -103,8 +103,9 @@ else
   echo "  → NOTES.md 已存在，保留"
 fi
 
-# 核心检查清单 + 生长记录：不存在才装（这两个是使用者要长期维护的，不许覆盖）
-for f in CORE-CHECKLIST.md CHECKLIST-GROWTH.md; do
+# 核心检查清单 + 生长记录 + 项目约束 + 外接规则
+# 后四个是使用者要长期维护的，已存在则保留，不许覆盖
+for f in CORE-CHECKLIST.md CHECKLIST-GROWTH.md constraints.md EXTERNAL.md; do
   if [ ! -f "$TARGET/$f" ]; then
     cp "$ROOT/templates/v3/$f" "$TARGET/$f"
     echo "  → $f（新建）"
