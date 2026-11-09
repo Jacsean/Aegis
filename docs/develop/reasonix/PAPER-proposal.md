@@ -173,3 +173,32 @@ Aegis 引入第二维：**思维模型**（第一性原理、Kano、逆向、双
 
 > Aegis **够格写一篇 workshop paper，但不够格写顶会**。
 > 差距不在想法，在**数据量差三个数量级**（1 个任务 vs 358 个）。
+
+---
+
+## 七、来源清单（本文所有 `[检索]` 的实际出处）
+
+> 补记说明：本文初稿标了 7 处 `[检索]` 却没有一条链接。这是**第二次犯同一个错**
+> （第一次在 `ASSESS-v3.md`，改了那份就以为修好了，忘了这份）。
+> 由 CORE-CHECKLIST 的「事实」维度检查抓出，属 HANDBOOK.md 论文点名的
+> 「虚假合规报告」失败模式。
+
+### 学术论文（判断"顶会够不够格"的依据）
+
+| 论文 | 规模 | 链接 |
+|---|---|---|
+| ANCHOR（约束层级与顺序评估） | 358 任务 × 19 配置；2,836 条原子约束 | https://arxiv.org/abs/2610.16859v1 |
+| Guardrails Beat Guidance（规则/技能大规模研究） | 679 规则文件、5,000+ 次 SWE-bench 运行 | https://arxiv.org/html/2604.11088v2 |
+| Constraint Decay（约束衰减） | — | https://www.semanticscholar.org/paper/dd5f2a077184293de0847b9a53b514f15924fc0c |
+| HANDBOOK.md（长绑定策略基准） | 824 条确定性标准 | arXiv:2607.25398（二手来源，未独立核实） |
+| Gated Spec-Driven Workflow | 9 个 feature | arXiv:2611.05094（二手来源，未独立核实） |
+| Skillware（类型化契约） | — | arXiv:2611.07652（单厂商自报，未独立复现） |
+
+### 写作规范参考
+
+| 内容 | 链接 |
+|---|---|
+| 如何写 workshop / tool paper | 各会议 CFP（未核实具体截止日期，投稿前必须查官网） |
+
+**未独立核实的**：HANDBOOK.md、Gated Spec-Driven Workflow、Skillware 三个编号来自二手整理，
+**投出去之前必须逐条核实**——这也是「事实」维度的要求。
