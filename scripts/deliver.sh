@@ -22,10 +22,25 @@ rm -rf "$TMP/$NAME/dev"
 touch "$TMP/$NAME/.aegis-package"   # 交付包标记：gate.sh 见此只跑框架自检
 say="已剔除 dev/（设计者维度）"; echo "  → $say"
 
-# 2b. 清 git 索引里的 dev/ 跟踪（否则包内 git status 永远脏，branch.sh 第一步就卡）
+# 2a. 剔除测试产物（跑任务的内容，不是框架本身）
+#     分工：docs/develop/reasonix/FINDINGS.md 是「Aegis 实测发现」（设计依据，保留）；
+#           docs/develop/reasonix/tests/ 是「测试任务的内容」（样本，剔除）。
+#     判断标准：换个任务还会不会发生？会 → FINDINGS；只对这个任务成立 → tests/。
+rm -rf "$TMP/$NAME/docs/develop/reasonix/tests"
+echo "  → 已剔除 docs/develop/reasonix/tests/（测试任务产物）"
+
+# 2a2. 重置自举产生的本地状态（这些是「框架自己这个项目」的，不是「给使用者的模板」）
+#      NOTES.md 里是框架开发过程中的决策记录，不该随交付包发给使用者；
+#      AEGIS-分工.md 是安装时按本机环境探测生成的，使用者要自己跑一次。
+rm -f "$TMP/$NAME/NOTES.md" "$TMP/$NAME/AEGIS-分工.md"
+echo "  → 已剔除 NOTES.md 与 AEGIS-分工.md（自举本地状态，使用者需自行生成）"
+
+# 2b. 清 git 索引里已剔除项的跟踪（否则包内 git status 永远脏，branch.sh 第一步就卡）
 git -C "$TMP/$NAME" rm -r --cached --quiet dev 2>/dev/null || true
+git -C "$TMP/$NAME" rm -r --cached --quiet docs/develop/reasonix/tests 2>/dev/null || true
+git -C "$TMP/$NAME" rm --cached --quiet NOTES.md "AEGIS-分工.md" 2>/dev/null || true
 git -C "$TMP/$NAME" -c user.name=deliver -c user.email=deliver@aegis.local \
-  commit --quiet --allow-empty -m "chore: 交付包索引剔除设计者维度（deliver.sh 自动提交）"
+  commit --quiet --allow-empty -m "chore: 交付包索引剔除设计者维度与测试产物（deliver.sh 自动提交）"
 
 # 2c. STATE.md 换成新项目起始态（包内不该带着框架自己的 S8 待复签状态）
 cat > "$TMP/$NAME/STATE.md" <<'STATE'
@@ -53,7 +68,7 @@ echo "  → STATE.md 已重置为新项目起始态"
 printf '.aegis-package\n' > "$TMP/$NAME/.git/info/exclude"
 git -C "$TMP/$NAME" add STATE.md
 git -C "$TMP/$NAME" -c user.name=deliver -c user.email=deliver@aegis.local \
-  commit --quiet -m "chore: STATE 重置为新项目起始态（deliver.sh 自动提交）"
+  commit --quiet --allow-empty -m "chore: STATE 重置为新项目起始态（deliver.sh 自动提交）"
 
 # 3. 验收自检：使用者维度完整性
 cd "$TMP/$NAME"
@@ -61,6 +76,14 @@ for f in AGENTS.md STATE.md docs/CONCEPTS.md .ai/00-core.md .skills/aegis-state/
   [ -f "$f" ] || { echo "✗ 缺使用者维度文件: $f"; exit 1; }
 done
 [ ! -e dev ] && echo "  ✓ dev/ 已剔除"
+[ ! -e docs/develop/reasonix/tests ] && echo "  ✓ tests/ 已剔除（测试任务产物）"
+[ ! -e NOTES.md ] && echo "  ✓ NOTES.md 已剔除（自举本地状态）"
+[ ! -e "AEGIS-分工.md" ] && echo "  ✓ AEGIS-分工.md 已剔除（使用者需自行生成）"
+if [ -f docs/develop/reasonix/FINDINGS.md ]; then
+  echo "  ✓ FINDINGS.md 保留（Aegis 实测发现，是设计依据）"
+else
+  echo "  ! FINDINGS.md 不存在（若尚未产生实测发现可忽略）"
+fi
 bash scripts/sync.sh --check >/dev/null 2>&1 && echo "  ✓ 派生物一致" || { echo "✗ 派生物不同步，先 make sync"; exit 1; }
 
 # 4. 打包
