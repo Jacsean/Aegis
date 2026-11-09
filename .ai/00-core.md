@@ -70,7 +70,7 @@ Aegis 是一套**以状态机为骨架、以制品为中心、以门禁为强制
 ### 铁律三之二：任务必须留档
 
 **每个任务结束（合并进 main 前）必须写一条开发事件记录**，
-记在 `dev/handoff/H-<编号>-<短名>.md`，并在 `dev/HANDOFF.md` 索引加一行。
+记在 `docs/internal/handoff/H-<编号>-<短名>.md`，并在 `docs/internal/handoff.md` 索引加一行。
 
 七要素：时间 / 谁 / 事件 / 为什么这样处理 / 怎么处理的 / **试过什么（成没成）** / 下一步等谁。
 
@@ -193,7 +193,7 @@ main/master  ← 始终保持可运行
 | **S2 对齐** | 意图校准 | `docs/rfc/CHECKLIST-*-R1/R2.md`、`ALIGN-*-R1/R2.md`、`ALIGN-*.md` | ✅ **强制（全流程唯一强制签字点）** |
 | S3 收敛 | 划边界 | `docs/prd.md`（范围声明/失败定义/功能/非目标/成功判据/风险 六节） | ✅ 与 S2 一致时自动继承 |
 | S4 展开 | 摊方案 | `docs/design/DESIGN.md`、`STYLE.md`、`demo/*.html`、`adr/*.md` | ✅ **强制（看 demo 后）** |
-| S5 找破绽 | 查崩点 | `docs/design/REVIEW-DESIGN.md` 或 `docs/reviews/REVIEW-CODE-*.md`（按检查点） | ⚠️ 建议 |
+| S5 找破绽 | 查崩点 | `docs/design/REVIEW-DESIGN.md` 或 `docs/internal/reviews/REVIEW-CODE-*.md`（按检查点） | ⚠️ 建议 |
 | S6 实现 | 落地 | `src/`、`tests/`、`docs/incidents/INC-*.md` | ❌ |
 | S7 固化 | 归档 | `STATE.md` 重写（≤40 行）、`CHANGELOG.md`、`INDEX` 完整、`git tag`、handoff | ❌ |
 | S8 交付 | 出包 | `docs/release/RELEASE-v*.md`（含真实冒烟输出） | ✅ 强制 |

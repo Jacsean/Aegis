@@ -74,7 +74,7 @@ S7 期间**禁止修改 `src/` 和 `tests/`**。
 ## 输入
 
 - `STATE.md`（当前状态）
-- `docs/reviews/REVIEW-CODE-<日期>.md`（S5 结论）
+- `docs/internal/reviews/REVIEW-CODE-<日期>.md`（S5 结论）
 - `docs/incidents/INC-*.md`（本迭代新增的）
 - `docs/adr/ADR-*.md`（本迭代新增的）
 - `git log main..HEAD`（本分支做了什么）
@@ -176,7 +176,7 @@ done
 
 ```bash
 # 1. 记录层：一条完整记录
-dev/handoff/H-<编号>-<短名>.md
+docs/internal/handoff/H-<编号>-<短名>.md
 ```
 
 ```markdown
@@ -198,7 +198,7 @@ dev/handoff/H-<编号>-<短名>.md
 
 ```bash
 # 2. 索引层：一行
-dev/HANDOFF.md
+docs/internal/handoff.md
 ```
 
 ```markdown
@@ -274,8 +274,8 @@ git commit -m "chore(archive): v1.3.0 归档 — STATE / CHANGELOG / INDEX / tag
 |---|---|---|
 | 状态快照 | `STATE.md` | 已整体重写，≤40 行，下一步可执行 |
 | 概念固化 | handoff 记录「**新词**」一行 | 本任务产生的新词全部有词条（升 `已定` 或 `暂定` 待验收），无新词写「无」——铁律七 |
-| 事件索引 | `dev/HANDOFF.md` | 一行一条，表头齐全，与记录文件一一对应 |
-| 事件记录 | `dev/handoff/H-*.md` | 七要素齐全，「试过什么」非空，上下游链接非空 |
+| 事件索引 | `docs/internal/handoff.md` | 一行一条，表头齐全，与记录文件一一对应 |
+| 事件记录 | `docs/internal/handoff/H-*.md` | 七要素齐全，「试过什么」非空，上下游链接非空 |
 | 变更日志 | `CHANGELOG.md` | 本版本条目含变更类型 + 可追溯编号 |
 | 文档索引 | `docs/README.md` | 所有 docs/ 下文件已登记 |
 | 版本标签 | git tag | `v<X.Y.Z>`，与 CHANGELOG 一致 |

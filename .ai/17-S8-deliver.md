@@ -64,7 +64,7 @@
 
 - `CHANGELOG.md`（本版本改了什么）
 - `STATE.md`（当前状态、已知限制）
-- `docs/reviews/REVIEW-CODE-*.md`（S5 登记的 Major/Minor）
+- `docs/internal/reviews/REVIEW-CODE-*.md`（S5 登记的 Major/Minor）
 - `docs/incidents/INC-*.md`（本版本的坑，可能要写进"已知限制"）
 - `docs/design/DESIGN.md`（架构概览，交付说明里要一句话说清这是什么）
 

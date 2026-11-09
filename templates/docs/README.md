@@ -99,5 +99,5 @@
 |---|---|
 | `ALIGN-*.md` | `docs/prd.md` |
 | `ADR-*.md` | `docs/design/DESIGN.md` |
-| `INC-*.md` | `docs/reviews/REVIEW-CODE-*.md` 或 `STATE.md` |
+| `INC-*.md` | `docs/internal/reviews/REVIEW-CODE-*.md` 或 `STATE.md` |
 | `REVIEW-*.md` | `STATE.md` 门禁签字 |

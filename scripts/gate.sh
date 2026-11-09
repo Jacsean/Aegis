@@ -638,7 +638,7 @@ if [[ "$PHASE" == "S7" || "$PHASE" == "ALL" ]]; then
     latest=$(grep -E '^\|[[:space:]]*H-[0-9]+' "$HF" | grep -vE '~~' | head -1)
     if [ -n "$latest" ]; then
       hid=$(printf '%s' "$latest" | awk -F'|' '{gsub(/ /,"",$2); print $2}')
-      hfile=$(find "$ROOT/dev/handoff" -name "${hid}-*.md" 2>/dev/null | head -1)
+      hfile=$(find "$ROOT/docs/internal/handoff" -name "${hid}-*.md" 2>/dev/null | head -1)
       if [ -n "$hfile" ]; then
         ok "$hid 有对应记录文件：$(basename "$hfile")"
         miss=""
@@ -689,7 +689,7 @@ if [[ "$PHASE" == "S7" || "$PHASE" == "ALL" ]]; then
       orphan=""
       for h in $(grep -E '^\|[[:space:]]*H-[0-9]+' "$HF" | grep -vE '~~' \
                  | awk -F'|' '{gsub(/ /,"",$2); print $2}'); do
-        if ! find "$ROOT/dev/handoff" -name "${h}-*.md" 2>/dev/null | grep -q .; then
+        if ! find "$ROOT/docs/internal/handoff" -name "${h}-*.md" 2>/dev/null | grep -q .; then
           orphan="$orphan $h"
         fi
       done

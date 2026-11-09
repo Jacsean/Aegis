@@ -101,28 +101,39 @@ make branch-finish NAME=user-login   # 过门禁 → 合并 → 清理
 
 ## 制品位置（不许乱放）
 
+> 目录按行业约定组织（Diátaxis + ADR + SRE 标准），见全局规范 3.1 节。
+
 ```
-docs/rfc/CHECKLIST-<任务>-R1.md / R2.md   两轮讨论清单（S2）
-docs/rfc/ALIGN-<任务>-R1.md / R2.md       两轮讨论记录（S2）
-docs/rfc/ALIGN-<任务>.md                   意图校准结论（S2）⭐
-docs/prd.md                    需求（S3）
-docs/design/DESIGN.md          设计主文档（S4）
-docs/design/STYLE.md           样式与交互规范（S4）
-docs/design/demo/*.html        HTML demo（S4，前端必需）
-docs/design/REVIEW-DESIGN.md   设计评审（S5）
-docs/adr/ADR-*.md              架构决策（S4）
-src/  tests/                   源码与测试（S6）
-docs/incidents/INC-*.md        故障与问题库（S6/S5，预防必填）
-docs/reviews/REVIEW-CODE-*.md  代码评审（S5，三轮）
-dev/archive/                   一次性脚本 / 大体积数据 / 旧交付说明（S7）【设计者维度，交付不包含】
-CHANGELOG.md                   变更日志（S7）
-docs/release/RELEASE-*.md      交付说明（S8）
-docs/reference/concepts.md       全局概念表（唯一概念定义处，改词只改这里）
-dev/HANDOFF.md        开发事件索引（始终，一行一条，时间倒序）
-dev/handoff/H-*.md    开发事件记录（每个任务结束必写，七要素）
-docs/guides/                   交付文档（给项目使用者看的，与开发文档分开）
-STATE.md                       状态快照（始终，≤40 行）
-docs/README.md                  文档总索引（始终）
+──────────────── 面向使用者（随交付）────────────────
+docs/README.md                       文档索引
+docs/guides/                         任务导向：装、配、用
+docs/reference/concepts.md           术语表（唯一概念定义处，改词只改这里）
+docs/explanation/                    理解导向：为什么这样设计
+docs/adr/ADR-*.md                    架构决策记录（S4，一份决策一个文件）
+docs/incidents/INC-*.md              故障记录（S6/S5，预防必填）
+docs/release/RELEASE-*.md            发布说明（S8）
+CHANGELOG.md                         变更日志（S7，Keep a Changelog）
+README.md                            项目说明
+
+──────────────── 需求与设计（随交付）────────────────
+docs/prd.md                          需求（S3）
+docs/design/DESIGN.md                设计主文档（S4）
+docs/design/STYLE.md                 样式与交互规范（S4）
+docs/design/demo/*.html              HTML demo（S4，前端必需）
+docs/design/REVIEW-DESIGN.md         设计评审（S5）
+
+──────────────── 过程记录（设计者维度，交付时剔除）────────────────
+docs/rfc/CHECKLIST-<任务>-R1/R2.md   两轮讨论清单（S2）
+docs/rfc/ALIGN-<任务>-R1/R2.md       两轮讨论记录（S2）
+docs/rfc/ALIGN-<任务>.md             意图校准结论（S2）⭐
+docs/internal/reviews/REVIEW-CODE-*.md  代码评审（S5）
+docs/internal/handoff.md             开发事件索引（一行一条，时间倒序）
+docs/internal/handoff/H-*.md         开发事件记录（每任务必写，七要素）
+docs/internal/archive/               一次性脚本 / 大体积数据 / 旧交付说明（S7）
+
+──────────────── 代码与状态 ────────────────
+src/  tests/                         源码与测试（S6）
+STATE.md                             状态快照（始终，≤40 行）
 ```
 
 ---

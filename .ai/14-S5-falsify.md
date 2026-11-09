@@ -308,7 +308,7 @@ S5 设计评审完成，结论：<通过 / 修正后通过 / 退回 S4>
 
 | 制品 | 路径 | 要求 |
 |---|---|---|
-| 代码评审记录 | `docs/reviews/REVIEW-CODE-<日期>.md` | 三轮齐备，含 INC 对照表 |
+| 代码评审记录 | `docs/internal/reviews/REVIEW-CODE-<日期>.md` | 三轮齐备，含 INC 对照表 |
 | 修复记录 | 同上 | Critical/Major 的修复位置 |
 | 索引登记 | `docs/README.md` | 已登记 |
 
