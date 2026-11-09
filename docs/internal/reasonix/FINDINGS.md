@@ -16,8 +16,8 @@
 | 3 | **`ask` 被 guard-bash 误伤**：提问里提到 "git commit" 就被当命令拦 | 实测输出 `⊘ ask blocked by PreToolUse hook` | 🟡 中 | ✅ 已修（要求 payload 含 `"command"` 字段） |
 | 4 | **安装会覆盖已有 `AGENTS.md`** | 代码审阅 | 🔴 高 | ✅ 已修（改标记追加） |
 | 5 | **合并 hook 配置时同 command 只跳过不更新** → 重装修不好 `match` | 第一次重装显示"新增 0 条"，旧配置残留 | 🟡 中 | ✅ 已修（改为更新） |
-| 6 | **`AEGIS-分工.md` 指向不存在的 `scripts/gen-division.sh`** | agent 读文档时发现并报告 | 🟡 中 | ⏳ 待修 |
-| 7 | **`constraints.md` 空 checkbox 被误解成"3 条空约束"** | agent 把它当风险报出来 | 🟢 低 | ⏳ 待修 |
+| 6 | **`AEGIS-分工.md` 指向不存在的 `scripts/gen-division.sh`** | agent 读文档时发现并报告 | 🟡 中 | ✅ 已修（脚本装入 `.aegis/`） |
+| 7 | **`constraints.md` 空 checkbox 被误解成"3 条空约束"** | agent 把它当风险报出来 | 🟢 低 | ✅ 已修（改成「（未定）」+ 状态说明） |
 
 ## 二、设计缺陷（不是 bug，是机制不够）
 
