@@ -159,3 +159,46 @@ Aegis 的价值分三层，**越往上越独有**：
 | 3 | **做一个可视化 demo**（hook 实时拦住 agent 的录屏/动图） | 这是最省力的传播素材 |
 | 4 | **跨平台**（至少补 Claude Code） | 单平台限制了受众 |
 | 5 | 与 Superpowers 明确分工写进 README | 避免被当成竞品 |
+
+---
+
+## 八、来源清单（本文所有 `[检索]` 的实际出处）
+
+> 补记说明：初稿标了 14 处 `[检索]` 却没有一条实际链接，被 CORE-CHECKLIST 的
+> 「事实」维度检查抓了出来（属于 HANDBOOK.md 论文点名的"虚假合规报告"）。
+> 以下逐条补齐。
+
+### 学术论文
+
+| 论文 | 链接 |
+|---|---|
+| Guardrails Beat Guidance（规则/技能/持久配置的大规模研究） | https://arxiv.org/html/2604.11088v2 |
+| Constraint Decay（后端代码生成中的约束衰减） | https://www.semanticscholar.org/paper/dd5f2a077184293de0847b9a53b514f15924fc0c |
+| ANCHOR（自然约束层级与顺序评估） | https://arxiv.org/abs/2610.16859v1 |
+| HANDBOOK.md（长绑定策略文档基准） | arXiv:2607.25398（编号来自二手来源，未独立核实） |
+| Gated Spec-Driven Workflow（门禁式 spec-driven） | arXiv:2611.05094（同上） |
+| Skillware（类型化契约替代 markdown skills） | arXiv:2611.07652（单厂商自报，未独立复现） |
+| Evaluating AGENTS.md（上下文文件是否有效） | https://huggingface.co/papers/2602.11988 |
+| Context engineering for AI agents（Anthropic 官方） | https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents |
+
+### 同行项目（star 数据来源）
+
+| 项目 | 链接 |
+|---|---|
+| Superpowers（obra） | https://github.com/obra/superpowers ；star 趋势见 https://www.gitgenius.co/repos/obra/superpowers |
+| BMAD-METHOD | https://github.com/bmad-code-org/BMAD-METHOD ；对比见 https://sddobservatory.com/frameworks/bmad-method/ |
+| claude-flow / Ruflo | https://github.com/ruvnet/claude-flow ；评估见 https://www.explainx.ai/blog/ruflo-ruvnet-claude-flow-meta-harness-swarms-memory-federation-claims-vs-readme-2026 |
+| Agent OS | https://github.com/buildermethods/agent-os ；数据见 https://sddobservatory.com/frameworks/agent-os/ |
+| 分层模型与横向对比 | https://calaverita.dev/blog/9-frameworks-ai-coding-comparativa/ |
+
+### 各家官方文档
+
+| 内容 | 链接 |
+|---|---|
+| Anthropic Skills（三层披露） | https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills |
+| Agent Skills 开放规范 | https://agentskills.io/specification |
+| Claude Code hooks（含「建议 vs 规则」分级） | https://code.claude.com/docs/en/agent-sdk/hooks |
+| AWS Kiro（steering 四模式 + agent hooks） | https://builder.aws.com/content/3IzauLJFRVlmhL4uZ5rnehxfLMT/aws-kiro-transforming-ai-assisted-development-with-spec-driven-engineering |
+| GitHub Spec Kit（constitution 优先） | https://visualstudiomagazine.com/articles/2025/09/03/github-open-sources-kit-for-spec-driven-ai-development.aspx |
+
+**未独立核实的**：HANDBOOK.md、Gated Spec-Driven Workflow、Skillware 三个 arXiv 编号来自二手整理，写论文引用前必须逐条核实。
