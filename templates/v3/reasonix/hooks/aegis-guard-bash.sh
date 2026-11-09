@@ -15,9 +15,14 @@ payload="$(cat 2>/dev/null || true)"
 #   只要提到 "git commit" 就会被误拦，实测踩过）
 printf '%s' "$payload" | grep -q '"command"' || exit 0
 
-# 只关心含 git commit / git merge / git push 的命令
+# 只关心真正的「写操作」子命令：git commit / git merge / git push
+# 注意（实测踩过两次）：
+#   1. 不能用 *git*merge* —— 它会把 `git branch -r --no-merged` 误判成合并命令，
+#      而 `--no-merged` 恰好是 AGENTS.md 要求的「看未合并分支」标准动作，等于自锁死
+#   2. 也不能只判关键词出现在 payload 任何位置 —— ask 提问里提到 git commit 会被误伤
+# 所以要求「git 空格 子命令」这种确切形态
 case "$payload" in
-  *git*commit*|*git*merge*|*git*push*) ;;
+  *"git commit"*|*"git merge"*|*"git push"*) ;;
   *) exit 0 ;;
 esac
 
