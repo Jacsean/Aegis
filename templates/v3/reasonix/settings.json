@@ -3,8 +3,8 @@
     "SessionStart": [
       {
         "command": "bash .reasonix/hooks/aegis-session-start.sh",
-        "description": "Aegis 入口：注入约束摘要（动手前必读的四条）",
-        "timeout": 5000
+        "description": "Aegis 入口：注入约束摘要（Windows 上 Git Bash 冷启动慢，timeout 给足 15s）",
+        "timeout": 15000
       }
     ],
     "PreToolUse": [
