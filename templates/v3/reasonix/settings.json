@@ -9,15 +9,15 @@
     ],
     "PreToolUse": [
       {
-        "match": "write|edit|multi_edit",
+        "match": "*",
         "command": "bash .reasonix/hooks/aegis-guard-write.sh",
-        "description": "Aegis 拦截：NOTES.md 未建时不许写文件",
+        "description": "Aegis 拦截：NOTES.md 未建时不许写文件（match=*，由脚本按 toolName 判断）",
         "timeout": 5000
       },
       {
-        "match": "bash",
+        "match": "*",
         "command": "bash .reasonix/hooks/aegis-guard-bash.sh",
-        "description": "Aegis 拦截：不许在主干上直接提交",
+        "description": "Aegis 拦截：不许在主干上提交（match=*，由脚本按 payload 判断）",
         "timeout": 5000
       }
     ],

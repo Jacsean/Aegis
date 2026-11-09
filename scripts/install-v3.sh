@@ -131,15 +131,18 @@ if [ "$CAP_HOOK" = "yes" ]; then
       let cur = {};
       if (fs.existsSync(tgt)) { try { cur = JSON.parse(fs.readFileSync(tgt,"utf8")); } catch(e){ cur={}; } }
       cur.hooks = cur.hooks || {};
-      let added = 0;
+      let added = 0, updated = 0;
       for (const [ev, arr] of Object.entries(add.hooks || {})) {
         cur.hooks[ev] = cur.hooks[ev] || [];
         for (const h of arr) {
-          if (!cur.hooks[ev].some(x => x.command === h.command)) { cur.hooks[ev].push(h); added++; }
+          // 同 command = 同一条 hook：用新版覆盖旧版（否则重装不会修复 match/description 的改动）
+          const i = cur.hooks[ev].findIndex(x => x.command === h.command);
+          if (i >= 0) { cur.hooks[ev][i] = h; updated++; }
+          else { cur.hooks[ev].push(h); added++; }
         }
       }
       fs.writeFileSync(tgt, JSON.stringify(cur, null, 2) + "\n");
-      console.log("  → .reasonix/settings.json（合并，新增 " + added + " 条 hook）");
+      console.log("  → .reasonix/settings.json（合并：新增 " + added + " 条，更新 " + updated + " 条）");
     ' "$TARGET/.reasonix/settings.json" "$ROOT/templates/v3/reasonix/settings.json"
   else
     if [ -f "$TARGET/.reasonix/settings.json" ]; then
