@@ -77,6 +77,24 @@ First principles, inversion, pre-mortem, Kano, double-loop reflection, and 11 mo
 Ambiguous request → it thinks harder. Clear request → **it stays out of your way**
 (about 40 tokens resident per turn).
 
+### 5️⃣ Your experience becomes an asset, not a fresh start every time
+
+The first four cover *how it thinks* and *how it's kept in line*. This one covers
+**whether what you build stays findable.**
+
+| What you get | Problem it solves |
+|---|---|
+| **Glossary** (`docs/reference/concepts.md`) | The same word won't mean two things to you and to it; no re-explaining on handover |
+| **Doc index** (`docs/README.md`) | You know where things live — no more "I'm sure I wrote that somewhere" |
+| **ADR template** | Three months later you can still look up **why A was chosen over B** |
+| **Incident template** (mandatory "prevention" field) | Mistakes get written down — and more importantly, how to not repeat them |
+
+**Without them**: all project knowledge lives in the conversation and dies with it.
+Next session, next person, next agent — **you explain everything from scratch.**
+
+The last two ship as templates without forcing a directory (dead weight if unused);
+the first two create the location up front (no location effectively means none).
+
 ---
 
 ## Before / After
@@ -87,6 +105,8 @@ Ambiguous request → it thinks harder. Clear request → **it stays out of your
 | Delivery check | You verify line by line | Four dimensions run first, **failures are named** |
 | Critical actions | Depends on good behavior | Blocked automatically, with the reason and the fix |
 | Same mistake | Can happen twice | Rejections persist, won't be re-proposed |
+| Same word | Two different meanings | Pinned in the glossary, no re-explaining |
+| Why we chose this | Long forgotten | The ADR records what was chosen, what was rejected, and why |
 | Trust | Gut feeling | Every claim is checkable |
 
 ---

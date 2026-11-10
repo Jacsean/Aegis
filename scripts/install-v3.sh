@@ -132,10 +132,14 @@ if [ ! -f "$TARGET/docs/README.md" ]; then
 else
   echo "  → docs/README.md 已存在，保留"
 fi
-# ADR / 故障记录 / 发布说明：模板放 .aegis/templates/，需要时自行 copy
+# ADR / 故障记录 / 发布说明 / 设计文档：模板放 .aegis/templates/，需要时自行 copy
 mkdir -p "$TARGET/.aegis/templates"
 cp -r "$ROOT/templates/docs/adr" "$ROOT/templates/docs/incidents" "$ROOT/templates/docs/release" "$TARGET/.aegis/templates/" 2>/dev/null || true
-echo "  → .aegis/templates/（ADR / 故障记录 / 发布说明模板，需要时 copy 到 docs/）"
+# 设计文档模板（DESIGN / STYLE）：通用价值，任何要写设计的项目都用得上
+# 注意不含 REVIEW-DESIGN.md —— 那是 Aegis 八阶段流程 S5 的配套产物，使用者没有这套流程
+mkdir -p "$TARGET/.aegis/templates/design"
+cp "$ROOT/templates/docs/design/DESIGN.md" "$ROOT/templates/docs/design/STYLE.md" "$TARGET/.aegis/templates/design/" 2>/dev/null || true
+echo "  → .aegis/templates/（ADR / 故障记录 / 发布说明 / 设计文档模板，需要时 copy 到 docs/）"
 echo ""
 
 # ---------- 5. 挂载 Reasonix hooks（只在用 Reasonix 时）----------
