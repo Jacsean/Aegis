@@ -8,6 +8,45 @@
 
 ---
 
+## [3.1.0] - 2026-11-06
+
+> 主线：**从「能拦」到「换平台不用重配」**。维度二补齐 + 多 harness 同步。
+
+### 新增
+
+- **`scripts/sync-harness.sh`** —— 一次配置，多平台生成
+  - 支持 Claude Code / Reasonix（拦截完整）、Cursor / Codex（仅 rules）
+  - 自动判断在 Aegis 仓库内跑还是项目内跑，用对应的源
+  - **能力差异报告**：直接告诉你换平台会丢什么（拦截 / 思维模型 / 文档骨架三栏）
+  - 装到 `.aegis/`，换 harness 时随时 `bash .aegis/sync-harness.sh . --all`
+- **维度二（工程方法）补齐** —— 之前完全缺失，使用者一个都拿不到
+  - `templates/v3/concepts.md` → 术语表（收录判据 GB/T 10112 / ISO 704 + 条目写法 + 只增不删规则）
+  - `templates/v3/docs-README.md` → 文档索引 + 目录约定
+  - `.aegis/templates/` → ADR / 故障记录 / 发布说明 / 设计文档模板
+- **`scripts/check-templates.sh`** —— 检查「有模板但没装」（本项目铁律的自动检测器）
+- **`scripts/audit-design.sh`** —— 用「2 维度 + 4 问题」当检查表，查设计目标有没有到达使用者
+- **`scripts/check.sh`** —— 四维度自检脚本化（事实 / 语义 / 时间 / 认知），退出码 0/1
+
+### 变更
+
+- `AGENTS.md` 新增本项目特有铁律：**方法要固化进「能力」，不是「规范」**
+  - 判据：使用者装完 Aegis 后会在自己项目里看到这个吗？会 → `templates/v3/`；不会 → 本仓库 `docs/`
+- `install-v3.sh` 第 4b 步：创建 `docs/reference/concepts.md` + `docs/README.md` + `.aegis/templates/`
+- `gate.sh` S6 自动跑 `check.sh`（失败只 warn，不挡纯文档改动）
+- README（中英）新增第 5 条好处「经验会沉淀成资产」+ Before/After 两行
+- `check.sh` 语义维度改三档判定：没文件→提醒 / 空文件→提醒 / 有内容→检查
+
+### 修复
+
+- **`ln -s` 假报告**：Git Bash 在 Windows 上静默退化成复制，命令返回 0 但产物不是链接，
+  原脚本却打出「软链」——改用 `[ -L ]` 复核
+- **项目内跑 sync-harness 找不到源**：默认读 `ROOT/templates/v3/`，项目里没这个目录——
+  改为自动判断用哪份源
+- **概念表模板的 HTML 注释里用 `### 术语名` 做示例**，被 check.sh 统计成「已定义 1 个术语」——
+  改成用分隔线包裹示例
+
+---
+
 ## [3.0.0] - 2026-11-06
 
 > **这是一次重写，不是改版。** v3 把 Aegis 从「流程规范」变成「能长、能拦、能接续的约束层」。

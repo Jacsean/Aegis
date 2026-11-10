@@ -8,7 +8,7 @@ It remembers across sessions. It leaves a trail you can check. It blocks the mov
 
 Install into any project in 60 seconds. Non-destructive — keeps your existing skills, rules and tools untouched.
 
-`v3.0.0` · Reasonix (Claude Code / Trae in progress)
+`v3.1.0` · Claude Code / Reasonix (full enforcement) · Cursor / Codex (rules only)
 
 **English** · [简体中文](README.zh-CN.md)
 

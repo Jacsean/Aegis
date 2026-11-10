@@ -8,7 +8,7 @@
 
 装进任何项目，60 秒生效。**不覆盖**你已有的 skills、规则和工具。
 
-`v3.0.0` · 当前支持 Reasonix（Claude Code / Trae 适配中）
+`v3.1.0` · Claude Code / Reasonix（拦截完整）· Cursor / Codex（仅 rules）
 
 [English](README.md) · **简体中文**
 
