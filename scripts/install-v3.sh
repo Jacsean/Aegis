@@ -198,6 +198,10 @@ echo "  → .aegis/gen-division.sh（装了技能后可自行重新生成分工�
 cp "$ROOT/scripts/check.sh" "$TARGET/.aegis/check.sh"
 chmod +x "$TARGET/.aegis/check.sh" 2>/dev/null || true
 echo "  → .aegis/check.sh（随时自检：bash .aegis/check.sh all .）"
+# 多平台同步 —— 换 harness 时不用重配一遍
+cp "$ROOT/scripts/sync-harness.sh" "$TARGET/.aegis/sync-harness.sh"
+chmod +x "$TARGET/.aegis/sync-harness.sh" 2>/dev/null || true
+echo "  → .aegis/sync-harness.sh（换 harness 时：bash .aegis/sync-harness.sh . --all）"
 bash "$ROOT/scripts/gen-division.sh" "$TARGET" 2>&1 | sed 's/^/  /'
 echo ""
 
