@@ -540,6 +540,16 @@ if [[ "$PHASE" == "S6" || "$PHASE" == "ALL" ]]; then
   todo_cnt=$(grep -rnE '(TODO|FIXME)' --include='*.py' --include='*.js' --include='*.ts' $CODE 2>/dev/null | wc -l | tr -d ' ')
   [ "${todo_cnt:-0}" -eq 0 ] && ok "无 TODO/FIXME 遗留" || warn "有 $todo_cnt 处 TODO/FIXME（需登记）"
 
+  # 四维度自检（scripts/check.sh）—— 把「靠自觉」变成「靠脚本」
+  # 只在有 check.sh 时跑；失败项会阻断，提醒项不阻断
+  if [ -f scripts/check.sh ]; then
+    if bash scripts/check.sh all . >/dev/null 2>&1; then
+      ok "四维度自检通过（认知·事实·语义·时间）"
+    else
+      warn "四维度自检有必须处理的项，详情: bash scripts/check.sh all ."
+    fi
+  fi
+
   # 硬编码密钥
   secret=$(grep -rnEi "(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][A-Za-z0-9/+=_-]{12,}" \
       --include='*.py' --include='*.js' --include='*.ts' $CODE 2>/dev/null | head -3 || true)
