@@ -69,7 +69,7 @@ check_semantic() {
 
   local CF="docs/reference/concepts.md"
   if [ ! -f "$CF" ]; then
-    fail "缺 docs/reference/concepts.md（术语无处定义，词义会随会话漂移）"
+    warn "没有 docs/reference/concepts.md（术语无处落笔；装 Aegis 时会自动创建）"
     return
   fi
   pass "概念表存在（$CF）"
@@ -78,9 +78,12 @@ check_semantic() {
   grep -oE '^###[[:space:]]+[^（(]+' "$CF" 2>/dev/null \
     | sed -E 's/^###[[:space:]]+//; s/[[:space:]]+$//' > /tmp/aegis-terms.$$
   local n
-  n=$(wc -l < /tmp/aegis-terms.$$ | tr -d ' ')
+  n=$(wc -l < /tmp/aegis-terms.$$ 2>/dev/null | tr -d ' ')
+  n="${n:-0}"
+  # 三档判定：没有文件→提醒；有文件但空→提醒；有内容→检查一致性
+  # 空表不算失败——「有位置」本身就是价值，用到再填
   if [ "$n" -eq 0 ]; then
-    fail "概念表里一个术语都没提取到（格式应为 '### 术语（English）'）"
+    warn "概念表还是空的（有位置了，遇到「两边理解不一致的词」时再填，不阻断）"
     rm -f /tmp/aegis-terms.$$
     return
   fi

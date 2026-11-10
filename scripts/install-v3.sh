@@ -113,6 +113,29 @@ for f in CORE-CHECKLIST.md CHECKLIST-GROWTH.md constraints.md EXTERNAL.md; do
     echo "  → $f 已存在，保留（它可能已被你改过）"
   fi
 done
+
+# ---------- 4b. 文档骨架（维度二：工程方法的载体）----------
+# 为什么要有：Aegis 的「语义」维度要求「术语归到已有概念了吗」，
+# 但如果项目里连概念表都没有，这条检查就是空转。
+# 判断依据：概念表和索引是「必须齐备」的（成本极低，缺了就没地方落笔）；
+#          ADR / 故障记录是「有需要用」的，只给模板，不占目录。
+mkdir -p "$TARGET/docs/reference"
+if [ ! -f "$TARGET/docs/reference/concepts.md" ]; then
+  cp "$ROOT/templates/v3/concepts.md" "$TARGET/docs/reference/concepts.md"
+  echo "  → docs/reference/concepts.md（术语表，空表带收录判据）"
+else
+  echo "  → docs/reference/concepts.md 已存在，保留"
+fi
+if [ ! -f "$TARGET/docs/README.md" ]; then
+  cp "$ROOT/templates/v3/docs-README.md" "$TARGET/docs/README.md"
+  echo "  → docs/README.md（文档索引 + 目录约定）"
+else
+  echo "  → docs/README.md 已存在，保留"
+fi
+# ADR / 故障记录 / 发布说明：模板放 .aegis/templates/，需要时自行 copy
+mkdir -p "$TARGET/.aegis/templates"
+cp -r "$ROOT/templates/docs/adr" "$ROOT/templates/docs/incidents" "$ROOT/templates/docs/release" "$TARGET/.aegis/templates/" 2>/dev/null || true
+echo "  → .aegis/templates/（ADR / 故障记录 / 发布说明模板，需要时 copy 到 docs/）"
 echo ""
 
 # ---------- 5. 挂载 Reasonix hooks（只在用 Reasonix 时）----------
